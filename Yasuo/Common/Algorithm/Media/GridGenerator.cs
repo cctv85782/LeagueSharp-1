@@ -274,7 +274,7 @@
 
             var toBeRemoved = new List<Connection>();
 
-            foreach (var connection in Grid.Connections)
+            foreach (var connection in Grid?.Connections)
             {
                 var backtracedPath = Backtrace(connection.From);
 
@@ -283,16 +283,8 @@
                     return;
                 }
 
-                var all = true;
+                var all = backtracedPath.All(x => x.From != this.Grid.BasePoint);
 
-                foreach (var x in backtracedPath)
-                {
-                    if (x.From == this.Grid.BasePoint)
-                    {
-                        all = false;
-                        break;
-                    }
-                }
                 if (all)
                 {
                     toBeRemoved.Add(connection);
@@ -301,7 +293,7 @@
 
             foreach (var connection in toBeRemoved)
             {
-                this.RemovePath(connection);
+                this.Grid?.Connections?.Remove(connection);
             }
         }
 
@@ -315,8 +307,8 @@
 
             foreach (var item in toGetRemoved)
             {
-                Grid.Points.Remove(item.To);
-                Grid.Connections.Remove(item);
+                Grid?.Points?.Remove(item.To);
+                Grid?.Connections?.Remove(item);
             }
 
             this.RemoveDisconnectedConnections();

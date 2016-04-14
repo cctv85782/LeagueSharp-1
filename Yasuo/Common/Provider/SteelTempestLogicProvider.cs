@@ -182,6 +182,24 @@
         {
             var predInput = new SebbyLib.Prediction.PredictionInput
             {
+                From = Variables.Player.ServerPosition,
+                Aoe = aoe,
+                Collision = Variables.Spells[SpellSlot.Q].Collision,
+                Speed = Variables.Spells[SpellSlot.Q].Speed,
+                Delay = Variables.Spells[SpellSlot.Q].Delay,
+                Radius = Variables.Spells[SpellSlot.Q].Range,
+                Unit = target,
+                Type = SkillshotType.SkillshotLine
+            };
+
+            return SebbyLib.Prediction.Prediction.GetPrediction(predInput);
+        }
+
+        public SebbyLib.Prediction.PredictionOutput GetPrediction(Vector3 from, Obj_AI_Base target, bool aoe)
+        {
+            var predInput = new SebbyLib.Prediction.PredictionInput
+            {
+                From = from,
                 Aoe = aoe,
                 Collision = Variables.Spells[SpellSlot.Q].Collision,
                 Speed = Variables.Spells[SpellSlot.Q].Speed,

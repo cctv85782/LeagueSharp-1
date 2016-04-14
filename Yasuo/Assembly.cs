@@ -19,15 +19,47 @@ namespace Yasuo
     class Assembly
     {
         /**
-        * TODO:
-        * 
-        *   SweepingBlade:
-        *   + Detection of Trundle/J4/Anivia Walls
-        *
-        *   General:
-        *   + Fix Prediction
-        *   + Fix Under Tower Checks
-        *
+         TODO:
+        
+            Sweeping Blade: (low - med)
+            + Detection of Trundle/J4/Anivia Walls while pathfinding
+            + Killsteal
+
+            Steel Tempest: (high)
+            + Predictions seems wrong
+            + Interrupt spells
+            + Anti Gapcloser
+            + Killsteal
+            + Q while gapclosing
+            + 3Q Ultimate Dodge
+            
+            Flash: (low)
+            + EQ Flash
+            + Q Flash
+
+            Windwall: (low - med)
+            + Protector
+            + WQ Animation canceling
+            + Precautional Windwall
+
+            Last Breath: (high)
+            + Overkill
+            + Fix NRE
+            + Do not towerdive option
+
+            TurretLogicProvider: (med)
+            + Fix Exception
+            + Improve safety check for undertower
+        
+            OrbwalkingModes:
+            + Add Freeze
+            + Add Combo without moving
+
+            General: (high)
+            + Add Tower dive logic
+            + Fix Prediction
+            + Fix Under Tower Checks
+        
         */
 
         /// <summary>
@@ -39,18 +71,6 @@ namespace Yasuo
             {
                 Menu = new Menu(name, name, true);
                 
-                if (!Variables.ChampionIndependent)
-                {
-                    CustomEvents.Game.OnGameLoad += delegate
-                    {
-                        if (Variables.ChampionName != Variables.Player.ChampionName)
-                        {
-                            this.Menu.AddItem(new MenuItem("ChampionSupport", "Champion is not supported"));
-                            Variables.Stop = true;
-                        };
-                    };
-                }
-
                 CustomEvents.Game.OnGameLoad += OnGameLoad;
                 CustomEvents.Game.OnGameEnd += OnGameEnd;
 
@@ -77,6 +97,16 @@ namespace Yasuo
         {
             try
             {
+                if (Variables.ChampionDependent)
+                {
+                    if (!Variables.SupportedChampions.Contains(Variables.Player.ChampionName))
+                    {
+                        Menu.AddItem(new MenuItem("ChampionNotSupported", "Champion is not supported"));
+                        Variables.Stop = true;
+                        return;
+                    }
+                }
+
                 var orbWalkingMenu = new Menu("Orbwalking", "Orbwalking");
                 Menu.AddSubMenu(orbWalkingMenu);
 

@@ -64,7 +64,11 @@
         /// </summary>
         public Objects.LastBreath LeastRemainingAirboneTime(List<Objects.LastBreath> executions)
         {
-            return executions?.MinOrDefault(x => x.MinRemainingAirboneTime);
+            if (executions.Count > 0)
+            {
+                return executions?.MinOrDefault(x => x.MinRemainingAirboneTime);
+            }
+            return null;
         }
 
         /// <summary>

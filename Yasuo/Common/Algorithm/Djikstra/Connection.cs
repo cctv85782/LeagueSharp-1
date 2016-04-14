@@ -88,9 +88,10 @@
         /// <summary>
         ///     Draws a line from To to From
         /// </summary>
+        /// <param name="points"></param>
         /// <param name="width"></param>
         /// <param name="color"></param>
-        public void Draw(int width = 1, Color color = default(Color))
+        public void Draw(bool points = false, int width = 1, Color color = default(Color))
         {
             if (From != null && To != null)
             {
@@ -102,8 +103,11 @@
                 Render.Circle.DrawCircle(Over.Position, 50, color, 5);
             }
 
-            To?.Draw(50, 3, Color.Red);
-            From?.Draw(50, 3, Color.Red);
+            if (points)
+            {
+                To?.Draw(50, 3, color);
+                From?.Draw(50, 3, color);
+            }
         }
 
         // Maybe redundant because the Equals extensions is the same

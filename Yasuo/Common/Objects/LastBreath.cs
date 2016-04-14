@@ -35,18 +35,25 @@ namespace Yasuo.Common.Objects
             ProviderR = new LastBreathLogicProvider();
             ProviderTurret = new TurretLogicProvider();
 
-            AffectedEnemies = new List<Obj_AI_Hero>();
+            if (unit != null && unit.IsValidTarget())
+            {
+                this.Target = unit;
+            }
 
-            this.Target = unit;
-            this.StartPosition = Variables.Player.ServerPosition;
+            if (Target != null)
+            {
+                AffectedEnemies.Add(Target);
 
-            this.SetEndPosition();
-            this.SetAffectedEnemies();
-            this.SetTravelDistance();
-            this.SetDangerValue();
-            this.SetMinRemainingAirboneTime();
-            this.SetKnockUpAmount();
-            this.SetDamageDealt();
+                this.StartPosition = Variables.Player.ServerPosition;
+
+                this.SetEndPosition();
+                this.SetAffectedEnemies();
+                this.SetTravelDistance();
+                this.SetDangerValue();
+                this.SetMinRemainingAirboneTime();
+                this.SetKnockUpAmount();
+                this.SetDamageDealt();
+            }
         }
 
         public int DangerValue { get; private set; }
@@ -59,7 +66,7 @@ namespace Yasuo.Common.Objects
 
         public float DamageDealt { get; private set; }
 
-        public List<Obj_AI_Hero> AffectedEnemies { get; } 
+        public List<Obj_AI_Hero> AffectedEnemies = new List<Obj_AI_Hero>(); 
 
         private void SetDangerValue()
         {

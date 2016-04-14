@@ -29,6 +29,8 @@
 
         internal Path Path;
 
+        internal static Path PathCopy = new Path();
+
         internal Grid Grid;
 
         public override string Name => "Sweeping Blade";
@@ -92,15 +94,15 @@
                     .SetTooltip("The assembly will try to E to the enemy predicted position. This will not work if Mode is set to Mouse."));
 
             pathfindingMenu.AddItem(
-                new MenuItem("AutoWalkToDash", "[Experimental] Auto-Walk behind minion").SetValue(true)
-                    .SetTooltip("If this is enabled the assembly will auto-walk behind a minion to dash over it."));
+                new MenuItem("AutoWalkToDash", "[Experimental] Auto-Walk to dash").SetValue(true)
+                    .SetTooltip("If this is enabled the assembly will auto-walk behind a unit to dash over it."));
 
             pathfindingMenu.AddItem(
                 new MenuItem("AutoDashing", "[Experimental] Auto-Dash dashable path (Dashing-Path)").SetValue(true)
                 .SetTooltip("If this is enabled the assembly will automatic pathfind and walk to the end of the path. This is a basic feature of pathfinding."));
 
             pathfindingMenu.AddItem(
-                new MenuItem("AutoWalking", "[Experimental] Auto-Walk non-dashable path (Walking-Path)").SetValue(true)
+                new MenuItem("AutoWalking", "[Experimental] Auto-Walk non-dashable path (Walking-Path)").SetValue(false)
                     .SetTooltip("If this is enabled the assembly will automatic pathfind and walk to the end of the path. If you like to have maximum control or your champion disable this."));
 
             pathfindingMenu.AddItem(
@@ -155,6 +157,10 @@
                 new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true)
                     .SetTooltip("The assembly will Draw the expected path to the enemy"));
 
+            drawingMenu.AddItem(
+                new MenuItem(this.Name + "SmartDrawings", "Smart Drawings").SetValue(true)
+                    .SetTooltip("Automaticall disables Drawings under certain circumstances and will do auto-coloring."));
+
             drawingMenu.AddItem(new MenuItem(this.Name + "PathDashColor", "Dashes").SetValue(new Circle(true, System.Drawing.Color.DodgerBlue)));
 
             drawingMenu.AddItem(new MenuItem(this.Name + "PathDashWidth", "Width of lines").SetValue(new Slider(2, 1, 10)));
@@ -165,7 +171,11 @@
 
             drawingMenu.AddItem(new MenuItem(this.Name + "PathWalkWidth", "Width of lines").SetValue(new Slider(2, 1, 10)));
 
-            drawingMenu.AddItem(new MenuItem(this.Name + "Circles", "Draw Circles around units").SetValue(new Circle(true, System.Drawing.Color.DodgerBlue)));
+            drawingMenu.AddItem(new MenuItem(this.Name + "CirclesColor", "Draw Circles").SetValue(new Circle(true, System.Drawing.Color.DodgerBlue)));
+
+            drawingMenu.AddItem(new MenuItem(this.Name + "CirclesLineWidth", "Width of lines").SetValue(new Slider(2, 1, 10)));
+
+            drawingMenu.AddItem(new MenuItem(this.Name + "CirclesRadius", "Radius").SetValue(new Slider(40, 10, 475)));
 
             this.Menu.AddSubMenu(drawingMenu);
 
@@ -189,8 +199,12 @@
         {
             try
             {
-                if (Variables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo
-                || !Variables.Spells[SpellSlot.E].IsReady())
+                Path = null;
+                PathCopy = null;
+
+                if (Variables.Player.IsDead
+                    || Variables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo
+                    || !Variables.Spells[SpellSlot.E].IsReady())
                 {
                     return;
                 }
@@ -265,7 +279,7 @@
                             targetedVector = Game.CursorPos;
                             break;
                         case 1:
-                            var target = TargetSelector.GetTarget(Variables.Spells[SpellSlot.Q].Range, TargetSelector.DamageType.Physical);
+                            var target = TargetSelector.GetTarget(5000, TargetSelector.DamageType.Physical);
 
                             if (target != null && !target.IsValid && !target.IsZombie)
                             {
@@ -273,15 +287,7 @@
                                 {
                                     if (this.Menu.Item("Prediction").GetValue<bool>())
                                     {
-                                        if (target != null && target.IsValid)
-                                        {
-                                            targetedVector = Prediction.GetPrediction(target, Variables.Player.Distance(target) / ProviderE.Speed()).UnitPosition;
-                                        }
-                                        else
-                                        {
-                                            targetedVector = Game.CursorPos;
-                                        }
-
+                                        targetedVector = Prediction.GetPrediction(target, Variables.Player.Distance(target) / ProviderE.Speed()).UnitPosition;
                                     }
                                     else
                                     {
@@ -292,7 +298,6 @@
                                 {
                                     targetedVector = Game.CursorPos;
                                 }
-
                             }
                             else
                             {
@@ -332,7 +337,8 @@
                     #region Path Execute
 
                     if (this.Path?.Connections != null && this.Path?.Connections?.Count > 0)
-                    {   
+                    {
+                        PathCopy = Path;
                         // Auto-Dashing
                         if (this.Path.Connections.First().IsDash)
                         {
@@ -344,8 +350,20 @@
                             }
                         }
 
-                        if (!this.Path.Connections.First().IsDash)
+                        // TODO: Priority Low - Med
+                        // Notice: Make it a way that it won't cancel AA
+                        if (!this.Path.Connections.First().IsDash && !Variables.Player.IsWindingUp)
                         {
+                            // Auto-Walk-To-Dash
+                            if (pathfindingMenu.Item("AutoWalkToDash").GetValue<bool>())
+                            {
+                                // Connection considered to walk behind a unit
+                                if (Path.Connections.First().Lenght <= 50)
+                                {
+                                    // Walk logic here
+                                }
+                            }
+
                             // Auto-Walking
                             if (pathfindingMenu.Item("AutoWalking").GetValue<bool>())
                             {
@@ -354,8 +372,12 @@
                                     Path.RemoveConnection(Path.Connections.First());
                                 }
 
-                                Variables.Player.IssueOrder(GameObjectOrder.MoveTo, Path.Connections.First().To.Position);
+                                if (Path.Connections.First().Lenght > 50)
+                                {
+                                    // Walk logic here
+                                }
                             }
+
                         }
 
                     }
@@ -389,7 +411,8 @@
 
         public void OnDraw(EventArgs args)
         {
-            if (Variables.Player.IsDead)
+            if (Variables.Player.IsDead 
+                || Variables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo)
             {
                 return;
             }
@@ -401,6 +424,19 @@
 
                 if (drawingMenu.Item(this.Name + "Enabled").GetValue<bool>())
                 {
+                    if (drawingMenu.Item(this.Name + "SmartDrawings").GetValue<bool>())
+                    {
+                        if (!Path.BuildsUpShield && Path.Connections.All(x => !x.IsDash))
+                        {
+                            return;
+                        }
+
+                        // TODO: Color Path light blue
+                        if (Path.BuildsUpShield)
+                        {
+                            
+                        }
+                    }
                     if (drawingMenu.Item(this.Name + "PathDashColor").GetValue<Circle>().Active)
                     {
                         var linewidth = drawingMenu.Item(this.Name + "PathDashWidth").GetValue<Slider>().Value;
@@ -417,6 +453,17 @@
 
                         Path.WalkLineWidth = linewidth;
                         Path.WalkColor = color;
+                    }
+
+                    if (drawingMenu.Item(this.Name + "CirclesColor").GetValue<Circle>().Active)
+                    {
+                        var linewidth = drawingMenu.Item(this.Name + "CirclesLineWidth").GetValue<Slider>().Value;
+                        var radius = drawingMenu.Item(this.Name + "CirclesRadius").GetValue<Slider>().Value;
+                        var color = drawingMenu.Item(this.Name + "CirclesColor").GetValue<Circle>().Color;
+
+                        Path.CircleLineWidth = linewidth;
+                        Path.CircleRadius = radius;
+                        Path.CircleColor = color;
                     }
 
                     Path.Draw();

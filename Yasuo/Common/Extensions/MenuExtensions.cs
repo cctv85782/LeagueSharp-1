@@ -14,5 +14,38 @@ namespace Yasuo.Common.Extensions
         {
             menu.AddItem(new MenuItem(menu.Name +" Helper", "Helper").SetTooltip(helpText));
         }
+
+        internal static void RefreshMenu(Menu menu, int tag)
+        {
+            if (menu == null)
+            {
+                return;
+            }
+
+            foreach (var item in menu.Items)
+            {
+                if (item.Tag != 0)
+                {
+                    item.Hide();
+                }
+
+                if (item.Tag == tag)
+                {
+                    item.Show();
+                }
+
+            }
+        }
+
+        public static void Hide(this MenuItem item)
+        {
+            if (item != null)
+            {
+                if (item.ShowItem)
+                {
+                    item.Show(false);
+                }
+            }
+        }
     }
 }

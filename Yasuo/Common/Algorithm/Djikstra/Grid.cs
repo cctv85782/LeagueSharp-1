@@ -132,7 +132,7 @@
                 foreach (var connection in Connections)
                 {
                     //Console.WriteLine(@"Drawing Grid");
-                    connection.Draw(width, Color);
+                    connection.Draw(true, width, Color);
                 }
             }
             catch (Exception ex)

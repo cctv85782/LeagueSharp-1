@@ -37,7 +37,7 @@
         protected override sealed void OnLoad()
         {
             this.Menu = new Menu(this.Name, this.Name);
-            this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
+            this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "[Disabled] Enabled").SetValue(true));
 
             // Blacklist
             var blacklist = new Menu("Blacklist", this.Name + "Blacklist");

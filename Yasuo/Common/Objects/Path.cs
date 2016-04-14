@@ -57,6 +57,11 @@ namespace Yasuo.Common.Objects
         public System.Drawing.Color WalkColor = System.Drawing.Color.White;
 
         /// <summary>
+        ///     Color of the circles
+        /// </summary>
+        public System.Drawing.Color CircleColor = System.Drawing.Color.White;
+
+        /// <summary>
         ///     Width of dashes (Drawings)
         /// </summary>
         public int DashLineWidth = 1;
@@ -65,6 +70,16 @@ namespace Yasuo.Common.Objects
         ///     Width of lines (Drawings)
         /// </summary>
         public int WalkLineWidth = 1;
+
+        /// <summary>
+        ///     Width of the circles (Drawings)
+        /// </summary>
+        public int CircleLineWidth = 1;
+
+        /// <summary>
+        ///     Radius of the circles (Drawings)
+        /// </summary>
+        public int CircleRadius = 40;
 
         /// <summary>
         ///     Provider for Flow logics
@@ -178,7 +193,7 @@ namespace Yasuo.Common.Objects
 
         #region Public Methods and Operators
 
-        public void Draw(bool multicolor = true)
+        public void Draw(bool multicolor = true, bool circles = true)
         {
             try
             {
@@ -188,11 +203,17 @@ namespace Yasuo.Common.Objects
                     {
                         if (connection.IsDash)
                         {
-                            connection.Draw(DashLineWidth, DashColor);
+                            connection.Draw(false, DashLineWidth, DashColor);
+
+                            if (circles)
+                            {
+                                connection.From.Draw(CircleRadius, CircleLineWidth, CircleColor);
+                                connection.To.Draw(CircleRadius, CircleLineWidth, CircleColor);
+                            }
                         }
                         else
                         {
-                            connection.Draw(WalkLineWidth, WalkColor);
+                            connection.Draw(false, WalkLineWidth, WalkColor);
                         }
                     }
                 }
@@ -200,7 +221,7 @@ namespace Yasuo.Common.Objects
                 {
                     foreach (var connection in Connections)
                     {
-                        connection.Draw(2, Color.White);
+                        connection.Draw(false, 2, Color.White);
                     }
                 }
             }
@@ -210,6 +231,10 @@ namespace Yasuo.Common.Objects
             }
         }
 
+        /// <summary>
+        ///     Removes a connection from the path
+        /// </summary>
+        /// <param name="connection"></param>
         public void RemoveConnection(Connection connection)
         {
             if (Connections.Contains(connection))
@@ -222,6 +247,98 @@ namespace Yasuo.Common.Objects
                 Units.Remove(connection.Over);
             }
         }
+
+        /// <summary>
+        ///     Gets a position after time following the path
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns>A vector</returns>
+        public Vector3 GetPosition(float time)
+        {
+            var result = new Vector3();
+
+            var time2 = time;
+
+            foreach (var connection in Connections)
+            {
+                if (time2 > 0)
+                {
+                    time2 -= connection.Time;
+                }
+
+                if (time <= 0)
+                {
+                    if (connection.IsDash)
+                    {
+                        return connection.To.Position;
+                    }
+                    else
+                    {
+                        var minusTime = time * -1;
+
+                        return connection.From.Position.Extend(connection.To.Position, (Variables.Player.MoveSpeed * 1000) / minusTime);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Splits the path logical into multiple segments
+        /// </summary>
+        /// <param name="segmentAmount"></param>
+        /// <returns>A vector-list</returns>
+        public List<Vector3> SplitVectorsLogical(float segmentAmount = 100)
+        {
+            var result = new List<Vector3>((int) segmentAmount);
+
+            foreach (var connection in Connections)
+            {
+                if (connection.IsDash)
+                {
+                    if (!result.Contains(connection.From.Position))
+                    {
+                        result.Add(connection.From.Position);
+                    }
+                    if (!result.Contains(connection.To.Position))
+                    {
+                        result.Add(connection.To.Position);
+                    }
+                }
+            }
+
+            if (result.Count() < 100)
+            {
+                var nonDashConnections = Connections.Where(x => !x.IsDash).ToList();
+
+                var segmentsPerConnection = segmentAmount / nonDashConnections.Count();
+                
+                foreach (var connection in nonDashConnections)
+                {
+                    var vectorsToAdd = new List<Vector3>((int) segmentsPerConnection);
+
+                    var steps = (int) connection.Lenght / (int) segmentsPerConnection;
+
+                    vectorsToAdd.Add(connection.From.Position);
+
+                    for (int i = 0; i < segmentsPerConnection; i += steps)
+                    {
+                        var vec = connection.From.Position.Extend(connection.To.Position, steps);
+                    }
+
+                    foreach (var vectors in vectorsToAdd)
+                    {
+                        if (!result.Contains(vectors))
+                        {
+                            result.Add(vectors);
+                        }
+                    }
+                }
+            }
+
+            return result;
+        } 
 
         #endregion
 

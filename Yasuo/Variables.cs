@@ -96,12 +96,12 @@ namespace Yasuo
         /// <summary>
         ///     If the assembly is limited to a specific champion
         /// </summary>
-        internal static bool ChampionIndependent = false;
+        internal static bool ChampionDependent = true;
 
         /// <summary>
-        ///     The champion the assembly is for
+        ///     The champion(s) the assembly is for
         /// </summary>
-        public static string ChampionName = "Yasuo";
+        public static List<string> SupportedChampions = new List<string>() { "Yasuo" };
 
         /// <summary>
         ///     The profile name of the GitHub account

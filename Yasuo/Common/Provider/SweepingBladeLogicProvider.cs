@@ -205,12 +205,12 @@
                     {
                         if (connection.Over != null)
                         {
-                            connection.Draw(3, System.Drawing.Color.Red);
+                            connection.Draw(true, 3, System.Drawing.Color.Red);
                         }
 
                         if (connection.Over == null)
                         {
-                            connection.Draw(3, System.Drawing.Color.Green);
+                            connection.Draw(true, 3, System.Drawing.Color.Green);
 
                         }
                     }
@@ -275,15 +275,11 @@
             return null;
         }
 
-        // TODO: HIGH PRIOTIRY
         /// <summary>
         ///     Returns Sweeping Blade speed
         /// </summary>
         /// <returns></returns>
-        public float Speed()
-        {
-            return Variables.Player.MoveSpeed + 100;
-        }
+        public float Speed() => 1025 + (Variables.Player.MoveSpeed - 345);
 
         // TODO: HIGH PRIORITY
         /// <summary>

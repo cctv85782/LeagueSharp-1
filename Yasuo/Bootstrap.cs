@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net.Configuration;
     using System.Reflection;
 
@@ -34,9 +35,10 @@
         {
             try
             {
-                Variables.Assembly = new Assembly(Variables.ChampionName);
+                Variables.Assembly = new Assembly(Variables.Name);
+                
 
-                if (Variables.Stop) return;
+                if (Variables.Stop) { return; }
 
                 #region parents
 
@@ -118,14 +120,17 @@
         {
             Notifications.AddNotification(string.Format("[{0}] {1} - loaded successfully!", name, version), displayTime, true);
 
-            if (Game.Time <= 60)
+            if (Game.Time <= 6000000)
             {
                 var banner = new Render.Sprite(Resources.BannerLoading, new Vector2());
 
                 // centered but a little above the screens center
+                
+                banner.Scale = new Vector2(1 / (Drawing.Width / 3),  1 / (Drawing.Height / 3)).Normalized();
                 var position = new Vector2((Drawing.Width / 2) - banner.Width / 2, (Drawing.Height / 2) - banner.Height / 2 - 50);
-
                 banner.Position = position;
+
+
                 
                 banner.Add(0);
 
