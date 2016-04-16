@@ -24,33 +24,36 @@ namespace Yasuo
             var e = Spells[SpellSlot.E];
             var r = Spells[SpellSlot.R];
 
-            if (Player.HasQ3())
-            {
-                q.SetSkillshot(GetQDelay, 90, 1200, false, SkillshotType.SkillshotLine);
-                q.Range = 475 * 2;
-                q.MinHitChance = HitChance.VeryHigh;
-            }
-            else
-            {
-                q.SetSkillshot(GetQDelay, 20, float.MaxValue, false, SkillshotType.SkillshotLine);
-                q.Range = 475;
-                q.MinHitChance = HitChance.VeryHigh;
-            }
             if (Player.IsDashing())
             {
                 q.SetSkillshot(GetQDelay, 375, float.MaxValue, false, SkillshotType.SkillshotCircle);
                 q.MinHitChance = HitChance.High;
             }
+            else
+            {
+                if (Player.HasQ3())
+                {
+                    q.SetSkillshot(GetQDelay, 90, 1200, false, SkillshotType.SkillshotLine);
+                    q.Range = 950;
+                    q.MinHitChance = HitChance.VeryHigh;
+                }
+                else
+                {
+                    q.SetSkillshot(GetQDelay, 20, float.MaxValue, false, SkillshotType.SkillshotLine);
+                    q.Range = 475;
+                    q.MinHitChance = HitChance.VeryHigh;
+                }
+            }
 
-            w = new Spell(SpellSlot.W, 400);
-            w.SetSkillshot(0, 400, 400, false, SkillshotType.SkillshotLine);
+            w.SetSkillshot(0, 250 + (w.Level * 50), 400, false, SkillshotType.SkillshotCone);
+            w.Range = 400;
 
-            e = new Spell(SpellSlot.E, 475);
             e.SetTargetted(0, 1025);
             e.Speed = 1000;
+            e.Range = 475;
 
-            r = new Spell(SpellSlot.R, 900);
             r.SetTargetted(0, float.MaxValue);
+            r.Range = 900;
         }
 
         /// <summary>

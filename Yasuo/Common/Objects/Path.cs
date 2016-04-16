@@ -287,9 +287,9 @@ namespace Yasuo.Common.Objects
         /// <summary>
         ///     Splits the path logical into multiple segments
         /// </summary>
-        /// <param name="segmentAmount"></param>
+        /// <param name="segmentAmount">Amount of vectors</param>
         /// <returns>A vector-list</returns>
-        public List<Vector3> SplitVectorsLogical(float segmentAmount = 100)
+        public List<Vector3> SplitIntoVectors(float segmentAmount = 100)
         {
             var result = new List<Vector3>((int) segmentAmount);
 
@@ -313,26 +313,44 @@ namespace Yasuo.Common.Objects
                 var nonDashConnections = Connections.Where(x => !x.IsDash).ToList();
 
                 var segmentsPerConnection = segmentAmount / nonDashConnections.Count();
-                
-                foreach (var connection in nonDashConnections)
+
+                if (segmentsPerConnection >= 1)
                 {
-                    var vectorsToAdd = new List<Vector3>((int) segmentsPerConnection);
-
-                    var steps = (int) connection.Lenght / (int) segmentsPerConnection;
-
-                    vectorsToAdd.Add(connection.From.Position);
-
-                    for (int i = 0; i < segmentsPerConnection; i += steps)
+                    foreach (var connection in nonDashConnections)
                     {
-                        var vec = connection.From.Position.Extend(connection.To.Position, steps);
+                        var vectorsToAdd = new List<Vector3>((int)segmentsPerConnection);
+
+                        var steps = (int)connection.Lenght / (int)segmentsPerConnection;
+
+                        vectorsToAdd.Add(connection.From.Position);
+
+                        for (int i = 0; i < segmentsPerConnection; i += steps)
+                        {
+                            var vec = connection.From.Position.Extend(connection.To.Position, steps);
+                        }
+
+                        foreach (var vectors in vectorsToAdd)
+                        {
+                            if (!result.Contains(vectors))
+                            {
+                                result.Add(vectors);
+                            }
+                        }
+                    }
+                }
+                else if (segmentsPerConnection < 1 && segmentsPerConnection > 0)
+                {
+                    var lastOrDefault = nonDashConnections.LastOrDefault();
+                    var vector = new Vector3();
+
+                    if (lastOrDefault != null)
+                    {
+                        vector = lastOrDefault.To.Position;
                     }
 
-                    foreach (var vectors in vectorsToAdd)
+                    if (!result.Contains(vector))
                     {
-                        if (!result.Contains(vectors))
-                        {
-                            result.Add(vectors);
-                        }
+                        result.Add(vector);
                     }
                 }
             }

@@ -103,6 +103,14 @@
             multiknockupDyn.AddItem(
                 new MenuItem(multiknockupDyn.Name + "MinHitAOEPathBased", "Min HitCount for AOE").SetValue(new Slider(2, 1, 5))).SetTag(2);
 
+            multiknockupDyn.AddItem(
+                new MenuItem(multiknockupDyn.Name + "SegmentAmount", "Amount of calculations: ").SetValue(
+                    new Slider(50, 1, 500)));
+
+            multiknockupDyn.AddItem(
+                new MenuItem(multiknockupDyn.Name + "PriorityMode", "Priority/Decisison MOde: ").SetValue(
+                    new StringList(new []{ "Champion Priority (TargetSelector)", "TODO: Killable"})));
+
             // Never
             multiknockupDyn.AddItem(
                 new MenuItem(multiknockupDyn.Name + "DisclaimerPathBased", "[i] Never aim for multiple targets")).SetTag(3);
@@ -228,11 +236,12 @@
                             break;
 
                         // Path Based
+                        // TODO: ADD calculation for arriving to that point on the path
                         case 1:
                             var path = SweepingBlade.PathCopy;
                             
                             // TODO
-                            var vectors = new List<Vector3>();
+                            var vectors = path.SplitIntoVectors(multiknockupsettings.Item("SegmentAmount").GetValue<Slider>().Value);
 
                             var predDic = new Dictionary<Vector3, List<SebbyLib.Prediction.PredictionOutput>>();
 
@@ -242,30 +251,55 @@
                                 {
                                     var predsVec = new List<SebbyLib.Prediction.PredictionOutput>();
 
+                                    foreach (var unit in targets.ToList())
+                                    {
+                                        var pred = ProviderQ.GetPrediction(vector, unit, true, 0);
+                                    }
+
                                     predDic.Add(vector, predsVec);
                                 }
                             }
 
-                            var best = new SebbyLib.Prediction.PredictionOutput();
+                            var scoreDic = new Dictionary<PredictionOutput, float>();
 
-                            foreach (var vecPred in predDic)
+                            foreach (var entry in predDic.ToList())
                             {
-                                var value = vecPred.Value;
-                                var score = 0;
+                                var value = entry.Value;
 
-                                foreach (var pred in value)
+                                foreach (var pred in value.ToList())
                                 {
-                                    var prioTargets = pred.AoeTargetsHit.Sum(x => TargetSelector.GetPriority(x));
-
-                                    if (best.AoeTargetsHitCount < pred.AoeTargetsHitCount)
+                                    if (pred.Hitchance < SebbyLib.Prediction.HitChance.High)
                                     {
-                                        best = pred;
+                                        continue;
+                                    }
+
+                                    switch (multiknockupsettings.Item("PriorityMode").GetValue<StringList>().SelectedIndex)
+                                    {
+                                        // Champion Priority (Target Selector)
+                                        case 0:
+                                            scoreDic.Add(pred, pred.AoeTargetsHit.Sum(x => TargetSelector.GetPriority(x)));
+                                            break;
+                                        // Killability
+                                        case 1:
+                                            scoreDic.Add(pred, pred.AoeTargetsHit.Sum(x => TargetSelector.GetPriority(x)));
+                                            break;
+                                        // Something smart that takes many things into consideration
+                                        //case 2:
+                                        //    break;
                                     }
                                 }
                             }
+
+                            var finalPred = scoreDic.MaxOrDefault(x => x.Value).Key;
+
+                            if (finalPred != null)
+                            {
+                                Variables.Spells[SpellSlot.Q].Cast(finalPred.CastPosition);
+                            }
+
                             break;
 
-                        // Never
+                        // Never (Disabled)
                         case 2:
                             break;
                     }

@@ -68,27 +68,28 @@ namespace Yasuo.Common.Provider
             return Vector3.Zero;
         }
 
-        private List<Vector3> GetPossiblePoints(Vector2 finalPos, int steps = 50)
+        /// <summary>
+        ///     Returns a precautionary position that is supposed to soak the most dmg before it happens
+        /// </summary>
+        /// <param name="units"></param>
+        /// <param name="prediction"></param>
+        /// <param name="range"></param>
+        /// <returns></returns>
+        public SebbyLib.Prediction.PredictionOutput GetPrecautionaryPosition(List<Obj_AI_Hero> units, bool prediction = true, float range = 1000)
         {
-            var position = Variables.Player.ServerPosition;
-            var radius = Variables.Spells[SpellSlot.W].Range;
-
-            List<Vector3> points = new List<Vector3>();
-            for (var i = 1; i <= steps; i++)
+            var predInput = new SebbyLib.Prediction.PredictionInput
             {
-                var angle = i * 2 * Math.PI / steps;
-                var point = new Vector3(position.X + radius * (float)Math.Cos(angle), position.Y + radius * (float)Math.Sin(angle), position.Z);
+                From = Variables.Player.ServerPosition,
+                Aoe = true,
+                Collision = Variables.Spells[SpellSlot.W].Collision,
+                Speed = 4000,
+                Delay = float.MaxValue,
+                Radius = range,
+                Unit = units.MaxOrDefault(TargetSelector.GetPriority),
+                Type = SebbyLib.Prediction.SkillshotType.SkillshotCone
+            };
 
-                if (point.Distance(Variables.Player.Position.Extend(finalPos.To3D(), radius)) < 430)
-                {
-                    points.Add(point);
-                    //Utility.DrawCircle(point, 20, System.Drawing.Color.Aqua, 1, 1);
-                }
-            }
-
-            points.RemoveAt(0);
-            points.RemoveAt(1);
-            return points;
+            return SebbyLib.Prediction.Prediction.GetPrediction(predInput); 
         }
     }
 }

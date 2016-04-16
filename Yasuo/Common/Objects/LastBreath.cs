@@ -53,8 +53,11 @@ namespace Yasuo.Common.Objects
                 this.SetMinRemainingAirboneTime();
                 this.SetKnockUpAmount();
                 this.SetDamageDealt();
+                this.SetPriority();
             }
         }
+
+        public int Priority { get; private set; }
 
         public int DangerValue { get; private set; }
 
@@ -66,7 +69,15 @@ namespace Yasuo.Common.Objects
 
         public float DamageDealt { get; private set; }
 
-        public List<Obj_AI_Hero> AffectedEnemies = new List<Obj_AI_Hero>(); 
+        public List<Obj_AI_Hero> AffectedEnemies = new List<Obj_AI_Hero>();
+
+        private void SetPriority()
+        {
+            foreach (var enemy in AffectedEnemies)
+            {
+                Priority += (int) TargetSelector.GetPriority(enemy);
+            }
+        }
 
         private void SetDangerValue()
         {

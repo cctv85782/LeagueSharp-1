@@ -25,13 +25,13 @@
 
         protected override void OnEnable()
         {
-            Game.OnUpdate += this.OnUpdate;
+            Game.OnUpdate += this.OnUpdate2;
             base.OnEnable();
         }
 
         protected override void OnDisable()
         {
-            Game.OnUpdate -= this.OnUpdate;
+            Game.OnUpdate -= this.OnUpdate2;
             base.OnDisable();
         }
 
@@ -40,7 +40,8 @@
             this.Menu = new Menu(this.Name, this.Name);
             this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "[Disabled] Enabled").SetValue(true));
 
-            // Blacklist
+            #region Blacklist
+
             var blacklist = new Menu("Blacklist", this.Name + "Blacklist");
 
             if (HeroManager.Enemies.Count == 0)
@@ -57,25 +58,49 @@
                     blacklist,
                     "Setting a champion to 'on', will make the script not using R for him anymore");
             }
+
             this.Menu.AddSubMenu(blacklist);
 
-            // Spell Settings
-            // Hit Multiple
+            #endregion
+
+            #region Spell specific settings
+
             this.Menu.AddItem(
                 new MenuItem(this.Name + "AOE", "Try to hit multiple").SetValue(true)
                     .SetTooltip(
-                        "If hit count > slider, it will try to hit multiple, else it will aim for a single champion"));
+                        "If this is enabled, the assembly will try to hit multiple targets"));
 
             this.Menu.AddItem(
                 new MenuItem(this.Name + "MinHitAOE", "Min HitCount for AOE").SetValue(new Slider(2, 1, 5)));
 
             this.Menu.AddItem(
-                new MenuItem(this.Name + "MinPlayerHealth", "Min Player Health (%)").SetValue(new Slider(0)));
+                new MenuItem(this.Name + "MinPlayerHealth", "Min Player Health (%)").SetValue(new Slider(10, 0, 100)));
 
-            this.Menu.AddItem(new MenuItem(this.Name + "OverkillCheck", "Overkill Check").SetValue(true)
-                .SetTooltip("if EQ or Q or E will be enough to kill the target Ultimate won't execute"));
+            this.Menu.AddItem(
+                new MenuItem(this.Name + "MaxTargetsMeanHealth", "Max Target(s) Health (%)").SetValue(new Slider(80, 0, 100)));
 
 
+            #region Advanced
+
+            var advanced = new Menu("Advanced", this.Name + "Advanced");
+
+            advanced.AddItem(
+                new MenuItem(advanced.Name + "EvaluationLogic", "Evaluation Logic").SetValue(
+                    new StringList(new[] { "Damage", "Count", "Priority", "Auto" })));
+
+            advanced.AddItem(
+                new MenuItem(advanced.Name + "MaxHealthPercDifference", "Max Health (%) Difference").SetValue(new Slider(40, 0, 100)));
+
+            advanced.AddItem(new MenuItem(advanced.Name + "OverkillCheck", "Overkill Check").SetValue(true)
+                .SetTooltip("If Combo is enough to finish the target it won't execute. Only works on single targets."));
+
+            advanced.AddItem(
+                new MenuItem(advanced.Name + "Disclaimer", "[i] Disclaimer")
+                    .SetTooltip("Changing Values here might destroy the assembly logic, only change values if you know what you are doing!"));
+
+            #endregion
+
+            #endregion
 
 
             this.Parent.Menu.AddSubMenu(this.Menu);
@@ -184,12 +209,74 @@
             
         }
 
+        public void OnUpdate2(EventArgs args)
+        {
+            var executions = new List<Common.Objects.LastBreath>();
+
+            foreach (var hero in HeroManager.Enemies.Where(x => x.IsAirbone()))
+            {
+                var execution = new Common.Objects.LastBreath(hero);
+
+                if (!executions.Contains(execution))
+                {
+                    executions.Add(execution);
+                }
+            }
+
+            var advanced = Menu.SubMenu(this.Name + "advanced");
+
+            Common.Objects.LastBreath possibleExecution = null;
+
+            if (executions.Count == 0)
+            {
+                return;
+            }
+
+            // TODO: ADD safetyvalue/dangervalue
+            switch (advanced.Item("EvaluationMode").GetValue<StringList>().SelectedIndex)
+            {
+                // Damage
+                case 0:
+                    possibleExecution = executions.MaxOrDefault(x => x.DamageDealt);
+                    break;
+                // Count
+                case 1:
+                    possibleExecution = executions.MaxOrDefault(x => x.AffectedEnemies.Count);
+                    break;
+                // Priority
+                case 2:
+                    possibleExecution = executions.MaxOrDefault(x => x.Priority);
+                    break;
+                // Auto
+                case 3:
+                    break;
+            }
+
+            if (possibleExecution != null)
+            {
+                Execute(possibleExecution);
+            }
+        }
+
         private void Execute(Obj_AI_Hero target)
         {
             if (target.IsValid && !target.IsZombie && target.IsAirbone())
             {
                 Variables.Spells[SpellSlot.R].CastOnUnit(target);
             }
+        }
+
+        private void Execute(Common.Objects.LastBreath execution)
+        {
+            if (execution.AffectedEnemies.Count < Menu.Item("MinHitAOE").GetValue<Slider>().Value
+                || Variables.Player.HealthPercent < Menu.Item("MinPlayerHealth").GetValue<Slider>().Value
+                || (execution.AffectedEnemies.Sum(x => x.HealthPercent) / execution.AffectedEnemies.Count) > Menu.Item("MaxTargetsMeanHealth").GetValue<Slider>().Value
+                || !Provider.ShouldCastNow(execution, SweepingBlade.PathCopy))
+            {
+                return;
+            }
+
+            Variables.Spells[SpellSlot.R].CastOnUnit(execution.Target);
         }
     }
 }

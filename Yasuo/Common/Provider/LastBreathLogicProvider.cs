@@ -95,7 +95,7 @@
             }
 
             // Last possible second ultimate
-            if (execution.MinRemainingAirboneTime <= buffer + Game.Ping)
+            if (execution.MinRemainingAirboneTime <= 1 + buffer + Game.Ping)
             {
                 return true;
             }
@@ -122,7 +122,6 @@
             // if a path is given and the path time is shorter than the knockup time
             else
             {
-                // TODO: Add CountEnemiesInRange
                 if (path.PathTime <= execution.MinRemainingAirboneTime + buffer + Game.Ping)
                 {
                     return false;

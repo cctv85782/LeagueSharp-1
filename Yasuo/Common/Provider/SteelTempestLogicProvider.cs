@@ -195,7 +195,7 @@
             return SebbyLib.Prediction.Prediction.GetPrediction(predInput);
         }
 
-        public SebbyLib.Prediction.PredictionOutput GetPrediction(Vector3 from, Obj_AI_Base target, bool aoe)
+        public SebbyLib.Prediction.PredictionOutput GetPrediction(Vector3 from, Obj_AI_Base target, bool aoe, float delay)
         {
             var predInput = new SebbyLib.Prediction.PredictionInput
             {
@@ -203,7 +203,7 @@
                 Aoe = aoe,
                 Collision = Variables.Spells[SpellSlot.Q].Collision,
                 Speed = Variables.Spells[SpellSlot.Q].Speed,
-                Delay = Variables.Spells[SpellSlot.Q].Delay,
+                Delay = Variables.Spells[SpellSlot.Q].Delay + delay,
                 Radius = Variables.Spells[SpellSlot.Q].Range,
                 Unit = target,
                 Type = SkillshotType.SkillshotLine

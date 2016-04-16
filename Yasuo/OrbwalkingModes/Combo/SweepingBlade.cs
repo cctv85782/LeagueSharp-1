@@ -123,6 +123,7 @@
 
             onchampion.AddItem(new MenuItem(this.Name + "Whirlwind", "Smart EQ").SetValue(true));
 
+            this.Menu.AddSubMenu(onchampion);
             #endregion
 
 
