@@ -8,6 +8,7 @@
     using LeagueSharp.Common;
 
     using Yasuo.Common.Classes;
+    using Yasuo.Common.Objects;
     using Yasuo.Common.Provider;
     using Yasuo.Common.Utility;
 
@@ -28,14 +29,12 @@
         protected override void OnEnable()
         {
             Game.OnUpdate += this.OnUpdate;
-            Drawing.OnDraw += this.OnDraw;
             base.OnEnable();
         }
 
         protected override void OnDisable()
         {
             Game.OnUpdate -= this.OnUpdate;
-            Drawing.OnDraw -= this.OnDraw;
             base.OnDisable();
         }
 
@@ -48,8 +47,6 @@
             // Mode
             this.Menu.AddItem(
                 new MenuItem(this.Name + "ModeTarget", "Dash to: ").SetValue(new StringList(new[] { "Mouse", "Auto" })));
-
-            // EQ
 
             #region EQ
 
@@ -117,16 +114,18 @@
             // if EQ will hit more than X units and X units die
             if (this.Menu.Item(this.Name + "EQ").GetValue<bool>())
             {
-                var minionsEq =
-                    MinionManager.GetMinions(
-                        Variables.Player.ServerPosition.Extend(
-                            minion.ServerPosition,
-                            Variables.Spells[SpellSlot.E].Range),
-                        375).Where(x => x.Health <= this.Provider.GetDamage(x));
-
-                if (minionsEq != null && minionsEq.Count() >= this.Menu.Item(this.Name + "MinHitAOE").GetValue<Slider>().Value)
+                if (Variables.Spells[SpellSlot.Q].IsReady(50))
                 {
-                    Execute(minion);
+                    var possibleDashes = minions.Select(unit => new Common.Objects.Dash(Variables.Player.ServerPosition, unit)).ToList();
+
+                    var mostHits = possibleDashes.MaxOrDefault(x => x.KnockUpMinions.Count);
+
+                    if (mostHits.KnockUpMinions.Count >= this.Menu.Item(this.Name + "MinHitAOE").GetValue<Slider>().Value
+                        && Variables.Spells[SpellSlot.Q].Cooldown <= 1
+                        && !minions.Any(x => x.Distance(Variables.Player) <= Variables.Player.AttackRange && x.HealthPercent <= 25))
+                    {
+                        Execute(mostHits.Over);
+                    }
                 }
             }
 
@@ -153,26 +152,14 @@
                     }
                         
                 }
-
-                if (possibleExecutions.Count < 0)
-                {
-                    return;
-                }
-
-                Execute(possibleExecutions.Where(x => this.ProviderTurret.IsSafePosition(Variables.Player.ServerPosition.Extend(x.ServerPosition, Variables.Spells[SpellSlot.E].Range))).MinOrDefault(x => x.Distance(Helper.GetMeanVector2(minions))));
             }
-
-
         }
 
-        public void OnDraw(EventArgs args)
+        private void Execute(Obj_AI_Base target)
         {
-            
-        }
+            var dash = new Common.Objects.Dash(Variables.Player.ServerPosition, target);
 
-        private static void Execute(Obj_AI_Base target)
-        {
-            if (target.IsValidTarget())
+            if (target.IsValidTarget() && ProviderTurret.IsSafePosition(dash.EndPosition))
             {
                 Variables.Spells[SpellSlot.E].CastOnUnit(target);
             }

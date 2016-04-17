@@ -30,6 +30,8 @@
 
         public SweepingBladeLogicProvider ProviderE;
 
+        public TurretLogicProvider ProviderTurret;
+
         protected override void OnEnable()
         {
             Game.OnUpdate += this.OnUpdate;
@@ -81,6 +83,8 @@
         protected override void OnInitialize()
         {
             this.ProviderE = new SweepingBladeLogicProvider();
+
+            this.ProviderTurret = new TurretLogicProvider();
 
             base.OnInitialize();
         }
@@ -158,7 +162,8 @@
 
         private void Execute(Obj_AI_Base target)
         {
-            if (target.IsValidTarget() && target != null)
+            var dash = new Common.Objects.Dash(target);
+            if (target.IsValidTarget() && target != null && ProviderTurret.IsSafePosition(dash.EndPosition))
             {
                 Variables.Spells[SpellSlot.E].CastOnUnit(target);
             }

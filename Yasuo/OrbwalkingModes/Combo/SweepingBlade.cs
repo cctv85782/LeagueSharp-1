@@ -284,7 +284,7 @@
 
                             if (target != null && !target.IsValid && !target.IsZombie)
                             {
-                                if (!this.BlacklistChampions.Contains(target))
+                                if (this.BlacklistChampions.Any() && !this.BlacklistChampions.Contains(target))
                                 {
                                     if (this.Menu.Item("Prediction").GetValue<bool>())
                                     {

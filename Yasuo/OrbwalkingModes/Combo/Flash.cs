@@ -6,9 +6,13 @@
     using LeagueSharp;
     using LeagueSharp.Common;
 
+    using SharpDX;
+
     using Yasuo.Common.Classes;
     using Yasuo.Common.Extensions;
     using Yasuo.Common.Provider;
+
+    using SkillshotType = SebbyLib.Prediction.SkillshotType;
 
     internal class Flash : Child<Combo>
     {
@@ -22,15 +26,21 @@
 
         public FlashLogicProvider Provider;
 
+        public SteelTempestLogicProvider ProviderQ;
+
+        private SpellSlot FlashSlot;
+
         protected override void OnEnable()
         {
             Game.OnUpdate += this.OnUpdate;
+            Obj_AI_Base.OnPlayAnimation += this.OnAnimation;
             base.OnEnable();
         }
 
         protected override void OnDisable()
         {
             Game.OnUpdate -= this.OnUpdate;
+            Obj_AI_Base.OnPlayAnimation -= this.OnAnimation;
             base.OnDisable();
         }
 
@@ -68,6 +78,15 @@
         protected override void OnInitialize()
         {
             this.Provider = new FlashLogicProvider();
+            this.ProviderQ = new SteelTempestLogicProvider();
+
+            foreach (var spell in Variables.Player.Spellbook.Spells)
+            {
+                if (spell.Name == "SummonerFlash")
+                {
+                    this.FlashSlot = spell.Slot;
+                }
+            }
 
             base.OnInitialize();
         }
@@ -89,11 +108,25 @@
 
         }
 
-        private void CastLastBreath(Obj_AI_Hero target)
+        public void OnAnimation(Obj_AI_Base sender, GameObjectPlayAnimationEventArgs args)
         {
-            if (target.IsValid && !target.IsZombie)
+            if (args.Animation == "Spell1_Dash" && sender.IsMe
+                && Variables.Player.HasQ3() && Variables.Player.Spellbook.CanUseSpell(FlashSlot) == SpellState.Ready)
             {
-                Variables.Spells[SpellSlot.R].Cast(target);
+                var targets = HeroManager.Enemies.Where(x => x.IsValid && x.Distance(Variables.Player) <= Variables.Spells[SpellSlot.Q].Range).ToList();
+
+                var preds = targets.Select(unit => this.ProviderQ.GetPrediction(unit, true, SkillshotType.SkillshotCircle)).ToList();
+
+
+                Execute(Game.CursorPos);
+            }
+        }
+
+        private void Execute(Vector3 position)
+        {
+            if (!position.IsWall() && position.IsValid())
+            {
+                Variables.Player.Spellbook.CastSpell(this.FlashSlot, position);
             }
         }
     }

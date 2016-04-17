@@ -20,21 +20,26 @@ namespace Yasuo
     {
         /**
          TODO:
+            Legend:
+            + = Add
+            ~ = Change
+            # = Rethink
+            - = Remove
+            * = Bugfix
         
             Sweeping Blade: (low - med)
             + Detection of Trundle/J4/Anivia Walls while pathfinding
             + Killsteal
 
             Steel Tempest: (high)
-            + Predictions seems wrong
             + Interrupt spells
             + Anti Gapcloser
             + Killsteal
-            + Q while gapclosing
+            + (80%) Q while gapclosing
             + 3Q Ultimate Dodge
             
             Flash: (low)
-            + EQ Flash
+            + (50%) EQ Flash
             + Q Flash
 
             Windwall: (low - med)
@@ -42,10 +47,10 @@ namespace Yasuo
             + WQ Animation canceling
             + Precautional Windwall
 
-            Last Breath: (high)
-            + Overkill
-            + Fix NRE
-            + Do not towerdive option
+            Last Breath: (very high)
+            ~ Overkill
+            * Fix NRE
+            # Do not towerdive option
 
             TurretLogicProvider: (med)
             + Fix Exception
@@ -59,6 +64,7 @@ namespace Yasuo
             + Add Tower dive logic
             + Fix Prediction
             + Fix Under Tower Checks
+            ~ Making Assembly SDK Only
         
         */
 
@@ -102,6 +108,8 @@ namespace Yasuo
                     if (!Variables.SupportedChampions.Contains(Variables.Player.ChampionName))
                     {
                         Menu.AddItem(new MenuItem("ChampionNotSupported", "Champion is not supported"));
+                        Menu.AddToMainMenu();
+
                         Variables.Stop = true;
                         return;
                     }

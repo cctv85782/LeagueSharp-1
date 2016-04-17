@@ -33,7 +33,7 @@ namespace Yasuo.Common.Objects
         public LastBreath(Obj_AI_Hero unit)
         {
             ProviderR = new LastBreathLogicProvider();
-            ProviderTurret = new TurretLogicProvider();
+            //ProviderTurret = new TurretLogicProvider();
 
             if (unit != null && unit.IsValidTarget())
             {

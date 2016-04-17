@@ -27,6 +27,7 @@ namespace Yasuo
             if (Player.IsDashing())
             {
                 q.SetSkillshot(GetQDelay, 375, float.MaxValue, false, SkillshotType.SkillshotCircle);
+                q.Range = 450;
                 q.MinHitChance = HitChance.High;
             }
             else
@@ -147,7 +148,7 @@ namespace Yasuo
             },
             {
                 SpellSlot.R, new Spell(SpellSlot.R, 1200)
-            }
+            },
         };
     }
 }

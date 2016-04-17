@@ -211,6 +211,23 @@
 
             return SebbyLib.Prediction.Prediction.GetPrediction(predInput);
         }
+
+        public SebbyLib.Prediction.PredictionOutput GetPrediction(Obj_AI_Base target, bool aoe, SebbyLib.Prediction.SkillshotType skillshotType)
+        {
+            var predInput = new SebbyLib.Prediction.PredictionInput
+            {
+                From = Variables.Player.ServerPosition,
+                Aoe = aoe,
+                Collision = Variables.Spells[SpellSlot.Q].Collision,
+                Speed = Variables.Spells[SpellSlot.Q].Speed,
+                Delay = Variables.Spells[SpellSlot.Q].Delay,
+                Radius = Variables.Spells[SpellSlot.Q].Range,
+                Unit = target,
+                Type = skillshotType
+            };
+
+            return SebbyLib.Prediction.Prediction.GetPrediction(predInput);
+        }
     }
 }
     

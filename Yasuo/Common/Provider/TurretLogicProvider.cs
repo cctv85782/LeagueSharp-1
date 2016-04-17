@@ -54,12 +54,13 @@
                     // We can onehit the turret, there are not much enemies near and we won't die from the next turret shot
                     if (turret.Health + turret.PhysicalShield <= Variables.Player.GetAutoAttackDamage(turret)
                         && turret.CountEnemiesInRange(turret.AttackRange) < 2
-                        && Variables.Player.Health > turret.GetAutoAttackDamage(Variables.Player)
+                        && Variables.Player.Health > turret.GetAutoAttackDamage(Variables.Player) * 2
                         && position.Distance(turret.ServerPosition) <= Variables.Player.AttackRange)
                     {
                         return true;
                     }
 
+                    // Turret is focusing something else and there are new targets that are not we in range
                     if (target != null && !target.IsMe
                         && this.CountAttackableUnitsInRange(turret.Position, turret.AttackRange) > 1
                         && target.Health >= turret.GetAutoAttackDamage((Obj_AI_Base)target))
@@ -87,7 +88,7 @@
             }
 
             var minions = MinionManager.GetMinions(position, range).Where(minion => minion.IsValidTarget());
-            var heroes = HeroManager.Allies.Where(ally => ally.Distance(position) <= range + ally.BoundingRadius && ally.IsValidTarget());
+            var heroes = HeroManager.Allies.Where(ally => ally.Distance(position) <= range + ally.BoundingRadius && ally.IsValidTarget() && !ally.IsMe);
 
             return minions.Count() + heroes.Count();
         }
