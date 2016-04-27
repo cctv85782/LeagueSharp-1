@@ -8,9 +8,12 @@
     using LeagueSharp.Common;
 
     using Yasuo.Common.Classes;
+    using Yasuo.Common.Extensions;
     using Yasuo.Common.Objects;
     using Yasuo.Common.Provider;
     using Yasuo.Common.Utility;
+
+    using Dash = Common.Objects.Dash;
 
     internal class SweepingBlade : Child<LastHit>
     {
@@ -20,9 +23,9 @@
             this.OnLoad();
         }
 
-        public override string Name => "Sweeping Blade";
+        public override string Name => "(E) Sweeping Blade";
 
-        public SweepingBladeLogicProvider Provider;
+        public SweepingBladeLogicProvider ProviderE;
 
         public TurretLogicProvider ProviderTurret;
 
@@ -43,7 +46,32 @@
             this.Menu = new Menu(this.Name, this.Name);
             this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
 
-            
+            #region Champion Specific Range Settings
+
+            var settingsChampDepen = new Menu("Champion Dependent", this.Name + "ChampionDependent");
+
+            if (HeroManager.Enemies.Count == 0)
+            {
+                settingsChampDepen.AddItem(new MenuItem(settingsChampDepen.Name + "null", "No enemies found"));
+            }
+            else
+            {
+                foreach (var x in HeroManager.Enemies)
+                {
+                    settingsChampDepen.AddItem(
+                        new MenuItem(settingsChampDepen.Name + x.ChampionName, x.ChampionName).SetValue(
+                            new Slider((int) x.AttackRange + (int)(GlobalVariables.Player.BoundingRadius / 2) + 100)));
+                }
+
+                settingsChampDepen.AddItem(
+                    new MenuItem(settingsChampDepen.Name + "information", "[i] informations").SetTooltip(
+                        "Changing values will change how close you dash to a champion while lasthitting"));
+            }
+
+            this.Menu.AddSubMenu(settingsChampDepen);
+
+            #endregion
+
             // Mode
             this.Menu.AddItem(
                 new MenuItem(this.Name + "ModeTarget", "Dash to: ").SetValue(new StringList(new[] { "Mouse", "Auto" })));
@@ -67,12 +95,18 @@
 
             #endregion
 
+            this.Menu.AddItem(new MenuItem(this.Name + "NoSkillshot", "Don't E into Skillshots").SetValue(true));
+
+            this.Menu.AddItem(new MenuItem(this.Name + "NoTurret", "Don't E into Turret").SetValue(true));
+
+            this.Menu.AddItem(new MenuItem(this.Name + "NoEnemy", "Don't E into Enemies").SetValue(true));
+
             this.Parent.Menu.AddSubMenu(this.Menu);
         }
 
         protected override void OnInitialize()
         {
-            this.Provider = new SweepingBladeLogicProvider();
+            this.ProviderE = new SweepingBladeLogicProvider();
             this.ProviderTurret = new TurretLogicProvider();
 
             base.OnInitialize();
@@ -80,51 +114,129 @@
 
         public void OnUpdate(EventArgs args)
         {
-            if (Variables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.LastHit
-                || !Variables.Spells[SpellSlot.E].IsReady())
+            if (GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.LastHit
+                || !GlobalVariables.Spells[SpellSlot.E].IsReady())
             {
                 return;
             }
 
-            Obj_AI_Base minion = null;
-            List<Obj_AI_Base> minions = MinionManager.GetMinions(
-                Variables.Player.ServerPosition,
-                Variables.Spells[SpellSlot.E].Range,
-                MinionTypes.All,
-                MinionTeam.Enemy,
-                MinionOrderTypes.None);
+            var minions = MinionManager.GetMinions(
+                            GlobalVariables.Player.ServerPosition,
+                            GlobalVariables.Spells[SpellSlot.E].Range,
+                            MinionTypes.All,
+                            MinionTeam.NotAlly,
+                            MinionOrderTypes.None);
+
+            var dashes = new List<Dash>();
+
+            if (minions.Any())
+            {
+                dashes = minions.Where(x => !x.HasBuff("YasuoDashScalar") && x.Distance(GlobalVariables.Player) <= GlobalVariables.Spells[SpellSlot.E].Range).Select(minion => new Common.Objects.Dash(minion)).ToList();
+            }
+
+            foreach (var dash in dashes.ToList())
+            {
+                if (Menu.Item(this.Name + "NoSkillshot").GetValue<bool>())
+                {
+                    if (!dash.InSkillshot)
+                    {
+                        continue;
+                    }
+                }
+
+                if (Menu.Item(this.Name + "NoTurret").GetValue<bool>())
+                {
+                    if (ProviderTurret.IsSafePosition(dash.EndPosition))
+                    {
+                        continue;
+                    }
+                }
+
+                if (Menu.Item(this.Name + "NoEnemy").GetValue<bool>())
+                {
+                    var range = 500;
+
+                    if (dash.EndPosition.CountEnemiesInRange(range) == 0)
+                    {
+                        continue;
+                    }
+                }
+
+                dashes.Remove(dash);
+            }
 
             switch (this.Menu.Item(this.Name + "ModeTarget").GetValue<StringList>().SelectedIndex)
             {
                 case 0:
-                    minion = MinionManager.GetMinions(Game.CursorPos, 475).Where(x => !x.HasBuff("YasuoDashWrapper") && x.Distance(Variables.Player) <= Variables.Spells[SpellSlot.E].Range)
-                        .OrderByDescending(x => x.Health).FirstOrDefault();
+                    if (dashes.Any())
+                    {
+                        foreach (var dash in dashes.Where(dash => dash.EndPosition.Distance(Game.CursorPos) < dash.StartPosition.Distance(Game.CursorPos)))
+                        {
+                            if (!dash.IsWallDash)
+                            {
+                                // Minion will die and no other minions are in killable range
+                                if (dash.Unit.Health < this.ProviderE.GetDamage(dash.Unit)
+                                    && !minions.Any(
+                                        x =>
+                                        !x.Equals(dash.Unit)
+                                        && (x.Distance(GlobalVariables.Player) <= GlobalVariables.Player.AttackRange)
+                                        || (GlobalVariables.Spells[SpellSlot.Q].IsReady(100)
+                                            && x.Distance(GlobalVariables.Player) <= GlobalVariables.Spells[SpellSlot.Q].Range)))
+                                {
+                                    if (GlobalVariables.Debug)
+                                    {
+                                        Console.WriteLine(@"LaneClear: SweepingBlade > Killing killable unit");
+                                    }
+
+                                    this.Execute(dash.Unit);
+                                }
+                            }
+                        }
+                    }
                     break;
                 case 1:
-                    minion = MinionManager.GetMinions(Variables.Player.ServerPosition, 475).Where(x => !x.HasBuff("YasuoDashWrapper"))
-                        .OrderByDescending(x => x.Health).FirstOrDefault();
-                    break;
-            }
+                    if (dashes.Any())
+                    {
+                        foreach (var dash in dashes)
+                        {
+                            if (!dash.IsWallDash)
+                            {
+                                // Minion will die and no other minions are in killable range
+                                if (dash.Unit.Health < this.ProviderE.GetDamage(dash.Unit)
+                                    && !minions.Any(
+                                        x =>
+                                        !x.Equals(dash.Unit)
+                                        && (x.Distance(GlobalVariables.Player) <= GlobalVariables.Player.AttackRange)
+                                        || (GlobalVariables.Spells[SpellSlot.Q].IsReady(100)
+                                            && x.Distance(GlobalVariables.Player) <= GlobalVariables.Spells[SpellSlot.Q].Range)))
+                                {
+                                    if (GlobalVariables.Debug)
+                                    {
+                                        Console.WriteLine(@"LaneClear: SweepingBlade > Killing killable unit");
+                                    }
 
-            if (minion == null)
-            {
-                return;
+                                    this.Execute(dash.Unit);
+                                }
+                            }
+                        }
+                    }
+                    break;
             }
 
             // if EQ will hit more than X units and X units die
             if (this.Menu.Item(this.Name + "EQ").GetValue<bool>())
             {
-                if (Variables.Spells[SpellSlot.Q].IsReady(50))
+                if (GlobalVariables.Spells[SpellSlot.Q].IsReady(50))
                 {
-                    var possibleDashes = minions.Select(unit => new Common.Objects.Dash(Variables.Player.ServerPosition, unit)).ToList();
+                    var possibleDashes = minions.Select(unit => new Common.Objects.Dash(GlobalVariables.Player.ServerPosition, unit)).ToList();
 
                     var mostHits = possibleDashes.MaxOrDefault(x => x.KnockUpMinions.Count);
 
                     if (mostHits.KnockUpMinions.Count >= this.Menu.Item(this.Name + "MinHitAOE").GetValue<Slider>().Value
-                        && Variables.Spells[SpellSlot.Q].Cooldown <= 1
-                        && !minions.Any(x => x.Distance(Variables.Player) <= Variables.Player.AttackRange && x.HealthPercent <= 25))
+                        && GlobalVariables.Spells[SpellSlot.Q].Cooldown <= 1
+                        && !minions.Any(x => x.Distance(GlobalVariables.Player) <= GlobalVariables.Player.AttackRange && x.HealthPercent <= 25))
                     {
-                        Execute(mostHits.Over);
+                        Execute(mostHits.Unit);
                     }
                 }
             }
@@ -144,7 +256,7 @@
                 {
                     foreach (var y in enemies.Where(z => z.HealthPercent > 10))
                     {
-                        var newPos = Variables.Player.ServerPosition.Extend(x.ServerPosition, Variables.Spells[SpellSlot.E].Range);
+                        var newPos = GlobalVariables.Player.ServerPosition.Extend(x.ServerPosition, GlobalVariables.Spells[SpellSlot.E].Range);
                         if (newPos.Distance(y.ServerPosition) < y.AttackRange)
                         {
                             possibleExecutions.Add(x);
@@ -157,11 +269,11 @@
 
         private void Execute(Obj_AI_Base target)
         {
-            var dash = new Common.Objects.Dash(Variables.Player.ServerPosition, target);
+            var dash = new Common.Objects.Dash(GlobalVariables.Player.ServerPosition, target);
 
             if (target.IsValidTarget() && ProviderTurret.IsSafePosition(dash.EndPosition))
             {
-                Variables.Spells[SpellSlot.E].CastOnUnit(target);
+                GlobalVariables.Spells[SpellSlot.E].CastOnUnit(target);
             }
         }
     }

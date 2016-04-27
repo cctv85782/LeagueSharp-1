@@ -13,22 +13,22 @@
         #region Fields
 
         /// <summary>
-        ///     If there is a big version jump that indicates an important update
+        ///     force update
         /// </summary>
-        public bool ForceUpdate = false;
+        public bool ForceUpdate;
 
         /// <summary>
-        ///     The assembly version
+        ///     The local version
         /// </summary>
         public Version LocalVersion = Assembly.GetCallingAssembly().GetName().Version;
 
         /// <summary>
-        ///     If an update is available
+        ///     update available
         /// </summary>
-        public bool UpdateAvailable = false;
+        public bool UpdateAvailable ;
 
         /// <summary>
-        ///     Where to search for an update
+        ///     The git hub path
         /// </summary>
         private readonly string gitHubPath;
 
@@ -36,6 +36,10 @@
 
         #region Constructors and Destructors
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="VersionChecker" /> class.
+        /// </summary>
+        /// <param name="gitHubPath">The git hub path.</param>
         public VersionChecker(string gitHubPath)
         {
             this.gitHubPath = gitHubPath;
@@ -46,10 +50,10 @@
         #region Public Methods and Operators
 
         /// <summary>
-        ///     Checks if an updated version is available
+        ///     Checks the new version.
         /// </summary>
-        /// <param name="path"></param>
-        public void Check(string path)
+        /// <param name="path">The path.</param>
+        public void CheckNewVersion(string path)
         {
             try
             {
@@ -88,6 +92,10 @@
 
         #region Methods
 
+        /// <summary>
+        ///     Gets the new version.
+        /// </summary>
+        /// <returns></returns>
         private Version GetNewVersion()
         {
             try

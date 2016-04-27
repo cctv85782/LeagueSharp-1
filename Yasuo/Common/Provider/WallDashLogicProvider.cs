@@ -5,50 +5,75 @@ namespace Yasuo.Common.Provider
 
     using SharpDX;
 
-    using Color = System.Drawing.Color;
-
     // TODO:  https://github.com/Aferii/LeagueSharp/tree/master/NavMeshRemake
 
-    static class WallDashLogicProvider
+    public class WallDashLogicProvider
     {
-        public static bool IsWallDash(this Obj_AI_Base unit, float dashRange, float minWallWidth = 50)
+        #region Constructors and Destructors
+
+        public WallDashLogicProvider()
         {
-            return IsWallDash(unit.ServerPosition, dashRange, minWallWidth);
         }
 
-        public static bool IsWallDash(this Vector3 position, float dashRange, float minWallWidth = 50)
+        #endregion
+
+        #region Enums
+
+        /// <summary>
+        ///     The dash range
+        /// </summary>
+        private enum DashRange
         {
-            var dashEndPos = Variables.Player.Position.Extend(position, dashRange);
-            var firstWallPoint = GetFirstWallPoint(ObjectManager.Player.Position, dashEndPos);
+            Fixed,
 
-            if (firstWallPoint.Equals(Vector3.Zero))
-            {
-                // No Wall
-                return false;
-            }
-
-            if (dashEndPos.IsWall())
-            // End Position is in Wall
-            {
-                var wallWidth = GetWallWidth(firstWallPoint, dashEndPos);
-
-                if (wallWidth > minWallWidth
-                    && wallWidth - firstWallPoint.Distance(dashEndPos) < wallWidth * 0.4f)
-                {
-                    return true;
-                }
-            }
-            else
-            // End Position is not a Wall
-            {
-                return true;
-            }
-
-            return false;
+            Dynamic
         }
+
+        /// <summary>
+        ///     The dash type
+        /// </summary>
+        private enum DashType
+        {
+            Unit,
+
+            Dynamic,
+
+            Static,
+
+            NoDash
+        }
+
+        /// <summary>
+        ///     The unit type
+        /// </summary>
+        private enum UnitType
+        {
+            All,
+
+            Allied,
+
+            NotAllied,
+
+            Enemy,
+
+            NotAllyForEnemy,
+
+            Neutral
+        }
+
+        #endregion
+
+        #region Public Methods and Operators
 
         // BUG Navmesh seems broken
-        public static Vector3 GetFirstWallPoint(Vector3 start, Vector3 end, int step = 1)
+        /// <summary>
+        ///     Gets the first wall point.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="step">The step.</param>
+        /// <returns></returns>
+        public Vector3 GetFirstWallPoint(Vector3 start, Vector3 end, int step = 1)
         {
             if (start.IsValid() && end.IsValid())
             {
@@ -67,7 +92,15 @@ namespace Yasuo.Common.Provider
             return Vector3.Zero;
         }
 
-        public static float GetWallWidth(Vector3 start, Vector3 direction, int maxWallWidth = 1000, int step = 1)
+        /// <summary>
+        ///     Gets the width of the wall.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="direction">The direction.</param>
+        /// <param name="maxWallWidth">Maximum width of the wall.</param>
+        /// <param name="step">The step.</param>
+        /// <returns></returns>
+        public float GetWallWidth(Vector3 start, Vector3 direction, int maxWallWidth = 1000, int step = 1)
         {
             var thickness = 0f;
 
@@ -78,7 +111,8 @@ namespace Yasuo.Common.Provider
 
             for (var i = 0; i < maxWallWidth; i = i + step)
             {
-                if (NavMesh.GetCollisionFlags(start.Extend(direction, i)) == CollisionFlags.Wall || start.Extend(direction, i).IsWall())
+                if (NavMesh.GetCollisionFlags(start.Extend(direction, i)) == CollisionFlags.Wall
+                    || start.Extend(direction, i).IsWall())
                 {
                     thickness += step;
                 }
@@ -90,5 +124,56 @@ namespace Yasuo.Common.Provider
 
             return thickness;
         }
+
+        /// <summary>
+        ///     Determines whether dash is walljump.
+        /// </summary>
+        /// <param name="unit">The unit.</param>
+        /// <param name="dashRange">The dash range.</param>
+        /// <param name="minWallWidth">Minimum width of the wall.</param>
+        /// <returns></returns>
+        public bool IsWallDash(Obj_AI_Base unit, float dashRange, float minWallWidth = 50)
+        {
+            return IsWallDash(unit.ServerPosition, dashRange, minWallWidth);
+        }
+
+        /// <summary>
+        ///     Determines whether dash is walljump.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <param name="dashRange">The dash range.</param>
+        /// <param name="minWallWidth">Minimum width of the wall.</param>
+        /// <returns></returns>
+        public bool IsWallDash(Vector3 position, float dashRange, float minWallWidth = 50)
+        {
+            var dashEndPos = GlobalVariables.Player.Position.Extend(position, dashRange);
+            var firstWallPoint = GetFirstWallPoint(ObjectManager.Player.Position, dashEndPos);
+
+            if (firstWallPoint.Equals(Vector3.Zero))
+            {
+                // No Wall
+                return false;
+            }
+
+            if (dashEndPos.IsWall())
+                // End Position is in Wall
+            {
+                var wallWidth = GetWallWidth(firstWallPoint, dashEndPos);
+
+                if (wallWidth > minWallWidth && wallWidth - firstWallPoint.Distance(dashEndPos) < wallWidth * 0.4f)
+                {
+                    return true;
+                }
+            }
+            else
+            // End Position is not a Wall
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        #endregion
     }
 }

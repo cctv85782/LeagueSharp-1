@@ -5,6 +5,7 @@
     using System.Linq;
 
     using LeagueSharp;
+    using LeagueSharp.Data.Enumerations;
     using LeagueSharp.SDK;
 
     using SharpDX;
@@ -14,78 +15,65 @@
 
     using Geometry = LeagueSharp.Common.Geometry;
     using Point = Yasuo.Common.Algorithm.Djikstra.Point;
-    using Variables = Yasuo.Variables;
 
     // TODO: PRIORITY LOW > Adding offset, different dash types - to make the logic behind this usable for every other dash in the game too
     // TODO: PRIORITY LOW > Making GridGenerator universal
+    // TODO: Add HealthPredictions on Minions/Units
 
     /// <summary>
-    ///     Grid or "Connection" Generator: http://i.imgur.com/XomUJvK.png
+    ///     Class to generate grids considering DashRange, DashType, UnitType
     /// </summary>
     public class GridGenerator
     {
         #region Fields
 
         /// <summary>
-        ///     The point where you start everything from. Usually the player position.
+        ///     The base point (where everything starts, most likely the Player Position)
         /// </summary>
-        public Point BasePoint = new Point(Variables.Player.ServerPosition);
+        public Point BasePoint = new Point(GlobalVariables.Player.ServerPosition);
 
         /// <summary>
-        ///     All possible pathes
+        ///     The grid
         /// </summary>
         public Grid Grid;
 
         /// <summary>
-        ///     Thresholder
-        ///     Every connection that got created
+        ///     The maximum connections
         /// </summary>
-        public List<Connection> SharedConnections = new List<Connection>();
+        private int maxConnections = 50000;
 
         /// <summary>
-        ///     Every point is definitely a dash end position and a possible dash start position
+        ///     The path deepness
         /// </summary>
-        public List<Point> SharedPoints = new List<Point>();
+        private int pathDeepness = 5;
 
-        private enum DashRange
-        {
-            Fixed, Dynamic
-        }
+        /// <summary>
+        ///     The shared connections
+        /// </summary>
+        private List<Connection> sharedConnections = new List<Connection>();
 
-        private enum DashType
-        {
-            Unit, Dynamic
-        }
-
-        private enum UnitType
-        {
-            All, Allied, NotAllied, Enemy, NotAllyForEnemy, Neutral
-        }
+        /// <summary>
+        ///     The shared points
+        /// </summary>
+        private List<Point> sharedPoints = new List<Point>();
 
         #endregion
 
         #region Constructors and Destructors
 
-        // TODO: Add HealthPredictions on Minions/Units
-
         /// <summary>
-        ///     Intializes the grid generator and creates a new thread
+        ///     Initializes a new instance of the <see cref="GridGenerator" /> class.
         /// </summary>
-        /// <param name="units">units that get taken into calculations</param>
-        /// <param name="maxConnections">maximum amount of connections</param>
-        /// <param name="endPosition">Information for the grid</param>
-        internal GridGenerator(List<Obj_AI_Base> units, int maxConnections, Vector3 endPosition)
+        /// <param name="units">The units.</param>
+        /// <param name="endPosition">The end position.</param>
+        internal GridGenerator(List<Obj_AI_Base> units, Vector3 endPosition)
         {
             Units = units;
 
-            if (Units.Contains(Variables.Player))
+            if (Units.Contains(GlobalVariables.Player))
             {
-                Units.Remove(Variables.Player);
+                Units.Remove(GlobalVariables.Player);
             }
-
-            // Setting default settings
-            MaxConnections = maxConnections;
-            PathDeepness = 20;
 
             EndPosition = endPosition;
             EndPoint = new Point(EndPosition);
@@ -93,10 +81,68 @@
 
         #endregion
 
+        #region Enums
+
+        /// <summary>
+        ///     The dash range
+        /// </summary>
+        private enum DashRange
+        {
+            Fixed,
+
+            Dynamic
+        }
+
+        /// <summary>
+        ///     The dash type
+        /// </summary>
+        private enum DashType
+        {
+            Unit,
+
+            Dynamic,
+
+            Static,
+
+            NoDash
+        }
+
+        /// <summary>
+        ///     The unit type
+        /// </summary>
+        private enum UnitType
+        {
+            All,
+
+            Allied,
+
+            NotAllied,
+
+            Enemy,
+
+            NotAllyForEnemy,
+
+            Neutral
+        }
+
+        #endregion
+
         #region Public Properties
 
+        /// <summary>
+        ///     Gets the end point.
+        /// </summary>
+        /// <value>
+        ///     The end point.
+        /// </value>
         public Point EndPoint { get; }
 
+        /// <summary>
+        ///     Gets or sets the end position.
+        /// </summary>
+        /// <value>
+        ///     The end position.
+        /// </value>
         public Vector3 EndPosition { get; set; }
 
         #endregion
@@ -104,18 +150,53 @@
         #region Properties
 
         /// <summary>
-        ///     Maximum amount of connections
+        ///     Gets or sets the maximum connections.
         /// </summary>
-        internal int MaxConnections { get; }
+        /// <value>
+        ///     The maximum connections.
+        /// </value>
+        internal int MaxConnections
+        {
+            get
+            {
+                return this.maxConnections;
+            }
+            set
+            {
+                if (value > 0)
+                {
+                    this.maxConnections = value;
+                }
+            }
+        }
 
         /// <summary>
-        ///     Maximum amount of dashes per path
+        ///     Gets or sets the path deepness.
         /// </summary>
-        internal int PathDeepness { get; }
+        /// <value>
+        ///     The path deepness.
+        /// </value>
+        internal int PathDeepness
+        {
+            get
+            {
+                return this.pathDeepness;
+            }
+            set
+            {
+                if (value > 0)
+                {
+                    this.pathDeepness = value;
+                }
+            }
+        }
 
         /// <summary>
-        ///     All units
+        ///     Gets the units.
         /// </summary>
+        /// <value>
+        ///     The units.
+        /// </value>
         internal List<Obj_AI_Base> Units { get; private set; }
 
         #endregion
@@ -129,14 +210,14 @@
         {
             try
             {
-                if (Variables.Debug)
+                if (GlobalVariables.Debug)
                 {
                     Console.WriteLine(@"GridGenerator.Cs > ConnectAllPoints()");
                 }
 
                 foreach (var x in Grid.Connections.ToList())
                 {
-                    var path = Variables.Player.GetPath(x.To.Position, EndPosition);
+                    var path = GlobalVariables.Player.GetPath(x.To.Position, EndPosition);
 
                     var firstpoint = x.To;
 
@@ -179,21 +260,23 @@
         {
             try
             {
-                if (Variables.Debug)
+                if (GlobalVariables.Debug)
                 {
                     Console.WriteLine(@"GridGenerator.Cs > Generate()");
                 }
 
                 // Setting up the first points
-                foreach (var unit in Units.Where(x => Geometry.Distance(x, BasePoint.Position) <= Variables.Spells[SpellSlot.E].Range))
+                foreach (var unit in
+                    Units.Where(
+                        x => Geometry.Distance(x, BasePoint.Position) <= GlobalVariables.Spells[SpellSlot.E].Range))
                 {
-                    var pointToAdd = new Point(new Dash(Variables.Player.ServerPosition, unit).EndPosition);
-                    SharedPoints.Add(pointToAdd);
-                    SharedConnections.Add(new Connection(BasePoint, pointToAdd, unit));
+                    var pointToAdd = new Point(new Dash(GlobalVariables.Player.ServerPosition, unit).EndPosition);
+                    this.sharedPoints.Add(pointToAdd);
+                    this.sharedConnections.Add(new Connection(BasePoint, pointToAdd, unit));
                 }
 
                 // Connectin StartPoint to EndPoint
-                var path2 = Variables.Player.GetPath(BasePoint.Position, EndPosition);
+                var path2 = GlobalVariables.Player.GetPath(BasePoint.Position, EndPosition);
 
                 for (var i = 0; i < path2.Count() - 1; i++)
                 {
@@ -213,47 +296,51 @@
 
                     var connection = new Connection(start, end);
 
-                    if (!SharedConnections.Contains(connection))
+                    if (!this.sharedConnections.Contains(connection))
                     {
-                        SharedConnections.Add(connection);
+                        this.sharedConnections.Add(connection);
                     }
                 }
 
-                SharedPoints.Add(EndPoint);
+                this.sharedPoints.Add(EndPoint);
 
                 // Starts generating possible pathes
                 for (var i = 0; i < PathDeepness; i++)
                 {
-                    if (!SharedPoints.Any())
+                    if (!this.sharedPoints.Any())
                     {
                         break;
                     }
 
-                    foreach (var point in SharedPoints.ToList())
+                    foreach (var point in this.sharedPoints.ToList())
                     {
                         var localBlacklist = Backtrace(point, MaxConnections);
 
-                        var unitCount = this.Units.Where(unit => Geometry.Distance(unit, point.Position) <= Variables.Spells[SpellSlot.E].Range)
-                                                     .Count(unit => !localBlacklist.Contains(unit));
+                        var unitCount =
+                            this.Units.Where(
+                                unit =>
+                                Geometry.Distance(unit, point.Position) <= GlobalVariables.Spells[SpellSlot.E].Range)
+                                .Count(unit => !localBlacklist.Contains(unit));
 
                         // Remove point from list and continue because there are no valid dashes available around that point
                         if (unitCount == 0)
                         {
-                            if (Variables.Debug)
+                            if (GlobalVariables.Debug)
                             {
-                                Console.WriteLine(@"[GridGenerator] Removing Point because no dashes are available for that point anymore");
+                                Console.WriteLine(
+                                    @"[GridGenerator] Removing Point because no dashes are available for that point anymore");
                             }
 
-                            SharedPoints.Remove(point);
+                            this.sharedPoints.Remove(point);
                             continue;
                         }
 
                         this.ProcessPoint(point, localBlacklist);
-                        SharedPoints.Remove(point);
+                        this.sharedPoints.Remove(point);
                     }
                 }
 
-                Grid = new Grid(SharedConnections, BasePoint, EndPoint);
+                Grid = new Grid(this.sharedConnections, BasePoint, EndPoint);
             }
             catch (Exception ex)
             {
@@ -267,60 +354,39 @@
         /// </summary>
         public void RemoveDisconnectedConnections()
         {
-            if (Variables.Debug)
+            if (GlobalVariables.Debug)
             {
                 Console.WriteLine(@"GridGenerator.Cs > RemoveDisconnectedConnections()");
             }
 
             var toBeRemoved = new List<Connection>();
 
-            foreach (var connection in Grid?.Connections)
-            {
-                var backtracedPath = Backtrace(connection.From);
+            var connections = this.Grid?.Connections;
 
-                if (backtracedPath == null || backtracedPath.Count < 0)
+            if (connections != null)
+            {
+                foreach (var connection in connections.ToList())
                 {
-                    return;
+                    var backtracedPath = this.Backtrace(connection.From);
+
+                    if (backtracedPath == null || backtracedPath.Count < 0)
+                    {
+                        return;
+                    }
+
+                    var all = backtracedPath.All(x => x.From != this.Grid.BasePoint);
+
+                    if (all)
+                    {
+                        toBeRemoved.Add(connection);
+                    }
                 }
 
-                var all = backtracedPath.All(x => x.From != this.Grid.BasePoint);
-
-                if (all)
+                foreach (var connection in toBeRemoved.ToList())
                 {
-                    toBeRemoved.Add(connection);
+                    connections.Remove(connection);
                 }
             }
-
-            foreach (var connection in toBeRemoved)
-            {
-                this.Grid?.Connections?.Remove(connection);
-            }
-        }
-
-        /// <summary>
-        ///     Removes a path completely from the grid and all following connections that got impossible to execute too
-        /// </summary>
-        /// <param name="point"></param>
-        public void RemovePath(Point point)
-        {
-            var toGetRemoved = Backtrace(point);
-
-            foreach (var item in toGetRemoved)
-            {
-                Grid?.Points?.Remove(item.To);
-                Grid?.Connections?.Remove(item);
-            }
-
-            this.RemoveDisconnectedConnections();
-        }
-
-        /// <summary>
-        ///     Removes a path completely from the grid and all following connections that got impossible to execute too
-        /// </summary>
-        /// <param name="connection"></param>
-        public void RemovePath(Connection connection)
-        {
-            RemovePath(connection.To);
         }
 
         // TODO PRIORITY: MEDIUM - LOW
@@ -329,18 +395,19 @@
         /// </summary>
         public void RemovePathesThroughSkillshots(List<Skillshot> skillshots)
         {
-            if (Variables.Debug)
+            if (GlobalVariables.Debug)
             {
                 Console.WriteLine(@"GridGenerator.Cs > RemovePathesThroughSkillshots()");
             }
 
-            if (Grid.Connections.Count == 0)
+            if (Grid?.Connections == null || !this.Grid.Connections.Any() || Grid.Points == null)
             {
-                return; 
+                return;
             }
+
             var skillshotDict = new Dictionary<Skillshot, Geometry.Polygon>();
 
-            if (skillshots.Count > 0)
+            if (skillshots.Any())
             {
                 foreach (var skillshot in skillshots)
                 {
@@ -370,28 +437,34 @@
                 }
             }
 
-            foreach (var skillshot in skillshotDict)
+            if (skillshotDict.Any())
             {
-                foreach (var point in Grid.Points)
+                foreach (var skillshot in skillshotDict)
                 {
-                    if (skillshot.Value.IsInside(point.Position))
-                    {
-                        RemovePath(point);
-                    }
-                }
+                    //foreach (var point in Grid.Points.ToList())
+                    //{
+                    //    if (skillshot.Value.IsInside(point.Position))
+                    //    {
+                    //        Grid?.Points?.Remove(point);
+                    //    }   
+                    //}
 
-                foreach (var connection in Grid.Connections)
-                {
-                    var clipperpath = skillshot.Value.ToClipperPath();
-                    var connectionpolygon = new Geometry.Polygon.Line(connection.From.Position, connection.To.Position);
-                    var connectionclipperpath = connectionpolygon.ToClipperPath();
-
-                    if (clipperpath.Intersect(connectionclipperpath).Any())
+                    foreach (var connection in Grid.Connections)
                     {
-                        RemovePath(connection);
+                        var clipperpath = skillshot.Value.ToClipperPath();
+                        var connectionpolygon = new Geometry.Polygon.Line(connection.From.Position, connection.To.Position);
+                        var connectionclipperpath = connectionpolygon.ToClipperPath();
+
+                        if (clipperpath.Intersect(connectionclipperpath).Any())
+                        {
+                            Console.WriteLine(@"Removing Connection");
+                            Grid?.Connections?.Remove(connection);
+                        }
                     }
                 }
             }
+
+            this.RemoveDisconnectedConnections();
         }
 
         #endregion
@@ -421,7 +494,7 @@
                 {
                     limiter++;
 
-                    if (SharedConnections.Count == 0)
+                    if (this.sharedConnections.Count == 0)
                     {
                         break;
                     }
@@ -431,7 +504,7 @@
                     {
                         #region Debug
 
-                        if (Variables.Debug)
+                        if (GlobalVariables.Debug)
                         {
                             Console.WriteLine(@"[BT] FINISHED: Reached Base Point");
                         }
@@ -441,12 +514,12 @@
                         break;
                     }
 
-                    foreach (var x in SharedConnections.ToList())
+                    foreach (var x in this.sharedConnections.ToList())
                     {
                         if (previousPoint.Position == x.To.Position)
                         {
                             //Console.WriteLine(@"[BT] Adding result");
-                            result.Add(x.Over);
+                            result.Add(x.Unit);
                             previousPoint = x.From;
                         }
                     }
@@ -455,7 +528,7 @@
                     {
                         #region Debug
 
-                        if (Variables.Debug)
+                        if (GlobalVariables.Debug)
                         {
                             Console.WriteLine(@"[BT] FINISHED: Reached Limit");
                         }
@@ -521,10 +594,9 @@
         /// <param name="blacklist"></param>
         private void ProcessPoint(Point point, List<Obj_AI_Base> blacklist)
         {
-            foreach (
-                var unit in
-                    this.Units.Where(
-                        unit => Geometry.Distance(unit, point.Position) <= Variables.Spells[SpellSlot.E].Range))
+            foreach (var unit in
+                this.Units.Where(
+                    unit => Geometry.Distance(unit, point.Position) <= GlobalVariables.Spells[SpellSlot.E].Range))
             {
                 // Blacklist Check
                 if (blacklist.Count > 0 && blacklist.Contains(unit))
@@ -540,12 +612,12 @@
                 // Overriding Endpoint. Connection class does not contain any wallcheck. Dash class does.
                 var tempConnection = new Connection(point, endPoint, unit) { To = endPoint };
 
-                if (Variables.Debug)
+                if (GlobalVariables.Debug)
                 {
                     Console.WriteLine(@"Adding new Point to SharedPoints: " + endPoint.Position);
                 }
 
-                SharedConnections.Add(tempConnection);
+                this.sharedConnections.Add(tempConnection);
             }
         }
 
@@ -554,13 +626,13 @@
         /// </summary>
         private void Reset()
         {
-            SharedConnections = new List<Connection>();
-            SharedPoints = new List<Point>();
+            this.sharedConnections = new List<Connection>();
+            this.sharedPoints = new List<Point>();
 
             Units = new List<Obj_AI_Base>();
-            Grid = new Grid(new List<Connection>(), null, null);
+            Grid = new Grid(new List<Connection>(), null);
 
-            if (Variables.Debug)
+            if (GlobalVariables.Debug)
             {
                 Console.WriteLine(@"[Reset] Reseted");
             }
@@ -571,10 +643,10 @@
         /// </summary>
         private void SoftReset()
         {
-            SharedConnections = new List<Connection>();
-            SharedPoints = new List<Point>();
+            this.sharedConnections = new List<Connection>();
+            this.sharedPoints = new List<Point>();
 
-            if (Variables.Debug)
+            if (GlobalVariables.Debug)
             {
                 Console.WriteLine(@"[SoftReset] Reseted");
             }

@@ -1,26 +1,24 @@
 ﻿// TODO: Much.
+
 namespace Yasuo.Common.Provider
 {
-    using LeagueSharp;
     using LeagueSharp.Common;
-    using LeagueSharp.Common.Data;
 
-    class PotionLogicProvider
+    // TODO
+    internal class PotionLogicProvider
     {
-        public int PotionValue(int amount)
-        {
-            var value = 150;
-            var mod = (int) Variables.Player.FlatHPRegenMod;
-            
-            // TODO: Add Resolve Masteries
+        #region Public Methods and Operators
 
-            return (value * mod) * amount;
-        }
-
+        /// <summary>
+        ///     Predicted health recovered
+        /// </summary>
+        /// <param name="time">The time.</param>
+        /// <param name="amount">The amount.</param>
+        /// <returns></returns>
         public float HealthRecovered(int time = int.MaxValue, int amount = 0)
         {
             // No potions
-            if (!Items.HasItem(2003, Variables.Player))
+            if (!Items.HasItem(2003, GlobalVariables.Player))
             {
                 return 0;
             }
@@ -34,9 +32,25 @@ namespace Yasuo.Common.Provider
 
             if (amount == 0)
             {
-
             }
             return PotionValue(amount);
         }
+
+        /// <summary>
+        ///     Value of one potion(s)
+        /// </summary>
+        /// <param name="amount">The amount.</param>
+        /// <returns></returns>
+        public int PotionValue(int amount)
+        {
+            var value = 150;
+            var mod = (int)GlobalVariables.Player.FlatHPRegenMod;
+
+            // TODO: Add Resolve Masteries
+
+            return (value * mod) * amount;
+        }
+
+        #endregion
     }
 }

@@ -9,26 +9,86 @@
 
     internal class KillSteal : Child<Modules>
     {
+        #region Constructors and Destructors
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="KillSteal" /> class.
+        /// </summary>
+        /// <param name="parent">The parent.</param>
         public KillSteal(Modules parent)
             : base(parent)
         {
             this.OnLoad();
         }
 
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        ///     Gets the name.
+        /// </summary>
+        /// <value>
+        ///     The name.
+        /// </value>
         public override string Name => "Killsteal";
 
-        protected override void OnEnable()
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        ///     Executes the specified target.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="spellslot">The spellslot.</param>
+        public void Execute(Obj_AI_Base target, SpellSlot spellslot)
         {
-            Game.OnUpdate += this.OnUpdate;
-            base.OnEnable();
+            GlobalVariables.Spells[spellslot].Cast(target);
         }
 
+        /// <summary>
+        ///     Raises the <see cref="E:Update" /> event.
+        /// </summary>
+        /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
+        public void OnUpdate(EventArgs args)
+        {
+            // TODO: Add Logic for every spell.
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        ///     Called when [disable].
+        /// </summary>
         protected override void OnDisable()
         {
             Game.OnUpdate -= this.OnUpdate;
             base.OnDisable();
         }
 
+        /// <summary>
+        ///     Called when [enable].
+        /// </summary>
+        protected override void OnEnable()
+        {
+            Game.OnUpdate += this.OnUpdate;
+            base.OnEnable();
+        }
+
+        /// <summary>
+        ///     Called when [initialize].
+        /// </summary>
+        protected override void OnInitialize()
+        {
+            base.OnInitialize();
+        }
+
+        /// <summary>
+        ///     Called when [load].
+        /// </summary>
         protected override sealed void OnLoad()
         {
             this.Menu = new Menu(this.Name, this.Name);
@@ -50,20 +110,6 @@
             this.Parent.Menu.AddSubMenu(this.Menu);
         }
 
-        protected override void OnInitialize()
-        {
-            base.OnInitialize();
-        }
-
-        public void OnUpdate(EventArgs args)
-        {
-            // TODO: Add Logic for every spell.
-        }
-
-        public void Execute(Obj_AI_Base target, SpellSlot spellslot)
-        {
-            Variables.Spells[spellslot].Cast(target);
-        }
+        #endregion
     }
 }
-

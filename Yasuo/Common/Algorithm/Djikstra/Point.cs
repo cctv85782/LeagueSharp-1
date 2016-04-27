@@ -4,8 +4,12 @@
 
     using SharpDX;
 
+    using Color = System.Drawing.Color;
+
     public class Point
     {
+        #region Constructors and Destructors
+
         /// <summary>
         ///     Constructor
         /// </summary>
@@ -20,12 +24,22 @@
         /// <summary>
         ///     Empty Constructor
         /// </summary>
-        public Point() { }
+        public Point()
+        {
+        }
+
+        #endregion
+
+        #region Public Properties
 
         /// <summary>
         ///     Position of the point
         /// </summary>
         public Vector3 Position { get; set; }
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         ///     Draws a circle around the point
@@ -33,9 +47,11 @@
         /// <param name="radius">Radius of the circle</param>
         /// <param name="width">Width of the circle</param>
         /// <param name="color">Color of the circle</param>
-        public void Draw(int radius, int width, System.Drawing.Color color)
+        public void Draw(int radius, int width, Color color)
         {
             Render.Circle.DrawCircle(Position, radius, color, width);
         }
+
+        #endregion
     }
 }

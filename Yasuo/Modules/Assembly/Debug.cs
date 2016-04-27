@@ -12,6 +12,10 @@
     {
         #region Constructors and Destructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Debug"/> class.
+        /// </summary>
+        /// <param name="parent">The parent.</param>
         public Debug(Assembly parent)
             : base(parent)
         {
@@ -22,24 +26,39 @@
 
         #region Public Properties
 
+        /// <summary>
+        /// Gets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
         public override string Name => "Debug";
 
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// Called when [disable].
+        /// </summary>
         protected override void OnDisable()
         {
-            Variables.Debug = false;
+            GlobalVariables.Debug = false;
             base.OnDisable();
         }
 
+        /// <summary>
+        /// Called when [enable].
+        /// </summary>
         protected override void OnEnable()
         {
-            Variables.Debug = true;
+            GlobalVariables.Debug = true;
             base.OnEnable();
         }
 
+        /// <summary>
+        /// Called when [load].
+        /// </summary>
         protected override sealed void OnLoad()
         {
             this.Menu = new Menu(this.Name, this.Name);

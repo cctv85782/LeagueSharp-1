@@ -3,47 +3,47 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
 
     using LeagueSharp;
     using LeagueSharp.Common;
-    using SDK = LeagueSharp.SDK;
-
-    using Microsoft.SqlServer.Server;
 
     using SharpDX;
 
-    using Yasuo.Common.Extensions;
     using Yasuo.Common.Provider;
+
+    using SpellDatabase = LeagueSharp.SDK.SpellDatabase;
 
     public class Helper
     {
+        #region Fields
+
+        /// <summary>
+        ///     The E logicprovicer
+        /// </summary>
         public SweepingBladeLogicProvider ProviderE = new SweepingBladeLogicProvider();
 
-        #region general
+        #endregion
 
-        internal static float GetTick()
+        #region Public Properties
+
+        /// <summary>
+        ///     Returns the Q Cast Delay
+        /// </summary>
+        public static float GetQDelay
         {
-            return (int)DateTime.Now.Subtract(Variables.AssemblyLoadTime).TotalMilliseconds;
+            get
+            {
+                if (GlobalVariables.Player.IsDashing())
+                {
+                    return 500;
+                }
+                return (float)(1 - Math.Min((ObjectManager.Player.AttackSpeedMod - 1) / 0.172, 0.66f));
+            }
         }
 
         #endregion
 
-        #region vectors
-
-        public static float GetPathLenght(Vector3[] path)
-        {
-            float result = 0f;
-
-            for (int i = 0; i < path.Count(); i++)
-            {
-                if (i + 1 != path.Count())
-                {
-                    result += path[i].Distance(path[i + 1]);
-                }
-            }
-            return result;
-        }
+        #region Public Methods and Operators
 
         /// <summary>
         ///     Returns the center from a given list of units
@@ -137,6 +137,20 @@
             return new Vector3(x / vectors.Count, y / vectors.Count, z / vectors.Count);
         }
 
+        public static float GetPathLenght(Vector3[] path)
+        {
+            var result = 0f;
+
+            for (var i = 0; i < path.Count(); i++)
+            {
+                if (i + 1 != path.Count())
+                {
+                    result += path[i].Distance(path[i + 1]);
+                }
+            }
+            return result;
+        }
+
         public float GetMeanDistance(List<Vector3> vectors, Vector3 vector)
         {
             var result = vectors.Sum(v => v.Distance(vector));
@@ -146,76 +160,11 @@
 
         #endregion
 
-        #region spells
-
-        /// <summary>
-        ///     Returns the Q Cast Delay
-        /// </summary>
-        public static float GetQDelay
-        {
-            get
-            {
-                if (Variables.Player.IsDashing())
-                {
-                    return 500;
-                }
-                return (float)(1 - Math.Min((ObjectManager.Player.AttackSpeedMod - 1) / 0.172, 0.66f));
-            }
-        }
+        #region Methods
 
         internal static float DistanceToTarget(Obj_AI_Base unit)
         {
             return unit.Distance(TargetSelector.GetSelectedTarget());
-        }
-
-        /// <summary>
-        ///     Returns Spell Range by Spell Name
-        /// </summary>
-        /// <param name="spellName"></param>
-        /// <returns>float</returns>
-        internal static float GetSpellRange(string spellName)
-        {
-            if (spellName != null)
-            {
-                return SDK.SpellDatabase.GetByName(spellName).Range;
-            }
-            return 0;
-        }
-
-        /// <summary>
-        ///     Returns Spell Range by Missile Name
-        /// </summary>
-        /// <param name="missileName"></param>
-        /// <returns>float</returns>
-        internal static float GetSpellRange2(string missileName)
-        {
-            if (missileName != null)
-            {
-                return SDK.SpellDatabase.GetByMissileName(missileName).Range;
-            }
-            return 0;
-        }
-
-        /// <summary>
-        ///     Returns Spell Width based on Spell Name
-        /// </summary>
-        /// <param name="spellName"></param>
-        /// <returns>float</returns>
-        internal static float GetSpellWidth(string spellName)
-        {
-            if (spellName == "YasuoWMovingWall")
-            {
-                return (250 + (50 * Variables.Spells[SpellSlot.W].Level));
-            }
-            if (spellName == "YasuoQ")
-            {
-                return 20;
-            }
-            if (spellName == "YasuoQ2")
-            {
-                return 90;
-            }
-            return spellName != null ? SDK.SpellDatabase.GetByName(spellName).Width : 0;
         }
 
         /// <summary>
@@ -234,7 +183,7 @@
                 case "YasuoQ2":
                     return 1400;
                 default:
-                    return SDK.SpellDatabase.GetByName(spellName).MissileSpeed;
+                    return SpellDatabase.GetByName(spellName).MissileSpeed;
             }
         }
 
@@ -247,9 +196,64 @@
         {
             if (spellName != null)
             {
-                return SDK.SpellDatabase.GetByName(spellName).Delay;
+                return SpellDatabase.GetByName(spellName).Delay;
             }
             return 0;
+        }
+
+        /// <summary>
+        ///     Returns Spell Range by Spell Name
+        /// </summary>
+        /// <param name="spellName"></param>
+        /// <returns>float</returns>
+        internal static float GetSpellRange(string spellName)
+        {
+            if (spellName != null)
+            {
+                return SpellDatabase.GetByName(spellName).Range;
+            }
+            return 0;
+        }
+
+        /// <summary>
+        ///     Returns Spell Range by Missile Name
+        /// </summary>
+        /// <param name="missileName"></param>
+        /// <returns>float</returns>
+        internal static float GetSpellRange2(string missileName)
+        {
+            if (missileName != null)
+            {
+                return SpellDatabase.GetByMissileName(missileName).Range;
+            }
+            return 0;
+        }
+
+        /// <summary>
+        ///     Returns Spell Width based on Spell Name
+        /// </summary>
+        /// <param name="spellName"></param>
+        /// <returns>float</returns>
+        internal static float GetSpellWidth(string spellName)
+        {
+            if (spellName == "YasuoWMovingWall")
+            {
+                return (250 + (50 * GlobalVariables.Spells[SpellSlot.W].Level));
+            }
+            if (spellName == "YasuoQ")
+            {
+                return 20;
+            }
+            if (spellName == "YasuoQ2")
+            {
+                return 90;
+            }
+            return spellName != null ? SpellDatabase.GetByName(spellName).Width : 0;
+        }
+
+        internal static float GetTick()
+        {
+            return (int)DateTime.Now.Subtract(GlobalVariables.AssemblyLoadTime).TotalMilliseconds;
         }
 
         #endregion

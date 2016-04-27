@@ -12,7 +12,7 @@ namespace Yasuo
     using Yasuo.Common.Objects;
     using Yasuo.Common.Utility;
 
-    internal class Variables : Helper
+    internal class GlobalVariables : Helper
     {
         /// <summary>
         ///     Method that adjusts the spells to the current circumstances

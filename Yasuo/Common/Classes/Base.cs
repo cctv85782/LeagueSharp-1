@@ -8,27 +8,97 @@
 
     public abstract class Base
     {
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Base"/> class.
+        /// </summary>
         protected Base()
         {
-            Variables.Assembly.OnUnload += this.OnUnload;
+            GlobalVariables.Assembly.OnUnload += this.OnUnload;
         }
 
-        public abstract bool Enabled { get; }
+        #endregion
 
-        public abstract string Name { get; }
+        #region Public Events
 
-        public bool Initialized { get; protected set; }
-
-        public bool Unloaded { get; protected set; }
-
-        public Menu Menu { get; set; }
-
-        public event EventHandler OnInitialized;
-
-        public event EventHandler OnEnabled;
-
+        /// <summary>
+        /// Occurs when [on disabled].
+        /// </summary>
         public event EventHandler OnDisabled;
 
+        /// <summary>
+        /// Occurs when [on enabled].
+        /// </summary>
+        public event EventHandler OnEnabled;
+
+        /// <summary>
+        /// Occurs when [on initialized].
+        /// </summary>
+        public event EventHandler OnInitialized;
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Base"/> is enabled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if enabled; otherwise, <c>false</c>.
+        /// </value>
+        public abstract bool Enabled { get; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="Base"/> is initialized.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if initialized; otherwise, <c>false</c>.
+        /// </value>
+        public bool Initialized { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the menu.
+        /// </summary>
+        /// <value>
+        /// The menu.
+        /// </value>
+        public Menu Menu { get; set; }
+
+        /// <summary>
+        /// Gets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public abstract string Name { get; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="Base"/> is unloaded.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if unloaded; otherwise, <c>false</c>.
+        /// </value>
+        public bool Unloaded { get; protected set; }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Called when [disable].
+        /// </summary>
+        protected virtual void OnDisable()
+        {
+            if (this.Initialized && this.Enabled && !this.Unloaded)
+            {
+                this.OnDisabled.RaiseEvent(null, null);
+            }
+        }
+
+        /// <summary>
+        /// Called when [enable].
+        /// </summary>
         protected virtual void OnEnable()
         {
             if (this.Unloaded)
@@ -47,14 +117,9 @@
             }
         }
 
-        protected virtual void OnDisable()
-        {
-            if (this.Initialized && this.Enabled && !this.Unloaded)
-            {
-                this.OnDisabled.RaiseEvent(null, null);
-            }
-        }
-
+        /// <summary>
+        /// Called when [initialize].
+        /// </summary>
         protected virtual void OnInitialize()
         {
             if (this.Initialized || this.Unloaded)
@@ -67,6 +132,11 @@
             this.Initialized = true;
         }
 
+        /// <summary>
+        /// Called when [unload].
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="UnloadEventArgs"/> instance containing the event data.</param>
         protected virtual void OnUnload(object sender, UnloadEventArgs args)
         {
             if (this.Unloaded)
@@ -82,14 +152,24 @@
             }
         }
 
+        #endregion
+
         public class UnloadEventArgs : EventArgs
         {
+            #region Fields
+
             public bool Final;
+
+            #endregion
+
+            #region Constructors and Destructors
 
             public UnloadEventArgs(bool final = false)
             {
                 this.Final = final;
             }
+
+            #endregion
         }
     }
 }

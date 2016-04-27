@@ -35,10 +35,10 @@
         {
             try
             {
-                Variables.Assembly = new Assembly(Variables.Name);
+                GlobalVariables.Assembly = new Assembly(GlobalVariables.Name);
                 
 
-                if (Variables.Stop) { return; }
+                if (GlobalVariables.Stop) { return; }
 
                 #region parents
 
@@ -61,7 +61,7 @@
 
                 CustomEvents.Game.OnGameLoad += delegate
                 {
-                    Variables.Assembly.Features.AddRange(
+                    GlobalVariables.Assembly.Features.AddRange(
                         new List<IChild>
                             {
                                 // Core
@@ -91,12 +91,12 @@
                                 //new WindWallProtector(protector)
                             });
 
-                    foreach (var feature in Variables.Assembly.Features)
+                    foreach (var feature in GlobalVariables.Assembly.Features)
                     {
                         feature.HandleEvents();
                     }
 
-                    DrawBanner(Variables.Prefix + " " + Variables.Name, 1337, 6000);
+                    DrawBanner(GlobalVariables.Prefix + " " + GlobalVariables.Name, 1337, 6000);
                 };
 
                 #endregion

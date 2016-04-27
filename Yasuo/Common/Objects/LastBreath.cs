@@ -12,29 +12,45 @@ namespace Yasuo.Common.Objects
 
     using SharpDX;
 
-    using Yasuo.Common.Provider;
     using Yasuo.Common.Extensions;
-    using Yasuo.Common.Utility;
+    using Yasuo.Common.Provider;
 
     using Color = System.Drawing.Color;
 
-    class LastBreath
+    internal class LastBreath
     {
-        public LastBreathLogicProvider ProviderR;
+        #region Fields
 
-        public TurretLogicProvider ProviderTurret;
+        /// <summary>
+        ///     The affected enemies
+        /// </summary>
+        public List<Obj_AI_Hero> AffectedEnemies = new List<Obj_AI_Hero>();
 
-        public Vector3 StartPosition { get; private set; }
+        /// <summary>
+        ///     The R logicprovider
+        /// </summary>
+        public LastBreathLogicProvider ProviderR = new LastBreathLogicProvider();
 
-        public Vector3 EndPosition { get; private set; }
+        /// <summary>
+        ///     The turret logicprovider
+        /// </summary>
+        public TurretLogicProvider ProviderTurret = new TurretLogicProvider();
 
+        /// <summary>
+        ///     The target
+        /// </summary>
         public Obj_AI_Hero Target;
 
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="LastBreath" /> class.
+        /// </summary>
+        /// <param name="unit">The unit.</param>
         public LastBreath(Obj_AI_Hero unit)
         {
-            ProviderR = new LastBreathLogicProvider();
-            //ProviderTurret = new TurretLogicProvider();
-
             if (unit != null && unit.IsValidTarget())
             {
                 this.Target = unit;
@@ -44,7 +60,7 @@ namespace Yasuo.Common.Objects
             {
                 AffectedEnemies.Add(Target);
 
-                this.StartPosition = Variables.Player.ServerPosition;
+                this.StartPosition = GlobalVariables.Player.ServerPosition;
 
                 this.SetEndPosition();
                 this.SetAffectedEnemies();
@@ -57,33 +73,178 @@ namespace Yasuo.Common.Objects
             }
         }
 
-        public int Priority { get; private set; }
+        #endregion
 
-        public int DangerValue { get; private set; }
+        #region Public Properties
 
-        public float TravelDistance { get; private set; }
-
-        public int EnemiesInUlt { get; private set; }
-
-        public float MinRemainingAirboneTime { get; private set; }
-
+        /// <summary>
+        ///     Gets the damage dealt.
+        /// </summary>
+        /// <value>
+        ///     The damage dealt.
+        /// </value>
         public float DamageDealt { get; private set; }
 
-        public List<Obj_AI_Hero> AffectedEnemies = new List<Obj_AI_Hero>();
+        /// <summary>
+        ///     Gets the danger value.
+        /// </summary>
+        /// <value>
+        ///     The danger value.
+        /// </value>
+        public int DangerValue { get; private set; }
 
-        private void SetPriority()
+        /// <summary>
+        ///     Gets the end position.
+        /// </summary>
+        /// <value>
+        ///     The end position.
+        /// </value>
+        public Vector3 EndPosition { get; private set; }
+
+        /// <summary>
+        ///     Gets the enemies in ult.
+        /// </summary>
+        /// <value>
+        ///     The enemies in ult.
+        /// </value>
+        public int EnemiesInUlt { get; private set; }
+
+        // TODO: Priority High
+        /// <summary>
+        ///     Gets a value indicating whether this execution is overkill.
+        /// </summary>
+        /// <value>
+        ///     <c>true</c> if this execution is overkill; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsOverkill { get; private set; }
+
+        // TODO
+        /// <summary>
+        ///     Gets the mean health.
+        /// </summary>
+        /// <value>
+        ///     The mean health.
+        /// </value>
+        public float MeanHealth { get; private set; }
+
+        // TODO
+        /// <summary>
+        ///     Gets the mean health percentage.
+        /// </summary>
+        /// <value>
+        ///     The mean health percentage.
+        /// </value>
+        public float MeanHealthPercentage { get; private set; }
+
+        /// <summary>
+        ///     Gets the minimum remaining airbone time.
+        /// </summary>
+        /// <value>
+        ///     The minimum remaining airbone time.
+        /// </value>
+        public float MinRemainingAirboneTime { get; private set; }
+
+        /// <summary>
+        ///     Gets the priority.
+        /// </summary>
+        /// <value>
+        ///     The priority.
+        /// </value>
+        public int Priority { get; private set; }
+
+        /// <summary>
+        ///     Gets the start position.
+        /// </summary>
+        /// <value>
+        ///     The start position.
+        /// </value>
+        public Vector3 StartPosition { get; }
+
+        /// <summary>
+        ///     Gets the travel distance.
+        /// </summary>
+        /// <value>
+        ///     The travel distance.
+        /// </value>
+        public float TravelDistance { get; private set; }
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        ///     Draws this instance.
+        /// </summary>
+        public void Draw()
         {
-            foreach (var enemy in AffectedEnemies)
+            var color = Color.DeepSkyBlue;
+
+            Drawing.DrawLine(
+                Drawing.WorldToScreen(this.StartPosition),
+                Drawing.WorldToScreen(this.EndPosition.Extend(GlobalVariables.Player.ServerPosition, 200)),
+                1f,
+                Color.White);
+
+            Drawing.DrawCircle(this.EndPosition, 200, Color.White);
+
+            foreach (var enemy in this.AffectedEnemies)
             {
-                Priority += (int) TargetSelector.GetPriority(enemy);
+                Drawing.DrawCircle(enemy.Position, enemy.BoundingRadius, color);
             }
         }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        ///     Sets the affected enemies.
+        /// </summary>
+        private void SetAffectedEnemies()
+        {
+            try
+            {
+                if (this.EndPosition == Vector3.Zero || this.EndPosition.CountEnemiesInRange(475) <= 0)
+                {
+                    return;
+                }
+
+                foreach (
+                    var enemy in
+                        HeroManager.Enemies.Where(
+                            x => x != Target && x.IsAirbone() && !x.IsZombie && x.Distance(this.EndPosition) <= 400))
+                {
+                    this.AffectedEnemies.Add(enemy);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+        /// <summary>
+        ///     Sets the damage dealt.
+        /// </summary>
+        private void SetDamageDealt()
+        {
+            if (AffectedEnemies != null)
+            {
+                foreach (var enemy in this.AffectedEnemies)
+                {
+                    DamageDealt += GlobalVariables.Spells[SpellSlot.R].GetDamage(enemy);
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Sets the danger value.
+        /// </summary>
         private void SetDangerValue()
         {
             try
             {
-                foreach (var enemy in HeroManager.Enemies.Where(x => !x.IsAirbone() && x.Distance(this.EndPosition) <= 750))
+                foreach (var x in HeroManager.Enemies.Where(x => !x.IsAirbone() && x.Distance(this.EndPosition) <= 750))
                 {
                     DangerValue += 1;
                 }
@@ -95,18 +256,15 @@ namespace Yasuo.Common.Objects
             }
             catch (Exception ex)
             {
-                Console.WriteLine(@"[SetDangerValue:] "+ex); 
+                Console.WriteLine(@"[SetDangerValue:] " + ex);
             }
-
 
             // TODO: Add Skillshots
         }
 
-        private void SetTravelDistance()
-        {
-            this.TravelDistance = this.StartPosition.Distance(this.EndPosition);
-        }
-
+        /// <summary>
+        ///     Sets the end position.
+        /// </summary>
         private void SetEndPosition()
         {
             var endPosition = Vector3.Zero;
@@ -121,7 +279,7 @@ namespace Yasuo.Common.Objects
                 var turret =
                     ObjectManager.Get<Obj_AI_Turret>()
                         .Where(x => !x.IsAlly && x.Health > 0)
-                        .MinOrDefault(x => x.Distance(Variables.Player));
+                        .MinOrDefault(x => x.Distance(GlobalVariables.Player));
 
                 if (turret != null && turret.IsValid)
                 {
@@ -139,6 +297,9 @@ namespace Yasuo.Common.Objects
             EndPosition = endPosition;
         }
 
+        /// <summary>
+        ///     Sets the knock up amount.
+        /// </summary>
         private void SetKnockUpAmount()
         {
             if (AffectedEnemies != null)
@@ -147,75 +308,37 @@ namespace Yasuo.Common.Objects
             }
         }
 
+        /// <summary>
+        ///     Sets the minimum remaining airbone time.
+        /// </summary>
         private void SetMinRemainingAirboneTime()
         {
             if (AffectedEnemies != null)
             {
-                MinRemainingAirboneTime = AffectedEnemies.MinOrDefault(x => x.RemainingAirboneTime()).RemainingAirboneTime();
+                MinRemainingAirboneTime =
+                    AffectedEnemies.MinOrDefault(x => x.RemainingAirboneTime()).RemainingAirboneTime();
             }
         }
 
-        private void SetDamageDealt()
+        /// <summary>
+        ///     Sets the priority.
+        /// </summary>
+        private void SetPriority()
         {
-            if (AffectedEnemies != null)
+            foreach (var enemy in AffectedEnemies)
             {
-                foreach (var enemy in this.AffectedEnemies)
-                {
-                    DamageDealt += Variables.Spells[SpellSlot.R].GetDamage(enemy);
-                }
-            }
-            if (DamageDealt > 0)
-            {
-                Game.PrintChat("Predicted Dmg dealt: " + DamageDealt);
+                Priority += (int)TargetSelector.GetPriority(enemy);
             }
         }
 
-        private void SetAffectedEnemies()
+        /// <summary>
+        ///     Sets the travel distance.
+        /// </summary>
+        private void SetTravelDistance()
         {
-            try
-            {
-                if (this.EndPosition == Vector3.Zero || this.EndPosition.CountEnemiesInRange(475) <= 0)
-                {
-                    return;
-                }
-
-                foreach (var enemy in HeroManager.Enemies.Where(x => x.IsAirbone() && !x.IsZombie && x.Distance(this.EndPosition) <= 475))
-                {
-                    this.AffectedEnemies.Add(enemy);
-                }
-
-                if (AffectedEnemies.Count > 0)
-                {
-                    Game.PrintChat("Enemies knocked up: " + this.AffectedEnemies.Count);
-                }
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                
-            }
-
+            this.TravelDistance = this.StartPosition.Distance(this.EndPosition);
         }
 
-        public void Draw()
-        {
-            var color = Color.DeepSkyBlue;
-
-            Drawing.DrawLine(
-                Drawing.WorldToScreen(this.StartPosition),
-                Drawing.WorldToScreen(this.EndPosition.Extend(Variables.Player.ServerPosition, 200)),
-                1f,
-                Color.White);
-
-
-            Drawing.DrawCircle(this.EndPosition, 200, Color.White);
-
-            foreach (var enemy in this.AffectedEnemies)
-            {
-                Drawing.DrawCircle(enemy.Position, enemy.BoundingRadius, color);
-            }
-        }
-
+        #endregion
     }
 }

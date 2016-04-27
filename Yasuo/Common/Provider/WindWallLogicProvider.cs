@@ -1,34 +1,58 @@
 namespace Yasuo.Common.Provider
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     using LeagueSharp;
     using LeagueSharp.Common;
-    using SDK = LeagueSharp.SDK;
+    using LeagueSharp.SDK;
 
     using SharpDX;
 
     using Yasuo.Common.Extensions;
 
-    using Variables = Yasuo.Variables;
+    using Prediction = SebbyLib.Prediction.Prediction;
+    using PredictionInput = SebbyLib.Prediction.PredictionInput;
+    using PredictionOutput = SebbyLib.Prediction.PredictionOutput;
+    using SkillshotType = SebbyLib.Prediction.SkillshotType;
+    using TargetSelector = LeagueSharp.Common.TargetSelector;
 
-    class WindWallLogicProvider
+    // TODO: Maybe Block spells that aiming an enemy and are blockable i.e: Lux W
+    // TODO: E when W not needed (ie. Ally wont get hit)
+    // TODO: E behind W when skillshot is targeted (ie. cait ult) will hit you or next AA will kill you or do much dmg
+    // TODO: Anti Gragas Insec (more of a fun thing actually.)
+    // TODO: Crit in AA
+    // TODO: 1v1 SafeZone logic
+    // TODO: Clean up code
+    // TODO: Annie Stun, Katarina Ult
+
+    public class WindWallLogicProvider
     {
-        // TODO: Maybe Block spells that aiming an enemy and are blockable i.e: Lux W
-        // TODO: E when W not needed (ie. Ally wont get hit)
-        // TODO: E behind W when skillshot is targeted (ie. cait ult) will hit you or next AA will kill you or do much dmg
-        // TODO: Anti Gragas Insec (more of a fun thing actually.)
-        // TODO: Crit in AA
-        // TODO: 1v1 SafeZone logic
-        // TODO: Clean up code
-        // TODO: Annie Stun, Katarina Ult
+        #region Constructors and Destructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WindWallLogicProvider"/> class.
+        /// </summary>
+        public WindWallLogicProvider()
+        {
+        }
+
+        #endregion
+
+        #region Enums
+
+        /// <summary>
+        ///     Determines the "usemode"
+        /// </summary>
         public enum WindWallMode
         {
-            Protecting, SelfProtecting 
+            Protecting,
+
+            SelfProtecting
         }
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         ///     Returns the optimal cast position for multiple skillshots
@@ -36,9 +60,9 @@ namespace Yasuo.Common.Provider
         /// <param name="skillshots"></param>
         /// <param name="mode"></param>
         /// <returns></returns>
-        public Vector3 GetCastPosition(SDK.Skillshot[] skillshots, WindWallMode mode)
+        public Vector3 GetCastPosition(Skillshot[] skillshots, WindWallMode mode)
         {
-            var skillshotDict = new Dictionary<SDK.Skillshot, Vector3>();
+            var skillshotDict = new Dictionary<Skillshot, Vector3>();
             var result = Vector3.Zero;
 
             foreach (var skillshot in skillshots)
@@ -75,21 +99,29 @@ namespace Yasuo.Common.Provider
         /// <param name="prediction"></param>
         /// <param name="range"></param>
         /// <returns></returns>
-        public SebbyLib.Prediction.PredictionOutput GetPrecautionaryPosition(List<Obj_AI_Hero> units, bool prediction = true, float range = 1000)
+        public PredictionOutput GetPrecautionaryPosition(
+            List<Obj_AI_Hero> units,
+            bool prediction = true,
+            float range = 1000)
         {
-            var predInput = new SebbyLib.Prediction.PredictionInput
-            {
-                From = Variables.Player.ServerPosition,
-                Aoe = true,
-                Collision = Variables.Spells[SpellSlot.W].Collision,
-                Speed = 4000,
-                Delay = float.MaxValue,
-                Radius = range,
-                Unit = units.MaxOrDefault(TargetSelector.GetPriority),
-                Type = SebbyLib.Prediction.SkillshotType.SkillshotCone
-            };
+            var predInput = new PredictionInput
+                                {
+                                    From = GlobalVariables.Player.ServerPosition,
+                                    Aoe = true,
+                                    Collision = GlobalVariables.Spells[SpellSlot.W].Collision,
+                                    Speed = 4000,
+                                    Delay = float.MaxValue,
+                                    Radius = range,
+                                    Unit =
+                                        EnumerableExtensions.MaxOrDefault(
+                                            units,
+                                            TargetSelector.GetPriority),
+                                    Type = SkillshotType.SkillshotCone
+                                };
 
-            return SebbyLib.Prediction.Prediction.GetPrediction(predInput); 
+            return Prediction.GetPrediction(predInput);
         }
+
+        #endregion
     }
 }

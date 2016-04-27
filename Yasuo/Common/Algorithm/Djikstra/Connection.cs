@@ -16,8 +16,8 @@
         /// </summary>
         /// <param name="from">start point</param>
         /// <param name="to">end point</param>
-        /// <param name="over">over unit (can be null)</param>
-        public Connection(Point from, Point to, Obj_AI_Base over = null)
+        /// <param name="unit">over unit (can be null)</param>
+        public Connection(Point from, Point to, Obj_AI_Base unit = null)
         {
             var provider = new SweepingBladeLogicProvider();
 
@@ -25,11 +25,11 @@
 
             this.To = to;
 
-            this.Over = over;
+            this.Unit = unit;
 
             this.Lenght = this.From.Position.Distance(this.To.Position);
 
-            if (Over != null)
+            if (this.Unit != null)
             {
                 this.IsDash = true;
             }
@@ -37,7 +37,7 @@
             if (this.Lenght > 0)
             {
                 this.Time = !this.IsDash 
-                    ? this.Lenght / Variables.Player.MoveSpeed 
+                    ? this.Lenght / GlobalVariables.Player.MoveSpeed 
                     : this.Lenght / provider.Speed();
             }
         }
@@ -69,7 +69,7 @@
         /// <summary>
         ///     Dash Unit
         /// </summary>
-        public Obj_AI_Base Over { get; set; }
+        public Obj_AI_Base Unit { get; set; }
 
         /// <summary>
         ///     How long does it take to "walk/dash" the connection
@@ -79,7 +79,7 @@
         /// <summary>
         ///     Connection is a dash
         /// </summary>
-        public bool IsDash = false;
+        public bool IsDash;
 
         #endregion
 
@@ -98,9 +98,9 @@
                 Drawing.DrawLine(Drawing.WorldToScreen(From.Position), Drawing.WorldToScreen(To.Position), width, color);
             }
 
-            if (Over != null)
+            if (this.Unit != null)
             {
-                Render.Circle.DrawCircle(Over.Position, 50, color, 5);
+                Render.Circle.DrawCircle(this.Unit.Position, 50, color);
             }
 
             if (points)
@@ -118,7 +118,7 @@
         /// <returns></returns>
         public bool SameAs(Connection connection)
         {
-            if (connection.From == this.From && connection.To == this.To && connection.Over == this.Over)
+            if (connection.From == this.From && connection.To == this.To && connection.Unit == this.Unit)
             {
                 return true;
             }

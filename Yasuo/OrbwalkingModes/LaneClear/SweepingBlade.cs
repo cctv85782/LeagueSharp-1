@@ -11,6 +11,7 @@ namespace Yasuo.OrbwalkingModes.LaneClear
 
     using Yasuo.Common.Classes;
     using Yasuo.Common.Extensions;
+    using Yasuo.Common.Extensions.MenuExtensions;
     using Yasuo.Common.Objects;
     using Yasuo.Common.Provider;
     using Yasuo.Common.Utility;
@@ -21,16 +22,29 @@ namespace Yasuo.OrbwalkingModes.LaneClear
     {
         #region Fields
 
-        public List<Obj_AI_Base> BlacklistUnits;
+        /// <summary>
+        /// The blacklist
+        /// </summary>
+        public Blacklist Blacklist;
 
+        /// <summary>
+        /// The provider e
+        /// </summary>
         public SweepingBladeLogicProvider ProviderE;
 
+        /// <summary>
+        /// The provider turret
+        /// </summary>
         public TurretLogicProvider ProviderTurret;
 
         #endregion
 
         #region Constructors and Destructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SweepingBlade"/> class.
+        /// </summary>
+        /// <param name="parent">The parent.</param>
         public SweepingBlade(LaneClear parent)
             : base(parent)
         {
@@ -41,30 +55,39 @@ namespace Yasuo.OrbwalkingModes.LaneClear
 
         #region Public Properties
 
-        public override string Name => "Sweeping Blade";
-
-        #endregion
-
-        #region Public Methods and Operators
-
-        
+        /// <summary>
+        /// Gets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public override string Name => "(E) Sweeping Blade";
 
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// Called when [disable].
+        /// </summary>
         protected override void OnDisable()
         {
             Game.OnUpdate -= this.OnUpdate;
             base.OnDisable();
         }
 
+        /// <summary>
+        /// Called when [enable].
+        /// </summary>
         protected override void OnEnable()
         {
             Game.OnUpdate += this.OnUpdate;
             base.OnEnable();
         }
 
+        /// <summary>
+        /// Called when [initialize].
+        /// </summary>
         protected override void OnInitialize()
         {
             this.ProviderE = new SweepingBladeLogicProvider();
@@ -73,16 +96,30 @@ namespace Yasuo.OrbwalkingModes.LaneClear
             base.OnInitialize();
         }
 
+        /// <summary>
+        /// Called when [load].
+        /// </summary>
         protected override sealed void OnLoad()
         {
             this.Menu = new Menu(this.Name, this.Name);
+
+            Blacklist = new Blacklist(this.Menu, "Don't dash into");
+
+            this.GeneralSettings();
+
             this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
 
-            // Mode
+            this.Parent.Menu.AddSubMenu(this.Menu);
+        }
+
+        // TODO: Clean up the menu
+        /// <summary>
+        /// Method to set up the general settings.
+        /// </summary>
+        private void GeneralSettings()
+        {
             this.Menu.AddItem(
                 new MenuItem(this.Name + "ModeTarget", "Dash to: ").SetValue(new StringList(new[] { "Mouse", "Auto" })));
-
-            // EQ
 
             #region EQ
 
@@ -113,21 +150,24 @@ namespace Yasuo.OrbwalkingModes.LaneClear
             this.Menu.AddItem(new MenuItem(this.Name + "NoEnemy", "Don't E into Enemies").SetValue(true));
 
             #endregion
-
-            this.Parent.Menu.AddSubMenu(this.Menu);
         }
 
+        // TODO: Decomposite
+        /// <summary>
+        /// Raises the <see cref="E:Update" /> event.
+        /// </summary>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
         void OnUpdate(EventArgs args)
         {
-            if (Variables.Orbwalker.ActiveMode != LeagueSharp.Common.Orbwalking.OrbwalkingMode.LaneClear || !Variables.Spells[SpellSlot.E].IsReady()
-                || Variables.Player.IsWindingUp)
+            if (GlobalVariables.Orbwalker.ActiveMode != LeagueSharp.Common.Orbwalking.OrbwalkingMode.LaneClear || !GlobalVariables.Spells[SpellSlot.E].IsReady()
+                || GlobalVariables.Player.IsWindingUp)
             {
                 return;
             }
 
             var minions = MinionManager.GetMinions(
-                Variables.Player.ServerPosition,
-                Variables.Spells[SpellSlot.E].Range,
+                GlobalVariables.Player.ServerPosition,
+                GlobalVariables.Spells[SpellSlot.E].Range,
                 MinionTypes.All,
                 MinionTeam.NotAlly,
                 MinionOrderTypes.None);
@@ -136,22 +176,22 @@ namespace Yasuo.OrbwalkingModes.LaneClear
 
             if (minions.Any())
             {
-                dashes = minions.Where(x => !x.HasBuff("YasuoDashScalar")).Select(minion => new Common.Objects.Dash(minion)).ToList();
+                dashes = minions.Where(x => !x.HasBuff("YasuoDashScalar") && x.Distance(GlobalVariables.Player) <= GlobalVariables.Spells[SpellSlot.E].Range).Select(minion => new Common.Objects.Dash(minion)).ToList();
             }
 
             foreach (var dash in dashes.ToList())
             {
-                if (Menu.Item(this.Name + "NoSkillshot").GetValue<bool>())
+                if (Menu.Item(this.Name + "NoTurret").GetValue<bool>())
                 {
-                    if (!dash.InSkillshot)
+                    if (ProviderTurret.IsSafePosition(dash.EndPosition))
                     {
                         continue;
                     }
                 }
 
-                if (Menu.Item(this.Name + "NoTurret").GetValue<bool>())
+                if (Menu.Item(this.Name + "NoSkillshot").GetValue<bool>())
                 {
-                    if (ProviderTurret.IsSafePosition(dash.EndPosition))
+                    if (!dash.InSkillshot)
                     {
                         continue;
                     }
@@ -181,20 +221,20 @@ namespace Yasuo.OrbwalkingModes.LaneClear
                             if (!dash.IsWallDash)
                             {
                                 // Minion will die and no other minions are in killable range
-                                if (dash.Over.Health < this.ProviderE.GetDamage(dash.Over)
+                                if (dash.Unit.Health < this.ProviderE.GetDamage(dash.Unit)
                                     && !minions.Any(
                                         x =>
-                                        !x.Equals(dash.Over)
-                                        && (x.Distance(Variables.Player) <= Variables.Player.AttackRange)
-                                        || (Variables.Spells[SpellSlot.Q].IsReady(100)
-                                            && x.Distance(Variables.Player) <= Variables.Spells[SpellSlot.Q].Range)))
+                                        !x.Equals(dash.Unit)
+                                        && (x.Distance(GlobalVariables.Player) <= GlobalVariables.Player.AttackRange)
+                                        || (GlobalVariables.Spells[SpellSlot.Q].IsReady(100)
+                                            && x.Distance(GlobalVariables.Player) <= GlobalVariables.Spells[SpellSlot.Q].Range)))
                                 {
-                                    if (Variables.Debug)
+                                    if (GlobalVariables.Debug)
                                     {
                                         Console.WriteLine(@"LaneClear: SweepingBlade > Killing killable unit");
                                     }
 
-                                    this.Execute(dash.Over);
+                                    this.Execute(dash.Unit);
                                 }
                             }
                         }
@@ -210,22 +250,26 @@ namespace Yasuo.OrbwalkingModes.LaneClear
                     var dash = dashes.MaxOrDefault(x => x.KnockUpMinions.Count);
 
                     if (dash.KnockUpMinions.Count >= this.Menu.Item(this.Name + "MinHitAOE").GetValue<Slider>().Value
-                        && Variables.Spells[SpellSlot.Q].Cooldown <= 1
-                        && !minions.Any(x => x.Distance(Variables.Player) <= Variables.Player.AttackRange && x.HealthPercent <= 25))
+                        && GlobalVariables.Spells[SpellSlot.Q].Cooldown <= 1
+                        && !minions.Any(x => x.Distance(GlobalVariables.Player) <= GlobalVariables.Player.AttackRange && x.HealthPercent <= 25))
                     {
-                        Execute(dash.Over);
+                        Execute(dash.Unit);
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// Executes on the specified unit.
+        /// </summary>
+        /// <param name="unit">The unit.</param>
         private void Execute(Obj_AI_Base unit)
         {
             var dash = new Dash(unit);
 
             if (unit.IsValidTarget() && unit != null)
             {
-                Variables.Spells[SpellSlot.E].CastOnUnit(unit);
+                GlobalVariables.Spells[SpellSlot.E].CastOnUnit(unit);
             }
         }
 

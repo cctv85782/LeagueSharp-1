@@ -14,17 +14,82 @@
 
     internal class SteelTempest : Child<Mixed>
     {
+        #region Fields
+
+        public SweepingBladeLogicProvider ProviderE;
+
+        public SteelTempestLogicProvider ProviderQ;
+
+        #endregion
+
+        #region Constructors and Destructors
+
         public SteelTempest(Mixed parent)
             : base(parent)
         {
             this.OnLoad();
         }
 
-        public override string Name => "Steel Tempest";
+        #endregion
 
-        public SteelTempestLogicProvider ProviderQ;
+        #region Public Properties
 
-        public SweepingBladeLogicProvider ProviderE;
+        public override string Name => "(Q) Steel Tempest";
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        public void OnUpdate(EventArgs args)
+        {
+            var target = TargetSelector.GetTarget(
+                GlobalVariables.Spells[SpellSlot.Q].Range,
+                TargetSelector.DamageType.Physical);
+            var pred = PredictionOktw.GetPrediction(target, GlobalVariables.Spells[SpellSlot.Q].Delay);
+
+            if (GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo || target == null
+                || !target.IsValidTarget())
+            {
+                return;
+            }
+
+            #region EQ
+
+            if (!GlobalVariables.Spells[SpellSlot.Q].IsReady())
+            {
+                return;
+            }
+
+            // EQ > Synergyses with the E function in SweepingBlade/LogicProvider.cs
+            if (GlobalVariables.Player.IsDashing()
+                && pred.UnitPosition.Distance(ObjectManager.Player.ServerPosition)
+                <= GlobalVariables.Spells[SpellSlot.Q].Range)
+            {
+                this.Execute(target);
+            }
+            if (!GlobalVariables.Player.IsDashing())
+            {
+                if (this.Menu.Item(this.Name + "AOE").GetValue<bool>()
+                    && GlobalVariables.Player.CountEnemiesInRange(GlobalVariables.Spells[SpellSlot.Q].Range)
+                    >= this.Menu.Item(this.Name + "MinHitAOE").GetValue<Slider>().Value)
+                {
+                    this.Execute(target, GlobalVariables.Player.HasQ3(), true);
+                }
+                this.Execute(target, GlobalVariables.Player.HasQ3());
+            }
+
+            #endregion
+        }
+
+        #endregion
+
+        #region Methods
+
+        protected override void OnDisable()
+        {
+            Game.OnUpdate -= this.OnUpdate;
+            base.OnDisable();
+        }
 
         protected override void OnEnable()
         {
@@ -32,10 +97,12 @@
             base.OnEnable();
         }
 
-        protected override void OnDisable()
+        protected override void OnInitialize()
         {
-            Game.OnUpdate -= this.OnUpdate;
-            base.OnDisable();
+            this.ProviderQ = new SteelTempestLogicProvider();
+            this.ProviderE = new SweepingBladeLogicProvider();
+
+            base.OnInitialize();
         }
 
         protected override sealed void OnLoad()
@@ -68,76 +135,30 @@
             this.Parent.Menu.AddSubMenu(this.Menu);
         }
 
-        protected override void OnInitialize()
-        {
-            this.ProviderQ = new SteelTempestLogicProvider();
-            this.ProviderE = new SweepingBladeLogicProvider();
-
-            base.OnInitialize();
-        }
-
-        public void OnUpdate(EventArgs args)
-        {
-
-            var target = TargetSelector.GetTarget(
-                Variables.Spells[SpellSlot.Q].Range,
-                TargetSelector.DamageType.Physical);
-            var pred = PredictionOktw.GetPrediction(target, Variables.Spells[SpellSlot.Q].Delay);
-
-            if (Variables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo 
-                || target == null || !target.IsValidTarget())
-            {
-                return;
-            }
-
-            #region EQ
-
-            if (!Variables.Spells[SpellSlot.Q].IsReady())
-            {
-                return;
-            }
-
-            // EQ > Synergyses with the E function in SweepingBlade/LogicProvider.cs
-            if (Variables.Player.IsDashing() && pred.UnitPosition.Distance(ObjectManager.Player.ServerPosition) <= Variables.Spells[SpellSlot.Q].Range)
-            {
-                this.Execute(target);
-            }
-            if (!Variables.Player.IsDashing())
-            {
-                if (this.Menu.Item(this.Name + "AOE").GetValue<bool>()
-                    && Variables.Player.CountEnemiesInRange(Variables.Spells[SpellSlot.Q].Range)
-                    >= this.Menu.Item(this.Name + "MinHitAOE").GetValue<Slider>().Value)
-                {
-                    this.Execute(target, Variables.Player.HasQ3(), true);
-                }
-                this.Execute(target, Variables.Player.HasQ3());
-            }
-
-            #endregion
-        }
-
         private void Execute(Obj_AI_Base target, bool hasQ3 = false, bool aoe = false)
         {
-            var pred = PredictionOktw.GetPrediction(target, Variables.Spells[SpellSlot.Q].Delay);
+            var pred = PredictionOktw.GetPrediction(target, GlobalVariables.Spells[SpellSlot.Q].Delay);
 
             if (hasQ3)
             {
                 if (aoe)
                 {
-                    Variables.Spells[SpellSlot.Q].CastOnBestTarget(aoe: true);
+                    GlobalVariables.Spells[SpellSlot.Q].CastOnBestTarget(aoe: true);
                 }
                 else
                 {
-                    Variables.Spells[SpellSlot.Q].Cast(pred.CastPosition);
+                    GlobalVariables.Spells[SpellSlot.Q].Cast(pred.CastPosition);
                 }
             }
             else
             {
                 if (pred.Hitchance >= HitChance.High)
                 {
-                    Variables.Spells[SpellSlot.Q].Cast(pred.CastPosition);
+                    GlobalVariables.Spells[SpellSlot.Q].Cast(pred.CastPosition);
                 }
             }
         }
+
+        #endregion
     }
 }

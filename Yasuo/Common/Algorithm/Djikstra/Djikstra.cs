@@ -2,12 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Configuration;
     using System.Linq;
-
-    using LeagueSharp.Common;
-
-    using SharpDX;
 
     // TODO: Move away from a point system. On the other side it makes things easy.. 
     // TODO: Take Speed of Connection in Consideration
@@ -16,13 +11,21 @@
     /// <summary>
     ///     Shortest Path Algorithm
     /// </summary>
-    class Dijkstra
+    internal class Dijkstra
     {
+        #region Fields
+
+        public List<Point> Base = new List<Point>();
+
+        #endregion
+
+        #region Constructors and Destructors
+
         /// <summary>
         ///     Constructor
         /// </summary>
         public Dijkstra(Grid grid)
-        {   
+        {
             try
             {
                 this.Connections = grid.Connections;
@@ -52,17 +55,103 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine(@"[Error while using Djikstra Algorithm]: " +ex);
+                Console.WriteLine(@"[Error while using Djikstra Algorithm]: " + ex);
             }
         }
 
+        #endregion
+
+        #region Public Properties
+
         public List<Connection> Connections { get; set; }
 
-        public List<Point> Base = new List<Point>();
+        public Dictionary<Point, Point> Previous { get; set; }
 
         public Dictionary<Point, float> Speed { get; set; }
 
-        public Dictionary<Point, Point> Previous { get; set; }
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        ///     Gives all neighbors that are still in the base
+        /// </summary>
+        /// <param name="point">Points</param>
+        /// <returns></returns>
+        public List<Point> GetNeighbors(Point point)
+        {
+            var neighbors = new List<Point>();
+
+            foreach (var connection in this.Connections)
+            {
+                if (connection.From.Equals(point) && this.Base.Contains(point))
+                {
+                    neighbors.Add(connection.To);
+                }
+            }
+
+            return neighbors;
+        }
+
+        /// <summary>
+        ///     Gets the Point with the shortest distance
+        /// </summary>
+        /// <returns></returns>
+        public Point GetPointSmallestDistance()
+        {
+            var speed = float.MaxValue;
+            Point smallest = null;
+
+            foreach (var n in this.Base)
+            {
+                if (this.Speed[n] < speed)
+                {
+                    speed = this.Speed[n];
+                    smallest = n;
+                }
+            }
+
+            return smallest;
+        }
+
+        /// <summary>
+        ///     Calculates the Path to the Point d (d = target)
+        /// </summary>
+        /// <param name="point">Targeted Point</param>
+        /// <returns>point path</returns>
+        public List<Point> GetPointsTo(Point point)
+        {
+            var path = new List<Point>();
+
+            path.Insert(0, point);
+
+            while (this.Previous[point] != null)
+            {
+                point = this.Previous[point];
+                path.Insert(0, point);
+            }
+
+            return path;
+        }
+
+        /// <summary>
+        ///     Gives the distance between 2 Points
+        /// </summary>
+        /// <param name="point1">Start Point</param>
+        /// <param name="point2">End Point</param>
+        /// <returns></returns>
+        public float GetValueBetween(Point point1, Point point2)
+        {
+            foreach (var connection in this.Connections)
+            {
+                if (connection.From.Equals(point1) && connection.To.Equals(point2))
+                {
+                    return connection.Time;
+                }
+            }
+
+            return 0;
+        }
 
         /// <summary>
         ///     Calculates the shortest distance from the Start Point to all other Points
@@ -99,84 +188,6 @@
             }
         }
 
-        /// <summary>
-        ///     Calculates the Path to the Point d (d = target)
-        /// </summary>
-        /// <param name="point">Targeted Point</param>
-        /// <returns>point path</returns>
-        public List<Point> GetPointsTo(Point point)
-        {
-            var path = new List<Point>();
-
-            path.Insert(0, point);
-
-            while (this.Previous[point] != null)
-            {
-                point = this.Previous[point];
-                path.Insert(0, point);
-            }
-
-            return path;
-        }
-
-        /// <summary>
-        ///     Gets the Point with the shortest distance
-        /// </summary>
-        /// <returns></returns>
-        public Point GetPointSmallestDistance()
-        {
-            var speed = float.MaxValue;
-            Point smallest = null;
-
-            foreach (var n in this.Base)
-            {
-                if (this.Speed[n] < speed)
-                {
-                    speed = this.Speed[n];
-                    smallest = n;
-                }
-            }
-
-            return smallest;
-        }
-
-        /// <summary>
-        ///     Gives all neighbors that are still in the base
-        /// </summary>
-        /// <param name="point">Points</param>
-        /// <returns></returns>
-        public List<Point> GetNeighbors(Point point)
-        {
-            var neighbors = new List<Point>();
-
-            foreach (var connection in this.Connections)
-            {
-                if (connection.From.Equals(point) && this.Base.Contains(point))
-                {
-                    neighbors.Add(connection.To);
-                }
-            }
-
-            return neighbors;
-        }
-
-        /// <summary>
-        ///     Gives the distance between 2 Points
-        /// </summary>
-        /// <param name="point1">Start Point</param>
-        /// <param name="point2">End Point</param>
-        /// <returns></returns>
-        public float GetValueBetween(Point point1, Point point2)
-        {
-            foreach (var connection in this.Connections)
-            {
-                if (connection.From.Equals(point1) && connection.To.Equals(point2))
-                {
-                    return connection.Time;
-                }
-            }
-
-            return 0;
-        }
+        #endregion
     }
 }

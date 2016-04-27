@@ -26,7 +26,7 @@
 
         public Path Path;
 
-        public override string Name => "Sweeping Blade";
+        public override string Name => "(E) Sweeping Blade";
 
         public SweepingBladeLogicProvider ProviderE;
 
@@ -77,6 +77,12 @@
 
             #endregion
 
+            this.Menu.AddItem(new MenuItem(this.Name + "NoSkillshot", "Don't E into Skillshots").SetValue(true));
+
+            this.Menu.AddItem(new MenuItem(this.Name + "NoTurret", "Don't E into Turret").SetValue(true));
+
+            this.Menu.AddItem(new MenuItem(this.Name + "NoEnemy", "Don't E into Enemies").SetValue(true));
+
             this.Parent.Menu.AddSubMenu(this.Menu);
         }
 
@@ -92,20 +98,20 @@
         // TODO: PRIORITY HIGH
         public void OnUpdate(EventArgs args)
         {
-            if (Variables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Mixed)
+            if (GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Mixed)
             {
                 return;
             }
 
             Obj_AI_Base minion = MinionManager.GetMinions(Game.CursorPos, 475).Where(x =>
                                 !x.HasBuff("YasuoDashWrapper")
-                                && x.Distance(Variables.Player) <= Variables.Spells[SpellSlot.E].Range)
+                                && x.Distance(GlobalVariables.Player) <= GlobalVariables.Spells[SpellSlot.E].Range)
                                 .OrderByDescending(x => x.Health)
                                 .FirstOrDefault();
 
             var minions = MinionManager.GetMinions(
-                Variables.Player.ServerPosition,
-                Variables.Spells[SpellSlot.E].Range,
+                GlobalVariables.Player.ServerPosition,
+                GlobalVariables.Spells[SpellSlot.E].Range,
                 MinionTypes.All,
                 MinionTeam.Enemy,
                 MinionOrderTypes.None);
@@ -125,15 +131,15 @@
                         minions.Where(
                             unit =>
                             unit.Health <= this.ProviderE.GetDamage(unit)
-                            && unit.Distance(Variables.Player.ServerPosition) <= Variables.Spells[SpellSlot.E].Range))
+                            && unit.Distance(GlobalVariables.Player.ServerPosition) <= GlobalVariables.Spells[SpellSlot.E].Range))
                 {
-                    if (enemies.Count(enemy => enemy.Distance(Variables.Player.ServerPosition) <= 1000) > 0)
+                    if (enemies.Count(enemy => enemy.Distance(GlobalVariables.Player.ServerPosition) <= 1000) > 0)
                     {
                         foreach (var y in enemies.Where(z => z.HealthPercent > 10))
                         {
-                            var newPos = Variables.Player.ServerPosition.Extend(
+                            var newPos = GlobalVariables.Player.ServerPosition.Extend(
                                 x.ServerPosition,
-                                Variables.Spells[SpellSlot.E].Range);
+                                GlobalVariables.Spells[SpellSlot.E].Range);
                             if (newPos.Distance(y.ServerPosition) < y.AttackRange)
                             {
                                 possibleExecutions.Add(x);
@@ -165,7 +171,7 @@
             var dash = new Common.Objects.Dash(target);
             if (target.IsValidTarget() && target != null && ProviderTurret.IsSafePosition(dash.EndPosition))
             {
-                Variables.Spells[SpellSlot.E].CastOnUnit(target);
+                GlobalVariables.Spells[SpellSlot.E].CastOnUnit(target);
             }
         }
     }

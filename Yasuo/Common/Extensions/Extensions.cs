@@ -1,60 +1,48 @@
 ﻿namespace Yasuo.Common.Extensions
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
 
     using LeagueSharp;
     using LeagueSharp.Common;
+    using LeagueSharp.Data.Enumerations;
     using LeagueSharp.SDK;
-    using LeagueSharp.SDK.Core.Utils;
-    using LeagueSharp.SDK.Modes.Weights;
 
     using SharpDX;
 
-    using Yasuo.Modules;
-    using Yasuo.Modules.Protector;
+    using Yasuo.Common.Provider;
 
-    using Geometry = LeagueSharp.Common.Geometry;
-    using MinionTypes = LeagueSharp.Common.MinionTypes;
-
-    static class Extensions
+    internal static class Extensions
     {
+        #region Public Methods and Operators
 
+        /// <summary>
+        ///     Returns all units in Range
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="range"></param>
+        /// <returns></returns>
         public static int CountMinionsInRange(this Vector3 position, float range)
         {
             var minionList = MinionManager.GetMinions(position, range);
 
             return minionList?.Count ?? 0;
         }
-        /// <summary>
-        /// Returns the remaining airbone time from unit
-        /// </summary>
-        /// <param name="unit"></param>
-        /// <returns></returns>
-        public static float RemainingAirboneTime(this Obj_AI_Base unit)
-        {
-            float result = 0;
-
-            foreach (var buff in unit.Buffs.Where(buff => buff.Type == BuffType.Knockback || buff.Type == BuffType.Knockup))
-            {
-                result = buff.EndTime - Game.Time;
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Returns true if unit is airbone
-        /// </summary>
-        /// <param name="unit"></param>
-        /// <returns></returns>
-        public static bool IsAirbone(this Obj_AI_Base unit) => unit.HasBuffOfType(BuffType.Knockup) || unit.HasBuffOfType(BuffType.Knockback);
 
         public static bool HasQ3(this Obj_AI_Hero hero) => ObjectManager.Player.HasBuff("YasuoQ3W");
 
+        /// <summary>
+        ///     Returns true if unit is airbone
+        /// </summary>
+        /// <param name="unit"></param>
+        /// <returns></returns>
+        public static bool IsAirbone(this Obj_AI_Base unit)
+            => unit.HasBuffOfType(BuffType.Knockup) || unit.HasBuffOfType(BuffType.Knockback);
+
         // BUG: Returns wrong value do to SDK not working.
         /// <summary>
-        /// Returns the missile position after time time.
+        ///     Returns the missile position after time time.
         /// </summary>
         public static Vector2 MissilePosition(this Skillshot skillshot, bool allowNegative = false, float delay = 0)
         {
@@ -68,13 +56,17 @@
             {
                 Game.PrintChat("test");
                 var t = Math.Max(0, Utils.TickCount + delay - skillshot.StartTime - skillshot.SData.Delay);
-                t = (int)Math.Max(0, Math.Min(skillshot.EndPosition.Distance(skillshot.StartPosition), t * skillshot.SData.MissileSpeed / 1000));
+                t =
+                    (int)
+                    Math.Max(
+                        0,
+                        Math.Min(
+                            skillshot.EndPosition.Distance(skillshot.StartPosition),
+                            t * skillshot.SData.MissileSpeed / 1000));
                 return skillshot.StartPosition + skillshot.Direction * t;
             }
             return Vector2.Zero;
         }
-
-
 
         /// <exception cref="Exception">A delegate callback throws an exception. </exception>
         public static void RaiseEvent(this EventHandler @event, object sender, EventArgs e)
@@ -93,5 +85,34 @@
                 @event(sender, e);
             }
         }
+
+        /// <summary>
+        ///     Returns the remaining airbone time from unit
+        /// </summary>
+        /// <param name="unit"></param>
+        /// <returns></returns>
+        public static float RemainingAirboneTime(this Obj_AI_Base unit)
+        {
+            float result = 0;
+
+            foreach (
+                var buff in unit.Buffs.Where(buff => buff.Type == BuffType.Knockback || buff.Type == BuffType.Knockup))
+            {
+                result = buff.EndTime - Game.Time;
+            }
+            return result * 1000;
+        }
+
+        /// <summary>
+        ///     Converts a list of Obj_Ai_Base's to Vector3's.
+        /// </summary>
+        /// <param name="units">The units.</param>
+        /// <returns></returns>
+        public static List<Vector3> ToVector3S(this List<Obj_AI_Base> units)
+        {
+            return (from unit in units where unit.IsValid select unit.ServerPosition).ToList();
+        }
+
+        #endregion
     }
 }

@@ -22,9 +22,34 @@ namespace Yasuo.Common.Objects
         #region Fields
 
         /// <summary>
+        ///     Color of the circles
+        /// </summary>
+        public Color CircleColor = Color.White;
+
+        /// <summary>
+        ///     Width of the circles (Drawings)
+        /// </summary>
+        public int CircleLineWidth = 1;
+
+        /// <summary>
+        ///     Radius of the circles (Drawings)
+        /// </summary>
+        public int CircleRadius = 40;
+
+        /// <summary>
         ///     All connections
         /// </summary>
         public List<Connection> Connections = new List<Connection>();
+
+        /// <summary>
+        ///     Color of the dashes
+        /// </summary>
+        public Color DashColor = Color.White;
+
+        /// <summary>
+        ///     Width of dashes (Drawings)
+        /// </summary>
+        public int DashLineWidth = 1;
 
         /// <summary>
         ///     Where the path ends
@@ -47,39 +72,14 @@ namespace Yasuo.Common.Objects
         public List<Obj_AI_Base> Units = new List<Obj_AI_Base>();
 
         /// <summary>
-        ///     Color of the dashes
-        /// </summary>
-        public System.Drawing.Color DashColor = System.Drawing.Color.White;
-
-        /// <summary>
         ///     Color of the walking pathes
         /// </summary>
-        public System.Drawing.Color WalkColor = System.Drawing.Color.White;
-
-        /// <summary>
-        ///     Color of the circles
-        /// </summary>
-        public System.Drawing.Color CircleColor = System.Drawing.Color.White;
-
-        /// <summary>
-        ///     Width of dashes (Drawings)
-        /// </summary>
-        public int DashLineWidth = 1;
+        public Color WalkColor = Color.White;
 
         /// <summary>
         ///     Width of lines (Drawings)
         /// </summary>
         public int WalkLineWidth = 1;
-
-        /// <summary>
-        ///     Width of the circles (Drawings)
-        /// </summary>
-        public int CircleLineWidth = 1;
-
-        /// <summary>
-        ///     Radius of the circles (Drawings)
-        /// </summary>
-        public int CircleRadius = 40;
 
         /// <summary>
         ///     Provider for Flow logics
@@ -89,18 +89,18 @@ namespace Yasuo.Common.Objects
         #endregion
 
         #region Constructors and Destructors
-
+        
         /// <summary>
-        ///     Constructor that creates an empty path
+        /// Initializes a new instance of the <see cref="Path"/> class.
         /// </summary>
         public Path()
         {
         }
 
         /// <summary>
-        ///     Constructor that creates a new valid path object
+        ///     Initializes a new instance of the <see cref="Path"/> class.
         /// </summary>
-        /// <param name="connections">All dashes and walking paths</param>
+        /// <param name="connections">The connections.</param>
         public Path(List<Connection> connections)
         {
             try
@@ -117,7 +117,7 @@ namespace Yasuo.Common.Objects
 
                 foreach (var connection in Connections)
                 {
-                    Units.Add(connection.Over);
+                    Units.Add(connection.Unit);
                 }
 
                 this.SetDashLength();
@@ -127,9 +127,9 @@ namespace Yasuo.Common.Objects
                 this.SetWalkTime();
                 this.SetPathTime();
 
-                this.CheckForShield();
+                this.CheckForShields();
 
-                if (Variables.Debug)
+                if (GlobalVariables.Debug)
                 {
                     Drawing.DrawText(500, 520, Color.Red, "PathTime: " + PathTime);
                     Drawing.DrawText(500, 540, Color.Red, "PathLength: " + PathLenght);
@@ -141,7 +141,6 @@ namespace Yasuo.Common.Objects
             {
                 Console.WriteLine(ex);
             }
-
         }
 
         #endregion
@@ -232,23 +231,6 @@ namespace Yasuo.Common.Objects
         }
 
         /// <summary>
-        ///     Removes a connection from the path
-        /// </summary>
-        /// <param name="connection"></param>
-        public void RemoveConnection(Connection connection)
-        {
-            if (Connections.Contains(connection))
-            {
-                Connections.Remove(connection);
-            }
-
-            if (Units.Contains(connection.Over))
-            {
-                Units.Remove(connection.Over);
-            }
-        }
-
-        /// <summary>
         ///     Gets a position after time following the path
         /// </summary>
         /// <param name="time"></param>
@@ -276,12 +258,31 @@ namespace Yasuo.Common.Objects
                     {
                         var minusTime = time * -1;
 
-                        return connection.From.Position.Extend(connection.To.Position, (Variables.Player.MoveSpeed * 1000) / minusTime);
+                        return connection.From.Position.Extend(
+                            connection.To.Position,
+                            (GlobalVariables.Player.MoveSpeed * 1000) / minusTime);
                     }
                 }
             }
 
             return result;
+        }
+
+        /// <summary>
+        ///     Removes a connection from the path
+        /// </summary>
+        /// <param name="connection"></param>
+        public void RemoveConnection(Connection connection)
+        {
+            if (Connections.Contains(connection))
+            {
+                Connections.Remove(connection);
+            }
+
+            if (Units.Contains(connection.Unit))
+            {
+                Units.Remove(connection.Unit);
+            }
         }
 
         /// <summary>
@@ -291,7 +292,7 @@ namespace Yasuo.Common.Objects
         /// <returns>A vector-list</returns>
         public List<Vector3> SplitIntoVectors(float segmentAmount = 100)
         {
-            var result = new List<Vector3>((int) segmentAmount);
+            var result = new List<Vector3>((int)segmentAmount);
 
             foreach (var connection in Connections)
             {
@@ -316,25 +317,26 @@ namespace Yasuo.Common.Objects
 
                 if (segmentsPerConnection >= 1)
                 {
+                    var vectorsToAdd = new List<Vector3>((int)segmentsPerConnection);
+
                     foreach (var connection in nonDashConnections)
                     {
-                        var vectorsToAdd = new List<Vector3>((int)segmentsPerConnection);
-
                         var steps = (int)connection.Lenght / (int)segmentsPerConnection;
 
                         vectorsToAdd.Add(connection.From.Position);
 
-                        for (int i = 0; i < segmentsPerConnection; i += steps)
+                        for (var i = 0; i < segmentsPerConnection; i += steps)
                         {
                             var vec = connection.From.Position.Extend(connection.To.Position, steps);
+                            vectorsToAdd.Add(vec);
                         }
+                    }
 
-                        foreach (var vectors in vectorsToAdd)
+                    foreach (var vectors in vectorsToAdd)
+                    {
+                        if (!result.Contains(vectors))
                         {
-                            if (!result.Contains(vectors))
-                            {
-                                result.Add(vectors);
-                            }
+                            result.Add(vectors);
                         }
                     }
                 }
@@ -356,13 +358,16 @@ namespace Yasuo.Common.Objects
             }
 
             return result;
-        } 
+        }
 
         #endregion
 
         #region Methods
 
-        private void CheckForShield()
+        /// <summary>
+        ///     Checks for shields.
+        /// </summary>
+        private void CheckForShields()
         {
             if (PathLenght >= this.providerFlow.GetRemainingUnits())
             {
@@ -375,11 +380,17 @@ namespace Yasuo.Common.Objects
         }
 
         // TODO: PRIRORITY MEDIUM - LOW > Add Skillshots in Path (Based on Danger Level)
+        /// <summary>
+        ///     Sets the danger value.
+        /// </summary>
         private void SetDangerValue()
         {
-            foreach (var unit in this.Units.Where(x => x.CountEnemiesInRange(Variables.Spells[SpellSlot.E].Range) > 0))
+            foreach (
+                var unit in this.Units.Where(x => x.CountEnemiesInRange(GlobalVariables.Spells[SpellSlot.E].Range) > 0))
             {
-                foreach (var hero in HeroManager.Enemies.Where(y => y.Distance(unit) <= Variables.Spells[SpellSlot.E].Range))
+                foreach (
+                    var hero in
+                        HeroManager.Enemies.Where(y => y.Distance(unit) <= GlobalVariables.Spells[SpellSlot.E].Range))
                 {
                     this.DangerValue += (int)TargetSelector.GetPriority(hero);
                 }
@@ -387,6 +398,9 @@ namespace Yasuo.Common.Objects
             }
         }
 
+        /// <summary>
+        ///     Sets the length of the dash.
+        /// </summary>
         private void SetDashLength()
         {
             foreach (var connection in this.Connections.Where(connection => connection.IsDash))
@@ -395,6 +409,9 @@ namespace Yasuo.Common.Objects
             }
         }
 
+        /// <summary>
+        ///     Sets the dash time.
+        /// </summary>
         private void SetDashTime()
         {
             foreach (var connection in Connections.Where(connection => connection.IsDash))
@@ -403,16 +420,25 @@ namespace Yasuo.Common.Objects
             }
         }
 
+        /// <summary>
+        ///     Sets the path lengtht.
+        /// </summary>
         private void SetPathLengtht()
         {
             this.PathLenght = this.WalkLenght + this.DashLenght;
         }
 
+        /// <summary>
+        ///     Sets the path time.
+        /// </summary>
         private void SetPathTime()
         {
             this.PathTime = this.WalkTime + this.DashTime;
         }
 
+        /// <summary>
+        ///     Sets the length of the walk.
+        /// </summary>
         private void SetWalkLength()
         {
             foreach (var connection in Connections.Where(connection => !connection.IsDash))
@@ -421,6 +447,9 @@ namespace Yasuo.Common.Objects
             }
         }
 
+        /// <summary>
+        ///     Sets the walk time.
+        /// </summary>
         private void SetWalkTime()
         {
             foreach (var connection in Connections.Where(connection => !connection.IsDash))

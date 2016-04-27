@@ -5,40 +5,17 @@
 
     using LeagueSharp;
     using LeagueSharp.Common;
-    using LeagueSharp.SDK.Core.Utils;
+    using LeagueSharp.SDK.Utils;
 
-    using SharpDX;
-
-    using Yasuo.Common.Extensions;
     using Yasuo.Common.Objects;
     using Yasuo.Common.Utility;
 
-    class LastBreathLogicProvider
+    /// <summary>
+    ///     LogicProvider for (R) LastBreath
+    /// </summary>
+    internal class LastBreathLogicProvider
     {
-        /// <summary>
-        ///     Returns the execution where most damage can get dealt
-        /// </summary>
-        /// <param name="executions">
-        ///     LastBreath execution object
-        /// </param>
-        /// <returns>
-        ///     LastBreath execution object
-        /// </returns>
-        public Objects.LastBreath MostDamageDealt(List<Objects.LastBreath> executions)
-        {
-            Dictionary<Objects.LastBreath, float> damageDic = new Dictionary<LastBreath, float>();
-            
-            if (executions != null)
-            {
-                foreach (var x in executions)
-                {
-                    damageDic.Add(x, x.DamageDealt);
-                }
-
-                return damageDic.MaxOrDefault(x => x.Value).Key;
-            }
-            return null;
-        }
+        #region Public Methods and Operators
 
         /// <summary>
         ///     Gets all executions around a execution that are in range of lastbreath
@@ -47,9 +24,9 @@
         ///     LastBreath execution object
         /// </param>
         /// <returns></returns>
-        public List<Objects.LastBreath> GetExecutionsAround(Objects.LastBreath execution)
+        public List<LastBreath> GetExecutionsAround(LastBreath execution)
         {
-            var result = new List<Objects.LastBreath>();
+            var result = new List<LastBreath>();
 
             foreach (var target in execution.AffectedEnemies)
             {
@@ -62,11 +39,36 @@
         /// <summary>
         ///     Returns the execution that has the lowest remaining airbone time
         /// </summary>
-        public Objects.LastBreath LeastRemainingAirboneTime(List<Objects.LastBreath> executions)
+        public LastBreath LeastRemainingAirboneTime(List<LastBreath> executions)
         {
             if (executions.Count > 0)
             {
-                return executions?.MinOrDefault(x => x.MinRemainingAirboneTime);
+                return executions.MinOrDefault(x => x.MinRemainingAirboneTime);
+            }
+            return null;
+        }
+
+        /// <summary>
+        ///     Returns the execution where most damage can get dealt
+        /// </summary>
+        /// <param name="executions">
+        ///     LastBreath execution object
+        /// </param>
+        /// <returns>
+        ///     LastBreath execution object
+        /// </returns>
+        public LastBreath MostDamageDealt(List<LastBreath> executions)
+        {
+            var damageDic = new Dictionary<LastBreath, float>();
+
+            if (executions != null && executions.Any())
+            {
+                foreach (var x in executions)
+                {
+                    damageDic.Add(x, x.DamageDealt);
+                }
+
+                return damageDic.MaxOrDefault(x => x.Value).Key;
             }
             return null;
         }
@@ -74,7 +76,7 @@
         /// <summary>
         ///     Returns the most safe enemy to use ultimate on
         /// </summary>
-        public Objects.LastBreath MostSafety(List<Objects.LastBreath> executions)
+        public LastBreath MostSafety(List<LastBreath> executions)
         {
             return executions?.MinOrDefault(x => x.DangerValue);
         }
@@ -87,7 +89,7 @@
         /// <param name="path">The path to the target</param>
         /// <param name="buffer">a time buffer</param>
         /// <returns></returns>
-        public bool ShouldCastNow(Objects.LastBreath execution, Objects.Path path = null, int buffer = 10)
+        public bool ShouldCastNow(LastBreath execution, Path path = null, int buffer = 10)
         {
             if (execution == null)
             {
@@ -103,18 +105,20 @@
             // if no path is given
             if (path == null)
             {
-                var playerpath = Variables.Player.GetPath(execution.Target.ServerPosition);
-                var playerpathtime = Helper.GetPathLenght(playerpath) / Variables.Player.MoveSpeed;
+                var playerpath = GlobalVariables.Player.GetPath(execution.Target.ServerPosition);
+                var playerpathtime = Helper.GetPathLenght(playerpath) / GlobalVariables.Player.MoveSpeed;
 
                 // if walking is requires less time than remaining knockup time
                 if (playerpathtime <= execution.MinRemainingAirboneTime + buffer + Game.Ping)
                 {
+                    Game.PrintChat("walk to target");
                     return false;
                 }
 
                 // Instant Ult in 1 v 1 because armor pen and less time for enemiy to get spells up also you can't gapclose
                 if (execution.EndPosition.CountEnemiesInRange(1500) == 0 && !execution.Target.InAutoAttackRange())
                 {
+                    Game.PrintChat("insta 1v1 ult");
                     return true;
                 }
             }
@@ -124,11 +128,14 @@
             {
                 if (path.PathTime <= execution.MinRemainingAirboneTime + buffer + Game.Ping)
                 {
+                    Game.PrintChat("path given");
                     return false;
                 }
             }
 
             return execution.MinRemainingAirboneTime <= (Game.Ping + buffer);
         }
+
+        #endregion
     }
 }

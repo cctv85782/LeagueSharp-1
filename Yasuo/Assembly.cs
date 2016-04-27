@@ -103,14 +103,14 @@ namespace Yasuo
         {
             try
             {
-                if (Variables.ChampionDependent)
+                if (GlobalVariables.ChampionDependent)
                 {
-                    if (!Variables.SupportedChampions.Contains(Variables.Player.ChampionName))
+                    if (!GlobalVariables.SupportedChampions.Contains(GlobalVariables.Player.ChampionName))
                     {
                         Menu.AddItem(new MenuItem("ChampionNotSupported", "Champion is not supported"));
                         Menu.AddToMainMenu();
 
-                        Variables.Stop = true;
+                        GlobalVariables.Stop = true;
                         return;
                     }
                 }
@@ -118,7 +118,7 @@ namespace Yasuo
                 var orbWalkingMenu = new Menu("Orbwalking", "Orbwalking");
                 Menu.AddSubMenu(orbWalkingMenu);
 
-                Variables.Orbwalker = new Orbwalking.Orbwalker(Menu.SubMenu("Orbwalking"));
+                GlobalVariables.Orbwalker = new Orbwalking.Orbwalker(Menu.SubMenu("Orbwalking"));
 
                 Menu.AddToMainMenu();
             }
@@ -144,7 +144,7 @@ namespace Yasuo
         /// <param name="args"></param>
         private static void OnUpdate(EventArgs args)
         {   
-            Variables.SetSpells();
+            GlobalVariables.SetSpells();
         }
     }
 }

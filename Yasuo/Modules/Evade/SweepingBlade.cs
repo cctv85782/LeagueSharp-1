@@ -6,33 +6,93 @@ namespace Yasuo.Modules.Evade
     using LeagueSharp.Common;
     using LeagueSharp.SDK;
 
-    using Yasuo.Common.Provider;
     using Yasuo.Common.Classes;
     using Yasuo.Common.Objects;
-
-    using Variables = Yasuo.Variables;
+    using Yasuo.Common.Provider;
 
     internal class SweepingBlade : Child<Modules>
     {
+        #region Fields
+
+        /// <summary>
+        ///     The path
+        /// </summary>
+        public Path Path;
+
+        /// <summary>
+        ///     The E logicprovider
+        /// </summary>
+        public SweepingBladeLogicProvider ProviderE;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="SweepingBlade" /> class.
+        /// </summary>
+        /// <param name="parent">The parent.</param>
         public SweepingBlade(Modules parent)
             : base(parent)
         {
             this.OnLoad();
         }
 
-        public Path Path;
+        #endregion
 
-        public SweepingBladeLogicProvider Provider;
+        #region Public Properties
 
+        /// <summary>
+        ///     Gets the name.
+        /// </summary>
+        /// <value>
+        ///     The name.
+        /// </value>
         public override string Name => "Sweeping Blade";
 
-        protected override void OnEnable()
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        ///     Raises the <see cref="E:Draw" /> event.
+        /// </summary>
+        /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
+        public void OnDraw(EventArgs args)
         {
-            Game.OnUpdate += this.OnUpdate;
-            Drawing.OnDraw += this.OnDraw;
-            base.OnEnable();
         }
 
+        /// <summary>
+        ///     Raises the <see cref="E:Update" /> event.
+        /// </summary>
+        /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
+        public void OnUpdate(EventArgs args)
+        {
+            if (Tracker.DetectedSkillshots != null)
+            {
+                switch (GlobalVariables.Orbwalker.ActiveMode)
+                {
+                    case Orbwalking.OrbwalkingMode.Combo:
+                        break;
+                    case Orbwalking.OrbwalkingMode.LaneClear:
+                        break;
+                    case Orbwalking.OrbwalkingMode.LastHit:
+                        break;
+                    case Orbwalking.OrbwalkingMode.Mixed:
+                        break;
+                    case Orbwalking.OrbwalkingMode.None:
+                        break;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        ///     Called when [disable].
+        /// </summary>
         protected override void OnDisable()
         {
             Game.OnUpdate -= this.OnUpdate;
@@ -40,41 +100,35 @@ namespace Yasuo.Modules.Evade
             base.OnDisable();
         }
 
-        protected override sealed void OnLoad()
+        /// <summary>
+        ///     Called when [enable].
+        /// </summary>
+        protected override void OnEnable()
         {
-            this.Menu = new Menu(this.Name, this.Name);
-            this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
-
-            
-            this.Parent.Menu.AddSubMenu(this.Menu);
+            Game.OnUpdate += this.OnUpdate;
+            Drawing.OnDraw += this.OnDraw;
+            base.OnEnable();
         }
 
+        /// <summary>
+        ///     Called when [initialize].
+        /// </summary>
         protected override void OnInitialize()
         {
             base.OnInitialize();
         }
 
-        public void OnUpdate(EventArgs args)
+        /// <summary>
+        ///     Called when [load].
+        /// </summary>
+        protected override sealed void OnLoad()
         {
-            if (Tracker.DetectedSkillshots != null)
-            switch (Variables.Orbwalker.ActiveMode)
-            {
-                case LeagueSharp.Common.Orbwalking.OrbwalkingMode.Combo:
-                    break;
-                case LeagueSharp.Common.Orbwalking.OrbwalkingMode.LaneClear:
-                    break;
-                case LeagueSharp.Common.Orbwalking.OrbwalkingMode.LastHit:
-                    break;
-                case LeagueSharp.Common.Orbwalking.OrbwalkingMode.Mixed:
-                    break;
-                case LeagueSharp.Common.Orbwalking.OrbwalkingMode.None:
-                    break;
-            }
+            this.Menu = new Menu(this.Name, this.Name);
+            this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
+
+            this.Parent.Menu.AddSubMenu(this.Menu);
         }
 
-        public void OnDraw(EventArgs args)
-        {
-
-        }
+        #endregion
     }
 }

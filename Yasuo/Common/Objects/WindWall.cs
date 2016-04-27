@@ -12,22 +12,55 @@
 
     internal class WindWall
     {
-        //public SafeZoneLogicProvider Provider;
+        #region Fields
 
-        public Vector2 Start;
-
-        public float Range;
-
+        /// <summary>
+        ///     The additional width
+        /// </summary>
         public float AdditionalWidth;
 
-        private Geometry.Polygon polygon;
-
+        /// <summary>
+        ///     The allies inside
+        /// </summary>
         public List<Obj_AI_Base> AlliesInside;
 
-        public List<Obj_AI_Base> EnemiesInside;
-
+        /// <summary>
+        ///     The cast position
+        /// </summary>
         public Vector2 CastPosition;
 
+        /// <summary>
+        ///     The enemies inside
+        /// </summary>
+        public List<Obj_AI_Base> EnemiesInside;
+
+        /// <summary>
+        ///     The range
+        /// </summary>
+        public float Range;
+
+        //public SafeZoneLogicProvider Provider;
+
+        /// <summary>
+        ///     The start
+        /// </summary>
+        public Vector2 Start;
+
+        /// <summary>
+        ///     The polygon
+        /// </summary>
+        private Geometry.Polygon polygon;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="WindWall" /> class.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="range">The range.</param>
+        /// <param name="additionalWidth">Width of the additional.</param>
         public WindWall(Vector2 start, float range, float additionalWidth)
         {
             this.Start = start;
@@ -41,22 +74,55 @@
             this.CheckAllies();
         }
 
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        ///     Draws this instance.
+        /// </summary>
+        public void Draw()
+        {
+            this.polygon.Draw(Color.Aqua, 2);
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        ///     Checks the allies.
+        /// </summary>
+        private void CheckAllies()
+        {
+            foreach (var ally in HeroManager.Allies)
+            {
+                if (this.polygon.IsInside(ally.ServerPosition.To2D()))
+                {
+                    this.AlliesInside.Add(ally);
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Creates this instance.
+        /// </summary>
         private void Create()
         {
-            var wwCenter = Geometry.Extend(Variables.Player.ServerPosition, this.Start.To3D(), 300);
+            var wwCenter = Geometry.Extend(GlobalVariables.Player.ServerPosition, this.Start.To3D(), 300);
             this.CastPosition = wwCenter.To2D();
 
-            var wwPerpend = (wwCenter - Variables.Player.ServerPosition).Normalized();
+            var wwPerpend = (wwCenter - GlobalVariables.Player.ServerPosition).Normalized();
             wwPerpend.X = -wwPerpend.X;
 
             var leftInnerBound = Geometry.Extend(
                 wwCenter,
                 wwPerpend,
-                (Variables.Spells[SpellSlot.W].Width / 2) + this.AdditionalWidth);
+                (GlobalVariables.Spells[SpellSlot.W].Width / 2) + this.AdditionalWidth);
             var rightInnerBound = Geometry.Extend(
                 wwCenter,
                 wwPerpend,
-                -(Variables.Spells[SpellSlot.W].Width / 2) - this.AdditionalWidth);
+                -(GlobalVariables.Spells[SpellSlot.W].Width / 2) - this.AdditionalWidth);
 
             var leftOuterBound = Geometry.Extend(this.Start, leftInnerBound.To2D(), this.Range);
             var rightOuterBound = Geometry.Extend(this.Start, rightInnerBound.To2D(), this.Range);
@@ -71,20 +137,6 @@
             this.polygon = safeZone;
         }
 
-        private void CheckAllies()
-        {
-            foreach (var ally in HeroManager.Allies)
-            {
-                if (this.polygon.IsInside(ally.ServerPosition.To2D()))
-                {
-                    this.AlliesInside.Add(ally);
-                }
-            }
-        }
-
-        public void Draw()
-        {
-            this.polygon.Draw(Color.Aqua, 2);
-        }
+        #endregion
     }
 }

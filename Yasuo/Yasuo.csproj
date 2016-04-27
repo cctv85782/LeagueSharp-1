@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Yasuo</RootNamespace>
     <AssemblyName>Yasuo</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <PreBuildEvent />
@@ -30,6 +30,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -58,22 +59,19 @@
     <Reference Include="LeagueSharp">
       <HintPath>C:\LeagueSharp\System\LeagueSharp.dll</HintPath>
     </Reference>
-    <Reference Include="LeagueSharp.Common, Version=1.0.0.49, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="LeagueSharp.Common">
       <HintPath>C:\LeagueSharp\System\LeagueSharp.Common.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.Data">
       <HintPath>C:\LeagueSharp\System\LeagueSharp.Data.dll</HintPath>
     </Reference>
-    <Reference Include="LeagueSharp.SDK, Version=1.0.0.0, Culture=neutral, PublicKeyToken=81fd73eb5b0f2c8a, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="LeagueSharp.SDK">
       <HintPath>C:\LeagueSharp\System\LeagueSharp.SDK.dll</HintPath>
     </Reference>
     <Reference Include="SebbyLib">
       <HintPath>C:\LeagueSharp\System\SebbyLib.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX, Version=2.6.3.0, Culture=neutral, PublicKeyToken=345b829e6e492981, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="SharpDX">
       <HintPath>C:\LeagueSharp\System\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D9, Version=2.6.3.0, Culture=neutral, PublicKeyToken=345b829e6e492981, processorArchitecture=MSIL">
@@ -103,13 +101,18 @@
     <Compile Include="Common\Classes\Parent.cs" />
     <Compile Include="Common\Classes\Template.cs" />
     <Compile Include="Common\Data\Debuffs.cs" />
-    <Compile Include="Common\Extensions\MenuExtensions.cs" />
     <Compile Include="Common\Extensions\Extensions.cs" />
+    <Compile Include="Common\Extensions\MenuExtensions\Pathfinder.cs" />
+    <Compile Include="Common\Extensions\MenuExtensions\Whitelist.cs" />
+    <Compile Include="Common\Extensions\MenuExtensions\Blacklist.cs" />
+    <Compile Include="Common\Extensions\MenuExtensions\DynamicMenu.cs" />
+    <Compile Include="Common\Extensions\MenuExtensions\MenuExtensions.cs" />
     <Compile Include="Common\Objects\Dash.cs" />
     <Compile Include="Common\Objects\LastBreath.cs" />
     <Compile Include="Common\Objects\Path.cs" />
     <Compile Include="Common\Objects\WindWall.cs" />
     <Compile Include="Common\Predictions\PredictionOktw.cs" />
+    <Compile Include="Common\Provider\ComboLogicProvider.cs" />
     <Compile Include="Common\Provider\FlashLogicProvider.cs" />
     <Compile Include="Common\Provider\FlowLogicProvider.cs" />
     <Compile Include="Common\Provider\LastBreathLogicProvider.cs" />
@@ -120,11 +123,11 @@
     <Compile Include="Common\Provider\TurretLogicProvider.cs" />
     <Compile Include="Common\Provider\WallDashLogicProvider.cs" />
     <Compile Include="Common\Provider\WindWallLogicProvider.cs" />
+    <Compile Include="Common\Utility\HealthComparer.cs" />
     <Compile Include="Common\Utility\VersionChecker.cs" />
     <Compile Include="Common\Utility\Helper.cs" />
     <Compile Include="Common\Utility\Logger.cs" />
-    <Compile Include="Common\Utility\Utility.cs" />
-    <Compile Include="Drawings\Draws.cs" />
+    <Compile Include="Drawings\Flow.cs" />
     <Compile Include="Drawings\Drawings.cs" />
     <Compile Include="Modules\Assembly\Debug.cs" />
     <Compile Include="Modules\Auto\Killsteal.cs" />
@@ -154,7 +157,7 @@
     <Compile Include="Assembly.cs" />
     <Compile Include="OrbwalkingModes\Combo\SteelTempest.cs" />
     <Compile Include="OrbwalkingModes\Combo\SweepingBlade.cs" />
-    <Compile Include="Variables.cs" />
+    <Compile Include="GlobalVariables.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

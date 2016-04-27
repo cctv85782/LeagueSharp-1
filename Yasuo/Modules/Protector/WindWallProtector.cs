@@ -19,6 +19,7 @@
 
     using Color = System.Drawing.Color;
 
+    // TODO
     internal class WindWallProtector : Child<Protector>
     {
         public WindWallProtector(Protector parent)
@@ -58,7 +59,7 @@
         protected override void OnInitialize()
         {
             Tracker = new SDK.Tracker();
-            Provider = new SweepingBladeLogicProvider(Variables.Spells[SpellSlot.E].Range * 2);
+            Provider = new SweepingBladeLogicProvider(GlobalVariables.Spells[SpellSlot.E].Range * 2);
             base.OnInitialize();
         }
 
@@ -154,10 +155,10 @@
 
         public void Execute(Vector2 castPosition)
         {
-            if (Variables.Spells[SpellSlot.W].IsReady() 
+            if (GlobalVariables.Spells[SpellSlot.W].IsReady() 
                 && castPosition.IsValid() && castPosition != Vector2.Zero)
             {
-                Variables.Spells[SpellSlot.W].Cast(castPosition);
+                GlobalVariables.Spells[SpellSlot.W].Cast(castPosition);
             }
         }
     }
