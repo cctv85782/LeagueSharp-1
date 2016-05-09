@@ -7,7 +7,7 @@
     using LeagueSharp.Common;
 
     using Yasuo.Common.Classes;
-    using Yasuo.Common.Provider;
+    using Yasuo.Common.LogicProvider;
 
     // TODO: Draw on minimap & menu settings (min units left, line thinkess, only if enemies around, color)
     internal class Flow : Child<Drawings>

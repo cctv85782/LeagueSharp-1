@@ -1,22 +1,15 @@
-namespace Yasuo.Common.Provider
+namespace Yasuo.Common.LogicProvider
 {
     using LeagueSharp;
     using LeagueSharp.Common;
 
     using SharpDX;
 
-    // TODO:  https://github.com/Aferii/LeagueSharp/tree/master/NavMeshRemake
+    // TODO: https://github.com/Aferii/LeagueSharp/tree/master/NavMeshRemake
+    // TODO: Working around properties, all types of dashes supported (enums)
 
     public class WallDashLogicProvider
     {
-        #region Constructors and Destructors
-
-        public WallDashLogicProvider()
-        {
-        }
-
-        #endregion
-
         #region Enums
 
         /// <summary>
@@ -134,7 +127,7 @@ namespace Yasuo.Common.Provider
         /// <returns></returns>
         public bool IsWallDash(Obj_AI_Base unit, float dashRange, float minWallWidth = 50)
         {
-            return IsWallDash(unit.ServerPosition, dashRange, minWallWidth);
+            return this.IsWallDash(unit.ServerPosition, dashRange, minWallWidth);
         }
 
         /// <summary>
@@ -147,18 +140,18 @@ namespace Yasuo.Common.Provider
         public bool IsWallDash(Vector3 position, float dashRange, float minWallWidth = 50)
         {
             var dashEndPos = GlobalVariables.Player.Position.Extend(position, dashRange);
-            var firstWallPoint = GetFirstWallPoint(ObjectManager.Player.Position, dashEndPos);
+            var firstWallPoint = this.GetFirstWallPoint(ObjectManager.Player.Position, dashEndPos);
 
             if (firstWallPoint.Equals(Vector3.Zero))
             {
                 // No Wall
                 return false;
             }
-
+              
             if (dashEndPos.IsWall())
                 // End Position is in Wall
             {
-                var wallWidth = GetWallWidth(firstWallPoint, dashEndPos);
+                var wallWidth = this.GetWallWidth(firstWallPoint, dashEndPos);
 
                 if (wallWidth > minWallWidth && wallWidth - firstWallPoint.Distance(dashEndPos) < wallWidth * 0.4f)
                 {

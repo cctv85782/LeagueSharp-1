@@ -8,6 +8,8 @@
     using Yasuo.Common.Classes;
     using Yasuo.Common.Utility;
 
+    // TODO: PRIORITY LOW > Notify with a sound and a notification banner
+
     internal class Version : Child<Assembly>
     {
         #region Fields
@@ -71,33 +73,36 @@
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         public void OnUpdate(EventArgs args)
         {
-            if (Game.Time - 300 > this.lastChecked)
+            if (Game.Time - 300 < this.lastChecked)
             {
-                this.versionChecker.CheckNewVersion(GlobalVariables.GitHubPath);
+                return;
+            }
 
-                if (versionChecker.UpdateAvailable)
+            this.versionChecker.CheckNewVersion(GlobalVariables.GitHubPath);
+
+            if (versionChecker.UpdateAvailable)
+            {
+                if (versionChecker.ForceUpdate)
                 {
-                    if (versionChecker.ForceUpdate)
+                    Notifications.AddNotification(GlobalVariables.Name + "- IMPORTANT UPDATE!", dispose: false);
+                }
+                else
+                {
+                    if (this.Menu.Item(this.Name + "NotifyNewVersion").GetValue<bool>())
                     {
-                        Notifications.AddNotification(GlobalVariables.Name + "- IMPORTANT UPDATE!", dispose: false);
-                    }
-                    else
-                    {
-                        if (this.Menu.Item(this.Name + "NotifyNewVersion").GetValue<bool>())
+                        if (!notified)
                         {
-                            if (!notified)
-                            {
-                                Notifications.AddNotification(GlobalVariables.Name + "- Update Available!", 2500);
+                            Notifications.AddNotification(GlobalVariables.Name + "- Update Available!", 2500);
 
-                                this.notified = true;
-                                Draw();
-                            }
+                            this.notified = true;
+                            Draw();
                         }
                     }
-                    this.Menu.Item(this.Name + "Version").DisplayName = "Version is outdated";
                 }
-                this.lastChecked = Game.Time;
+                this.Menu.Item(this.Name + "Version").DisplayName = "Version is outdated";
             }
+            this.lastChecked = Game.Time;
+            
         }
 
         #endregion

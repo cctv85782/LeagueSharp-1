@@ -6,10 +6,12 @@
 
     using LeagueSharp;
     using LeagueSharp.Common;
-    using LeagueSharp.SDK.Utils;
+
+    using SharpDX;
 
     using Yasuo.Common.Classes;
-    using Yasuo.Common.Provider;
+    using Yasuo.Common.Extensions;
+    using Yasuo.Common.LogicProvider;
     using Yasuo.Common.Utility;
 
     internal class SteelTempest : Child<LaneClear>
@@ -17,14 +19,19 @@
         #region Fields
 
         /// <summary>
+        ///     The minions
+        /// </summary>
+        protected List<Obj_AI_Base> Minions = new List<Obj_AI_Base>();
+
+        /// <summary>
         ///     The E logicprovider
         /// </summary>
-        public SweepingBladeLogicProvider ProviderE;
+        private SweepingBladeLogicProvider providerE;
 
         /// <summary>
         ///     The Q logicprovider
         /// </summary>
-        public SteelTempestLogicProvider ProviderQ;
+        private SteelTempestLogicProvider providerQ;
 
         #endregion
 
@@ -62,90 +69,19 @@
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         public void OnUpdate(EventArgs args)
         {
+            this.SoftReset();
+
             if (GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.LaneClear
                 || !GlobalVariables.Spells[SpellSlot.Q].IsReady())
             {
                 return;
             }
 
-            var minions = MinionManager.GetMinions(
-                GlobalVariables.Player.ServerPosition,
-                GlobalVariables.Spells[SpellSlot.Q].Range,
-                MinionTypes.All,
-                MinionTeam.Enemy,
-                MinionOrderTypes.None);
+            this.GetMinions();
 
-            if (minions.Count == 0)
-            {
-                return;
-            }
+            this.LogicMassClear();
 
-            #region EQ
-
-            // EQ > Synergyses with the E function in SweepingBlade/LogicProvider.cs
-            if (this.Menu.Item(this.Name + "EQ").GetValue<bool>()
-                && (GlobalVariables.Player.IsDashing()
-                    && minions.Where(x => x.Health <= this.ProviderQ.GetDamage(x))
-                           .Count(x => x.Distance(GlobalVariables.Player) <= 375) > 2))
-            {
-                // Won't waste Q3
-                // TODO: Add a Logic to do it if an enemy can get hit
-                if (this.Menu.Item(this.Name + "EQNoQ3").GetValue<bool>() && this.ProviderQ.HasQ3())
-                {
-                    return;
-                }
-                this.Execute(minions);
-            }
-
-                #endregion
-
-                #region Unstacked Q and Stacked Q
-
-            else
-            {
-                if (GlobalVariables.Player.Spellbook.IsAutoAttacking || GlobalVariables.Player.Spellbook.IsCharging
-                    || GlobalVariables.Player.Spellbook.IsChanneling)
-                {
-                    return;
-                }
-
-                // Mass lane clear logic
-                if (this.ProviderQ.HasQ3())
-                {
-                    // if AOE is enabled and more than X units are around us.
-                    if (this.Menu.Item(this.Name + "AOE").GetValue<bool>()
-                        && this.Menu.Item(this.Name + "MinHitAOE").GetValue<Slider>().Value
-                        <= minions.Where(x => !x.InAutoAttackRange()).ToList().Count)
-                    {
-                        // Check for the minions centered position and wait until we are a bit away
-                        // TODO: Add values like Spread of the minions
-                        if (this.Menu.Item(this.Name + "CenterCheck").GetValue<bool>()
-                            && GlobalVariables.Player.Distance(Helper.GetMeanVector2(minions)) > 450
-                            || minions.Where(x => !x.InAutoAttackRange()).ToList().Count > 15
-                            || this.ProviderQ.BuffTime() <= 10)
-                        {
-                            minions = minions.Where(x => !x.InAutoAttackRange()).ToList();
-                            this.Execute(minions, true);
-                        }
-
-                        // Alternative Logic if the Menu Item is disabled
-                        else if (!this.Menu.Item(this.Name + "CenterCheck").GetValue<bool>())
-                        {
-                            minions = minions.Where(x => !x.InAutoAttackRange()).ToList();
-                            this.Execute(minions, true);
-                        }
-                    }
-                }
-
-                // Stack Logic
-                // TODO: Add Health Prediction
-                else
-                {
-                    this.Execute(minions, tryStacking: true);
-                }
-            }
-
-            #endregion
+            this.LogicLastHit();
         }
 
         #endregion
@@ -175,8 +111,8 @@
         /// </summary>
         protected override void OnInitialize()
         {
-            this.ProviderQ = new SteelTempestLogicProvider();
-            this.ProviderE = new SweepingBladeLogicProvider();
+            this.providerQ = new SteelTempestLogicProvider();
+            this.providerE = new SweepingBladeLogicProvider();
 
             base.OnInitialize();
         }
@@ -188,7 +124,9 @@
         {
             this.Menu = new Menu(this.Name, this.Name);
 
-            this.GeneralSettings();
+
+            this.SetupGeneralMenu();
+
 
             this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
 
@@ -196,45 +134,60 @@
         }
 
         /// <summary>
-        ///     Executes the specified units.
+        ///     Executes on the specified position.
         /// </summary>
-        /// <param name="units">The units.</param>
-        /// <param name="aoe">if set to <c>true</c> [aoe].</param>
-        /// <param name="circular">if set to <c>true</c> [circular].</param>
-        /// <param name="tryStacking">if set to <c>true</c> [try stacking].</param>
-        private void Execute(List<Obj_AI_Base> units, bool aoe = false, bool circular = false, bool tryStacking = false)
+        /// <param name="position">The position.</param>
+        private static void Execute(Vector3 position)
         {
-            if (aoe)
+            if (position.IsValid())
             {
-                var pred = MinionManager.GetBestLineFarmLocation(
-                    units.Select(m => m.ServerPosition.To2D()).ToList(),
-                    GlobalVariables.Spells[SpellSlot.Q].Width,
-                    GlobalVariables.Spells[SpellSlot.Q].Range);
-
-                GlobalVariables.Spells[SpellSlot.Q].Cast(pred.Position);
+                GlobalVariables.Spells[SpellSlot.Q].Cast(position);
             }
-            if (circular)
-            {
-                GlobalVariables.Spells[SpellSlot.Q].Cast(
-                    units.Where(x => x.Distance(GlobalVariables.Player) <= 375).MinOrDefault(x => x.Health));
-            }
-            if (tryStacking)
-            {
-                // Get the minion that is furthest away and killable
-                var minion =
-                    MinionManager.GetMinions(
-                        GlobalVariables.Player.ServerPosition,
-                        GlobalVariables.Spells[SpellSlot.Q].Range)
-                        .Where(
-                            x =>
-                            x.Health <= this.ProviderQ.GetDamage(x)
-                            && x.Distance(GlobalVariables.Player.ServerPosition)
-                            <= GlobalVariables.Spells[SpellSlot.Q].Range)
-                        .MaxOrDefault(x => x.Distance(GlobalVariables.Player.ServerPosition));
+        }
 
-                if (minion != null)
+        /// <summary>
+        ///     Executes the LastHit logic.
+        /// </summary>
+        private void LogicLastHit()
+        {
+            if (GlobalVariables.Player.IsWindingUp || GlobalVariables.Player.Spellbook.IsCharging
+                || GlobalVariables.Player.Spellbook.IsChanneling)
+            {
+                return;
+            }
+        }
+
+        /// <summary>
+        ///     Executes the mass clear.
+        /// </summary>
+        private void LogicMassClear()
+        {
+            if (GlobalVariables.Player.IsWindingUp || GlobalVariables.Player.Spellbook.IsCharging
+                || GlobalVariables.Player.Spellbook.IsChanneling)
+            {
+                return;
+            }
+
+            var farmlocation = MinionManager.GetBestLineFarmLocation(
+                Minions.ToVector3S().To2D(),
+                GlobalVariables.Spells[SpellSlot.Q].Width,
+                GlobalVariables.Spells[SpellSlot.Q].Range);
+
+            if (farmlocation.MinionsHit == 0)
+            {
+                return;
+            }
+
+            if (this.Menu.Item(this.Name + "AOE").GetValue<bool>()
+                && this.Menu.Item(this.Name + "MinHitAOE").GetValue<Slider>().Value <= farmlocation.MinionsHit)
+            {
+                if (this.Menu.Item(this.Name + "CenterCheck").GetValue<bool>()
+                    && GlobalVariables.Player.Distance(Helper.GetMeanVector2(Minions)) > 450
+                    || Minions.Where(x => !x.InAutoAttackRange()).ToList().Count <= farmlocation.MinionsHit
+                    || this.providerQ.BuffTime() <= 100)
                 {
-                    GlobalVariables.Spells[SpellSlot.Q].Cast(minion.ServerPosition);
+                    Minions = Minions.Where(x => !x.InAutoAttackRange()).ToList();
+                    Execute(farmlocation.Position.To3D());
                 }
             }
         }
@@ -242,7 +195,7 @@
         /// <summary>
         ///     Method to set the general settings
         /// </summary>
-        private void GeneralSettings()
+        private void SetupGeneralMenu()
         {
             this.Menu.AddItem(
                 new MenuItem(this.Name + "AOE", "Try to hit multiple").SetValue(true)
@@ -262,8 +215,29 @@
                     .SetTooltip("If this is enabled, the assembly will try to hit minions while dashing"));
 
             this.Menu.AddItem(
-                new MenuItem(this.Name + "EQNoQ3", "Only EQ if Q not charged").SetValue(true)
+                new MenuItem(this.Name + "EQ.OnlyNotStacked", "Only EQ if Q not charged").SetValue(true)
                     .SetTooltip("If this is enabled, the assembly won't do EQ if you have stacked/charged Q"));
+        }
+
+        /// <summary>
+        ///     Gets the minions.
+        /// </summary>
+        private void GetMinions()
+        {
+            this.Minions = MinionManager.GetMinions(
+                GlobalVariables.Player.ServerPosition,
+                GlobalVariables.Spells[SpellSlot.Q].Range,
+                MinionTypes.All,
+                MinionTeam.NotAlly,
+                MinionOrderTypes.None);
+        }
+
+        /// <summary>
+        /// Resets some fields
+        /// </summary>
+        private void SoftReset()
+        {
+            this.Minions = new List<Obj_AI_Base>();
         }
 
         #endregion

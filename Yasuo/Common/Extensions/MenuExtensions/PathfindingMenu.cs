@@ -2,30 +2,27 @@
 
 namespace Yasuo.Common.Extensions.MenuExtensions
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using LeagueSharp;
     using LeagueSharp.Common;
 
     // TODO: PRIORITY HIGH
-    public class Pathfinder
+    public class PathfindingMenu
     {
         #region Fields
 
         /// <summary>
-        ///     The new menu
-        /// </summary>
-        public Menu AttachedMenu;
-
-        /// <summary>
         ///     The blacklist
         /// </summary>
-        public Blacklist Blacklist;
+        public Menu Blacklist;
 
         /// <summary>
         ///     The blacklisted heroes
         /// </summary>
-        public List<Obj_AI_Base> BlacklistedHeroes = new List<Obj_AI_Base>();
+        public List<Obj_AI_Base> BlacklistedHeroes;
 
         /// <summary>
         ///     The display name
@@ -37,49 +34,70 @@ namespace Yasuo.Common.Extensions.MenuExtensions
         /// </summary>
         public Menu Menu;
 
+        /// <summary>
+        ///     The settings
+        /// </summary>
+        public Menu Settings;
+
+        /// <summary>
+        ///     The dynamic menu
+        /// </summary>
+        private DynamicMenu attachedMenu;
+
+        /// <summary>
+        ///     The blacklist
+        /// </summary>
+        private BlacklistMenu blacklistMenu;
+
         #endregion
 
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DynamicMenu" /> class.
+        ///     Initializes a new instance of the <see cref="attachedMenu" /> class.
         /// </summary>
         /// <param name="menu">The menu.</param>
         /// <param name="displayName">The display name.</param>
-        public Pathfinder(Menu menu, string displayName)
+        public PathfindingMenu(Menu menu, string displayName)
         {
             this.Menu = menu;
             this.DisplayName = displayName;
 
-            this.SetupMenu();
+            this.Setup();
         }
 
         #endregion
 
-        #region Public Methods and Operators
+        #region Methods
 
         /// <summary>
-        ///     Adds the enemies.
+        ///     Adds all menu items.
         /// </summary>
-        public void AddEnemies()
+        private void Setup()
         {
-            Blacklist = new Blacklist(AttachedMenu, "Blacklist");
-
-            var selecter = new MenuItem("ModeTarget", "Dash to: ").SetValue(new StringList(new[] { "Mouse", "Enemy" }));
+            var selecter = new MenuItem("Mode", "Dash to: ").SetValue(new StringList(new[] { "Mouse", "Enemy" }));
 
             var mouse = new List<MenuItem>() { };
 
             var enemy = new List<MenuItem>()
                             {
-                                new MenuItem("Prediction", "Predict enemy position").SetValue(true)
+                                new MenuItem("Prediction", "Use Prediction").SetValue(true)
                                     .SetTooltip(
-                                        "The assembly will try to E to the enemy predicted position. This will not work if Mode is set to Mouse."),
+                                        "The assembly will try to E to the enemy predicted position."),
+
+                                new MenuItem("PredictionEnhanced", "Prediction -> Two Path System").SetValue(true)
+                                    .SetTooltip(
+                                        "The assembly will try to E to the enemy predicted position."),
+
+                                new MenuItem("MinCursorDistance", "Min Cursor Distance to target").SetValue(new Slider(600, 50, 2000)),
                             };
 
-            var dynamicMenu = new DynamicMenu(Menu, "Pathfinder", selecter, new[] { mouse, enemy });
+            this.attachedMenu = new DynamicMenu(this.Menu, DisplayName, selecter, new[] { mouse, enemy });
 
             var both = new List<MenuItem>()
                            {
+                new MenuItem("DontDashUnderTurret", "Don't dash under turret")
+                .SetValue(true),
                                new MenuItem("AutoWalkToDash", "[Experimental] Auto-Walk to dash")
                                    .SetValue(true)
                                    .SetTooltip(
@@ -101,28 +119,45 @@ namespace Yasuo.Common.Extensions.MenuExtensions
                                    "[Experimental] Try to Path around Skillshots").SetValue(true)
                                    .SetTooltip(
                                        "if this is enabled, the assembly will path around a skillshot if a path is given."),
+
+                               new MenuItem("Enabled", "Enabled").SetValue(true),
                            };
 
-            AttachedMenu.AddItem(new MenuItem("Enabled", "Enabled").SetValue(true));
-        }
+            this.blacklistMenu = new BlacklistMenu(this.attachedMenu.AttachedMenu, "Blacklist");
 
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        ///     Setups the menu.
-        /// </summary>
-        private void SetupMenu()
-        {
-            if (this.Menu == null)
+            foreach (var item in both)
             {
-                return;
+                item.Name = attachedMenu.AttachedMenu.Name + item.Name;
+
+                this.attachedMenu.AttachedMenu.AddItem(item);
             }
 
-            this.AttachedMenu = new Menu(this.DisplayName, this.Menu.Name + this.DisplayName);
+            foreach (var item in this.attachedMenu.AttachedMenu.Items)
+            {
+                if (item.Name == "Mode")
+                {
+                    var stringarray = item.GetValue<StringList>().SList;
 
-            this.Menu.AddSubMenu(this.AttachedMenu);
+                    var id = 0;
+
+                    for (var i = 0; i < stringarray.Count(); i++)
+                    {
+                        if (stringarray[i] == "Enemy")
+                        {
+                            id = i + 1;
+                        }
+                    }
+
+                    foreach (var item2 in this.blacklistMenu.AttachedMenu.Items)
+                    {
+                        item2.SetTag(id);
+                    }
+                }
+            }
+
+            Settings = this.attachedMenu.AttachedMenu;
+            Blacklist = this.blacklistMenu.AttachedMenu;
+            BlacklistedHeroes = this.blacklistMenu.BlacklistedHeroes;
         }
 
         #endregion

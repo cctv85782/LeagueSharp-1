@@ -11,8 +11,6 @@
 
     using SharpDX;
 
-    using Yasuo.Common.Provider;
-
     internal static class Extensions
     {
         #region Public Methods and Operators
@@ -28,6 +26,26 @@
             var minionList = MinionManager.GetMinions(position, range);
 
             return minionList?.Count ?? 0;
+        }
+
+        /// <summary>
+        /// Returns true if LastBreath object is a valid object.
+        /// </summary>
+        /// <param name="execution">The object.</param>
+        /// <returns></returns>
+        public static bool IsValid(this Common.Objects.LastBreath execution)
+        {
+            return execution.Target != null && execution.Target.IsValid;
+        }
+
+        /// <summary>
+        ///     returns true if unit is in AttackRange
+        /// </summary>
+        /// <param name="unit">The unit.</param>
+        /// <returns></returns>
+        public static bool InAutoAttackRange(this Obj_AI_Base unit)
+        {
+            return unit.Distance(GlobalVariables.Player) <= GlobalVariables.Player.AttackRange;
         }
 
         public static bool HasQ3(this Obj_AI_Hero hero) => ObjectManager.Player.HasBuff("YasuoQ3W");

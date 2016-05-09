@@ -11,8 +11,8 @@ namespace Yasuo.Modules.Flee
     using SharpDX;
 
     using Yasuo.Common.Classes;
+    using Yasuo.Common.LogicProvider;
     using Yasuo.Common.Objects;
-    using Yasuo.Common.Provider;
 
     internal class SweepingBlade : Child<Modules>
     {
@@ -126,7 +126,7 @@ namespace Yasuo.Modules.Flee
                     && GlobalVariables.Player.Distance(this.Path.Connections.First().Unit.ServerPosition)
                     <= GlobalVariables.Spells[SpellSlot.E].Range)
                 {
-                    this.Execute(Path.Connections.First().Unit);
+                    Execute(Path.Connections.First().Unit);
                 }
             }
             catch (Exception ex)
@@ -196,7 +196,7 @@ namespace Yasuo.Modules.Flee
         ///     Executes on the specified unit.
         /// </summary>
         /// <param name="unit">The unit.</param>
-        private void Execute(Obj_AI_Base unit)
+        private static void Execute(Obj_AI_Base unit)
         {
             try
             {

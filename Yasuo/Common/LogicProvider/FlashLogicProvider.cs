@@ -1,4 +1,4 @@
-﻿namespace Yasuo.Common.Provider
+﻿namespace Yasuo.Common.LogicProvider
 {
     class FlashLogicProvider
     {

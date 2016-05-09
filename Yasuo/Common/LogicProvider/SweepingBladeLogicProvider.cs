@@ -1,5 +1,7 @@
-﻿namespace Yasuo.Common.Provider
+﻿namespace Yasuo.Common.LogicProvider
 {
+    #region Using Directives
+
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -16,7 +18,10 @@
     using Yasuo.Common.Objects;
 
     using Color = System.Drawing.Color;
+    using Dash = Yasuo.Common.Objects.Dash;
     using Point = Yasuo.Common.Algorithm.Djikstra.Point;
+
+    #endregion
 
     /// <summary>
     /// </summary>
@@ -54,8 +59,8 @@
         /// <param name="calculationRange">The calculation range.</param>
         public SweepingBladeLogicProvider(float calculationRange = 10000)
         {
-            CalculationRange = calculationRange;
-            Drawing.OnDraw += DrawGrid;
+            this.CalculationRange = calculationRange;
+            Drawing.OnDraw += this.DrawGrid;
         }
 
         #endregion
@@ -95,8 +100,8 @@
         /// </summary>
         public void FinalizeGrid()
         {
-            GridGenerator.RemoveDisconnectedConnections();
-            GridGenerator.ConnectAllPoints();
+            this.GridGenerator.RemoveDisconnectedConnections();
+            this.GridGenerator.ConnectAllPoints();
         }
 
         /// <summary>
@@ -114,16 +119,16 @@
             switch (units)
             {
                 case Units.All:
-                    unitsToProcess = GetUnits(startPosition, true, true, true);
+                    unitsToProcess = this.GetUnits(startPosition, true, true, true);
                     break;
                 case Units.Minions:
-                    unitsToProcess = GetUnits(startPosition, true, false, false);
+                    unitsToProcess = this.GetUnits(startPosition, true, false, false);
                     break;
                 case Units.Champions:
-                    unitsToProcess = GetUnits(startPosition, false, true, false);
+                    unitsToProcess = this.GetUnits(startPosition, false, true, false);
                     break;
                 case Units.Mobs:
-                    unitsToProcess = GetUnits(startPosition, false, false, true);
+                    unitsToProcess = this.GetUnits(startPosition, false, false, true);
                     break;
             }
 
@@ -134,7 +139,7 @@
 
             if (unitsToProcess.Count > 0)
             {
-                GridGenerator = new GridGenerator(unitsToProcess, endPosition);
+                this.GridGenerator = new GridGenerator(unitsToProcess, endPosition);
             }
 
             // Generate Basic Grid
@@ -166,7 +171,7 @@
                     Console.WriteLine(@"[SweepingBladeLP] Getpath > Calculating Shortest Path");
                 }
 
-                if (GridGenerator.Grid == null || GridGenerator.Grid.Connections.Count == 0)
+                if (this.GridGenerator.Grid == null || this.GridGenerator.Grid.Connections.Count == 0)
                 {
                     if (GlobalVariables.Debug)
                     {
@@ -177,13 +182,13 @@
                 }
 
                 // Inputing the grid
-                var calculator = new Dijkstra(GridGenerator.Grid);
+                var calculator = new Dijkstra(this.GridGenerator.Grid);
 
-                calculator.SetStart(GridGenerator.Grid.BasePoint);
+                calculator.SetStart(this.GridGenerator.Grid.BasePoint);
 
                 // Set end point and return result as path
                 var points = calculator.GetPointsTo(this.GridGenerator.Grid.EndPoint);
-                CurrentPoints = points;
+                this.CurrentPoints = points;
 
                 if (GlobalVariables.Debug)
                 {
@@ -201,22 +206,22 @@
                     var from = points[i];
                     var to = points[i + 1];
 
-                    connections.Add(GridGenerator.Grid.FindConnection(from, to));
+                    connections.Add(this.GridGenerator.Grid.FindConnection(from, to));
                 }
 
-                CurrentConnections = connections;
+                this.CurrentConnections = connections;
 
                 if (GlobalVariables.Debug)
                 {
                     Console.WriteLine(
-                        @"[SweepingBladeLP] GetPath > CurrentConnections.Count: " + CurrentConnections.Count);
+                        @"[SweepingBladeLP] GetPath > CurrentConnections.Count: " + this.CurrentConnections.Count);
                 }
 
                 #endregion
 
-                if (CurrentConnections.Count > 0)
+                if (this.CurrentConnections.Count > 0)
                 {
-                    return new Path(CurrentConnections);
+                    return new Path(this.CurrentConnections);
                 }
 
                 return null;
@@ -236,11 +241,11 @@
         {
             if (GlobalVariables.Debug)
             {
-                GridGenerator?.Grid?.Draw();
+                this.GridGenerator?.Grid?.Draw();
 
-                if (CurrentConnections != null)
+                if (this.CurrentConnections != null)
                 {
-                    foreach (var connection in CurrentConnections)
+                    foreach (var connection in this.CurrentConnections)
                     {
                         if (connection.Unit != null)
                         {
@@ -254,11 +259,11 @@
                     }
                 }
 
-                if (CurrentPoints != null)
+                if (this.CurrentPoints != null)
                 {
-                    for (var i = 0; i < CurrentPoints.Count; i++)
+                    for (var i = 0; i < this.CurrentPoints.Count; i++)
                     {
-                        var point = CurrentPoints[i];
+                        var point = this.CurrentPoints[i];
                         Drawing.DrawText(
                             Drawing.WorldToScreen(point.Position).X,
                             Drawing.WorldToScreen(point.Position).Y,
@@ -267,10 +272,29 @@
                     }
                 }
 
-                var point2 = GridGenerator?.Grid?.BasePoint;
+                var point2 = this.GridGenerator?.Grid?.BasePoint;
 
                 point2?.Draw(60, 5, Color.Violet);
             }
+        }
+
+        /// <summary>
+        ///     Gets the current dash end position.
+        /// </summary>
+        /// <returns></returns>
+        public Vector3 GetCurrentDashEndPosition()
+        {
+            if (!GlobalVariables.Player.IsDashing())
+            {
+                return new Vector3();
+            }
+
+            var startPosition = GlobalVariables.Player.GetDashInfo().StartPos;
+            var endPosition = GlobalVariables.Player.GetDashInfo().EndPos;
+
+            var dash = new Dash(startPosition.To3D(), endPosition.To3D());
+
+            return dash.EndPosition;
         }
 
         /// <summary>
@@ -279,6 +303,7 @@
         /// <param name="startPosition">start point (vector)</param>
         /// <param name="minions">bool</param>
         /// <param name="champions">bool</param>
+        /// <param name="mobs"></param>
         /// <returns>List(Obj_Ai_Base)</returns>
         public List<Obj_AI_Base> GetUnits(
             Vector3 startPosition,
@@ -293,19 +318,19 @@
 
                 if (minions)
                 {
-                    units.AddRange(Cache.GetMinions(startPosition, CalculationRange, MinionTeam.NotAlly));
+                    units.AddRange(Cache.GetMinions(startPosition, this.CalculationRange, MinionTeam.NotAlly));
                 }
 
                 if (champions)
                 {
-                    units.AddRange(HeroManager.Enemies.Where(x => x.Distance(startPosition) <= CalculationRange));
+                    units.AddRange(HeroManager.Enemies.Where(x => x.Distance(startPosition) <= this.CalculationRange));
                 }
 
                 foreach (var x in
                     units.Where(
                         x =>
                         !x.IsValid || x.HasBuff("YasuoDashWrapper") || x.IsDead || x.Health == 0 || x.IsMe
-                        || x.Distance(GlobalVariables.Player.ServerPosition) > CalculationRange).ToList())
+                        || x.Distance(GlobalVariables.Player.ServerPosition) > this.CalculationRange).ToList())
                 {
                     units.Remove(x);
                 }
@@ -348,12 +373,12 @@
         {
             try
             {
-                if (GridGenerator == null)
+                if (this.GridGenerator == null)
                 {
                     return;
                 }
 
-                GridGenerator.Grid = null;
+                this.GridGenerator.Grid = null;
             }
             catch (Exception ex)
             {

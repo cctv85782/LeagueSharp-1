@@ -13,7 +13,7 @@ namespace Yasuo.Common.Objects
     using SharpDX;
 
     using Yasuo.Common.Algorithm.Djikstra;
-    using Yasuo.Common.Provider;
+    using Yasuo.Common.LogicProvider;
 
     using Color = System.Drawing.Color;
 

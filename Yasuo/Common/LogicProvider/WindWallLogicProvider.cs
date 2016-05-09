@@ -1,4 +1,4 @@
-namespace Yasuo.Common.Provider
+namespace Yasuo.Common.LogicProvider
 {
     using System.Collections.Generic;
 
@@ -67,7 +67,7 @@ namespace Yasuo.Common.Provider
 
             foreach (var skillshot in skillshots)
             {
-                skillshotDict.Add(skillshot, GetCastPosition(skillshot.MissilePosition(), skillshot.Direction));
+                skillshotDict.Add(skillshot, this.GetCastPosition(skillshot.MissilePosition(), skillshot.Direction));
             }
 
             switch (mode)

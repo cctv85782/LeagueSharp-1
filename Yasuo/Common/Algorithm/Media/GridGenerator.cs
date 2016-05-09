@@ -9,6 +9,7 @@
     using LeagueSharp.SDK;
 
     using SharpDX;
+    using SharpDX.Direct3D9;
 
     using Yasuo.Common.Algorithm.Djikstra;
     using Yasuo.Common.Objects;
@@ -349,6 +350,7 @@
             }
         }
 
+        // TODO: REWORK (More efficient)
         /// <summary>
         ///     Searches for connections that do not belong to the grid anymore and removes them
         /// </summary>
@@ -369,7 +371,7 @@
                 {
                     var backtracedPath = this.Backtrace(connection.From);
 
-                    if (backtracedPath == null || backtracedPath.Count < 0)
+                    if (backtracedPath == null)
                     {
                         return;
                     }
@@ -387,6 +389,71 @@
                     connections.Remove(connection);
                 }
             }
+
+            //if (GlobalVariables.Debug)
+            //{
+            //    Console.WriteLine(@"GridGenerator.Cs > RemoveDisconnectedConnections()");
+            //}
+
+            //var toBeRemoved = new List<Connection>();
+
+            //var connections = this.Grid?.Connections;
+
+            //if (connections != null)
+            //{
+            //    foreach (var connection in connections.ToList())
+            //    {
+            //        connections.Remove(connection);
+
+            //        if (connections.Any(x => x.To == connection.From))
+            //        {
+            //            continue;
+            //        }
+
+            //        if (toBeRemoved.Contains(connection))
+            //        {
+            //            continue;
+            //        }
+
+            //        toBeRemoved.Add(connection);
+            //    }
+            //}
+
+            //var connectionsleft = true;
+
+            //while (connectionsleft)
+            //{
+            //    foreach (var connection in toBeRemoved.ToList())
+            //    {
+            //        if (connections != null && connections.All(x => x.From != connection.To))
+            //        {
+            //            continue;
+            //        }
+
+            //        if (toBeRemoved.Contains(connection))
+            //        {
+            //            continue;
+            //        }
+            //        connections?.Remove(connection);
+            //        toBeRemoved.Add(connection);
+            //    }
+
+            //    var count = 0;
+
+            //    for (int index = 0; index < toBeRemoved.Count; index++)
+            //    {
+            //        var t = toBeRemoved[index];
+            //        if (count == toBeRemoved.Count - 1 || index < toBeRemoved.Count - 1)
+            //        {
+            //            connectionsleft = false;
+            //        }
+
+            //        if (connections != null && connections.All(x => x.From != t.To))
+            //        {
+            //            count++;
+            //        }
+            //    }
+            //}
         }
 
         // TODO PRIORITY: MEDIUM - LOW

@@ -13,7 +13,7 @@
     using Yasuo.Common.Classes;
     using Yasuo.Common.Extensions;
     using Yasuo.Common.Extensions.MenuExtensions;
-    using Yasuo.Common.Provider;
+    using Yasuo.Common.LogicProvider;
 
     using Dash = Yasuo.Common.Objects.Dash;
     using Prediction = SebbyLib.Prediction.Prediction;
@@ -27,22 +27,27 @@
         /// <summary>
         ///     The Flash logicprovider
         /// </summary>
-        public FlashLogicProvider Provider;
+        private FlashLogicProvider provider;
 
         /// <summary>
         ///     The E logicprovider
         /// </summary>
-        public SweepingBladeLogicProvider ProviderE;
+        private SweepingBladeLogicProvider providerE;
 
         /// <summary>
         ///     The Q logicprovider
         /// </summary>
-        public SteelTempestLogicProvider ProviderQ;
+        private SteelTempestLogicProvider providerQ;
 
         /// <summary>
         ///     The flash slot
         /// </summary>
-        private SpellSlot flashSlot;
+        internal SpellSlot FlashSlot;
+
+        /// <summary>
+        ///     The blacklist
+        /// </summary>
+        public BlacklistMenu BlacklistMenu;
 
         #endregion
 
@@ -91,7 +96,7 @@
                 eqFlash.SetSkillshot(0, 350, float.MaxValue, false, SkillshotType.SkillshotCircle);
 
                 if (args.Animation == "Spell1_Dash" && sender.IsMe && GlobalVariables.Player.HasQ3()
-                    && GlobalVariables.Player.Spellbook.CanUseSpell(this.flashSlot) == SpellState.Ready)
+                    && GlobalVariables.Player.Spellbook.CanUseSpell(this.FlashSlot) == SpellState.Ready)
                 {
                     var targets =
                         HeroManager.Enemies.Where(
@@ -133,6 +138,7 @@
             }
         }
 
+        // TODO: PRIORITY MED
         /// <summary>
         ///     Raises the <see cref="E:Update" /> event.
         /// </summary>
@@ -151,37 +157,35 @@
                     HeroManager.Enemies.Where(
                         x => x.Distance(GlobalVariables.Player) <= flash.SData.CastRange + eqFlash.Range).ToList();
 
-                var units = ProviderE.GetUnits(GlobalVariables.Player.ServerPosition);
-                {
-                }
+                //var units = ProviderE.GetUnits(GlobalVariables.Player.ServerPosition);
 
-                var gridGenerator = new GridGenerator(units, new Vector3())
-                                        {
-                                            MaxConnections = units.Count,
-                                            PathDeepness = 1
-                                        };
+                //var gridGenerator = new GridGenerator(units, new Vector3())
+                //                        {
+                //                            MaxConnections = units.Count,
+                //                            PathDeepness = 1
+                //                        };
 
-                gridGenerator.Generate();
+                //gridGenerator.Generate();
 
-                var dashes = new List<Dash>();
+                //var dashes = new List<Dash>();
 
-                if (gridGenerator.Grid != null)
-                {
-                    foreach (var connection in gridGenerator.Grid.Connections.Where(x => x.IsDash))
-                    {
-                        dashes.Add(new Dash(connection.Unit));
-                    }
-                }
+                //if (gridGenerator.Grid != null)
+                //{
+                //    foreach (var connection in gridGenerator.Grid.Connections.Where(x => x.IsDash))
+                //    {
+                //        dashes.Add(new Dash(connection.Unit));
+                //    }
+                //}
 
-                #region Evaluation
+                //#region Evaluation
 
-                Dash dash = null;
+                //Dash dash = null;
 
-                switch (flashSlot)
-                {
-                }
+                //switch (flashSlot)
+                //{
+                //}
 
-                #endregion
+                //#endregion
             }
         }
 
@@ -214,21 +218,22 @@
         /// </summary>
         protected override void OnInitialize()
         {
-            this.Provider = new FlashLogicProvider();
-            this.ProviderQ = new SteelTempestLogicProvider();
-            this.ProviderE = new SweepingBladeLogicProvider(450);
+            this.provider = new FlashLogicProvider();
+            this.providerQ = new SteelTempestLogicProvider();
+            this.providerE = new SweepingBladeLogicProvider(450);
 
             foreach (var spell in GlobalVariables.Player.Spellbook.Spells)
             {
                 if (spell.Name == "SummonerFlash")
                 {
-                    this.flashSlot = spell.Slot;
+                    this.FlashSlot = spell.Slot;
                 }
             }
 
             base.OnInitialize();
         }
 
+        // TODO: Look at Menu (Stacking???)
         /// <summary>
         ///     Called when [load].
         /// </summary>
@@ -237,28 +242,7 @@
             this.Menu = new Menu(this.Name, this.Name);
             this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
 
-            //#region Blacklist
-
-            //var blacklist = new Menu("Blacklist", this.Name + "Blacklist");
-
-            //if (HeroManager.Enemies.Count == 0)
-            //{
-            //    blacklist.AddItem(new MenuItem(blacklist.Name + "null", "No enemies found"));
-            //}
-            //else
-            //{
-            //    foreach (var x in HeroManager.Enemies)
-            //    {
-            //        blacklist.AddItem(new MenuItem(blacklist.Name + x.ChampionName, x.ChampionName).SetValue(false));
-            //    }
-            //    MenuExtensions.AddToolTip(
-            //        blacklist,
-            //        "Setting a champion to 'on', will make the script not using Flash for him anymore");
-            //}
-
-            //this.Menu.AddSubMenu(blacklist);
-
-            //#endregion
+            this.BlacklistMenu = new BlacklistMenu(this.Menu, "Blacklist");
 
             #region Stacking (Dynamic-Menu)
 
@@ -291,9 +275,6 @@
                     "If this is enabled, the assembly will stack based on the current gapclose path. Currently here are no options, but if I got enough time and motivation I will add some.")
                     .SetTag(3));
 
-            // Custom
-            advancedDyn.AddItem(new MenuItem(advancedDyn.Name + "WIP", "[i] Work in progress!"));
-
             // Always available
             advancedDyn.AddItem(new MenuItem(advancedDyn.Name + "", " "));
 
@@ -322,7 +303,7 @@
         {
             if (!position.IsWall() && position.IsValid())
             {
-                GlobalVariables.Player.Spellbook.CastSpell(this.flashSlot, position);
+                GlobalVariables.Player.Spellbook.CastSpell(this.FlashSlot, position);
             }
         }
 

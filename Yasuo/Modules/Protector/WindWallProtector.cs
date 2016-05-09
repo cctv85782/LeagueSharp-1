@@ -14,8 +14,8 @@
     using Yasuo.Common;
     using Yasuo.Common.Classes;
     using Yasuo.Common.Extensions;
+    using Yasuo.Common.LogicProvider;
     using Yasuo.Common.Objects;
-    using Yasuo.Common.Provider;
 
     using Color = System.Drawing.Color;
 

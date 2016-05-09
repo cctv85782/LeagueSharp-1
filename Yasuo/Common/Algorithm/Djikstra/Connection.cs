@@ -5,7 +5,7 @@
     using LeagueSharp;
     using LeagueSharp.Common;
 
-    using Yasuo.Common.Provider;
+    using Yasuo.Common.LogicProvider;
 
     public class Connection
     {

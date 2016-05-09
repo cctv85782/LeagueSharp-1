@@ -1,4 +1,4 @@
-﻿namespace Yasuo.Common.Provider
+﻿namespace Yasuo.Common.LogicProvider
 {
     using System;
     using System.Collections.Generic;
@@ -20,12 +20,12 @@
         /// <summary>
         ///     The turret cache
         /// </summary>
-        private readonly Dictionary<int, Obj_AI_Turret> TurretCache = new Dictionary<int, Obj_AI_Turret>();
+        private readonly Dictionary<int, Obj_AI_Turret> turretCache = new Dictionary<int, Obj_AI_Turret>();
 
         /// <summary>
         ///     The turret target
         /// </summary>
-        private readonly Dictionary<int, AttackableUnit> TurretTarget = new Dictionary<int, AttackableUnit>();
+        private readonly Dictionary<int, AttackableUnit> turretTarget = new Dictionary<int, AttackableUnit>();
 
         #endregion
 
@@ -36,10 +36,10 @@
         /// </summary>
         public TurretLogicProvider()
         {
-            InitializeCache();
+            this.InitializeCache();
 
-            Game.OnUpdate += OnUpdate;
-            Obj_AI_Base.OnTarget += OnTarget;
+            Game.OnUpdate += this.OnUpdate;
+            Obj_AI_Base.OnTarget += this.OnTarget;
         }
 
         #endregion
@@ -121,9 +121,9 @@
         public void OnTarget(Obj_AI_Base sender, Obj_AI_BaseTargetEventArgs args)
         {
             var turret = sender as Obj_AI_Turret;
-            if (turret != null && TurretCache.ContainsKey(sender.NetworkId))
+            if (turret != null && this.turretCache.ContainsKey(sender.NetworkId))
             {
-                TurretTarget[sender.NetworkId] = args.Target;
+                this.turretTarget[sender.NetworkId] = args.Target;
             }
         }
 
@@ -158,10 +158,10 @@
         {
             foreach (var obj in ObjectManager.Get<Obj_AI_Turret>().Where(turret => !turret.IsAlly && turret.Health > 0))
             {
-                if (!TurretCache.ContainsKey(obj.NetworkId))
+                if (!this.turretCache.ContainsKey(obj.NetworkId))
                 {
-                    TurretCache.Add(obj.NetworkId, obj);
-                    TurretTarget.Add(obj.NetworkId, null);
+                    this.turretCache.Add(obj.NetworkId, obj);
+                    this.turretTarget.Add(obj.NetworkId, null);
                 }
             }
         }
@@ -172,7 +172,7 @@
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void OnUpdate(EventArgs args)
         {
-            UpdateCache();
+            this.UpdateCache();
         }
 
         /// <summary>
@@ -180,13 +180,13 @@
         /// </summary>
         private void UpdateCache()
         {
-            foreach (var entry in TurretCache.ToList())
+            foreach (var entry in this.turretCache.ToList())
             {
                 var value = entry.Value;
 
                 if (value.IsDead || (int)value.Health == 0 || !value.IsValid)
                 {
-                    TurretCache.Remove(entry.Key);
+                    this.turretCache.Remove(entry.Key);
                 }
             }
 

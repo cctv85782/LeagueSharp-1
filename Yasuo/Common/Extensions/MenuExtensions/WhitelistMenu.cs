@@ -7,7 +7,7 @@ namespace Yasuo.Common.Extensions.MenuExtensions
     using LeagueSharp;
     using LeagueSharp.Common;
 
-    public class Whitelist
+    public class WhitelistMenu
     {
         #region Fields
 
@@ -40,7 +40,7 @@ namespace Yasuo.Common.Extensions.MenuExtensions
         /// </summary>
         /// <param name="menu">The menu.</param>
         /// <param name="displayName">The display name.</param>
-        public Whitelist(Menu menu, string displayName)
+        public WhitelistMenu(Menu menu, string displayName)
         {
             this.Menu = menu;
             this.DisplayName = displayName;

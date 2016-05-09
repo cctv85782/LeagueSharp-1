@@ -7,8 +7,8 @@ namespace Yasuo.Modules.Evade
     using LeagueSharp.SDK;
 
     using Yasuo.Common.Classes;
+    using Yasuo.Common.LogicProvider;
     using Yasuo.Common.Objects;
-    using Yasuo.Common.Provider;
 
     internal class SweepingBlade : Child<Modules>
     {

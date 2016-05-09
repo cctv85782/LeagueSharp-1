@@ -1,16 +1,19 @@
 ﻿namespace Yasuo.OrbwalkingModes.Combo
 {
+    #region Using Directives
+
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
     using LeagueSharp;
     using LeagueSharp.Common;
-
     using Yasuo.Common.Classes;
     using Yasuo.Common.Extensions;
     using Yasuo.Common.Extensions.MenuExtensions;
-    using Yasuo.Common.Provider;
+    using Yasuo.Common.LogicProvider;
+
+    #endregion
 
     internal class LastBreath : Child<Combo>
     {
@@ -19,12 +22,17 @@
         /// <summary>
         ///     The blacklist
         /// </summary>
-        public Blacklist Blacklist;
+        public BlacklistMenu BlacklistMenu;
+
+        /// <summary>
+        ///     The possible executions
+        /// </summary>
+        private List<Common.Objects.LastBreath> executions = new List<Common.Objects.LastBreath>();
 
         /// <summary>
         ///     The R logicprovider
         /// </summary>
-        public LastBreathLogicProvider Provider;
+        private LastBreathLogicProvider provider;
 
         #endregion
 
@@ -54,6 +62,15 @@
 
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        ///     The valid execution
+        /// </summary>
+        private Common.Objects.LastBreath ValidExecution { get; set; }
+
+        #endregion
+
         #region Public Methods and Operators
 
         /// <summary>
@@ -62,101 +79,19 @@
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         public void OnUpdate(EventArgs args)
         {
-            try
+            this.SoftReset();
+
+            if (GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo
+                || !GlobalVariables.Spells[SpellSlot.R].IsReady())
             {
-                if (GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo
-                    || !GlobalVariables.Spells[SpellSlot.R].IsReady())
-                {
-                    return;
-                }
-
-                var advanced = Menu.SubMenu(this.Name + "Advanced");
-
-                var executions = new List<Common.Objects.LastBreath>();
-
-                foreach (var hero in HeroManager.Enemies.Where(x => x.IsAirbone()))
-                {
-                    var execution = new Common.Objects.LastBreath(hero);
-
-                    if (!executions.Contains(execution))
-                    {
-                        executions.Add(execution);
-                    }
-                }
-
-                #region processing/validating
-
-                if (executions.Any())
-                {
-                    foreach (var execution in executions.ToList())
-                    {
-                        // Count
-                        if (execution.AffectedEnemies.Count
-                            < Menu.Item(this.Name + "MinHitAOE").GetValue<Slider>().Value)
-                        {
-                            executions.Remove(execution);
-                        }
-
-                        // Mean Health
-                        if ((execution.AffectedEnemies.Sum(x => x.HealthPercent) / execution.AffectedEnemies.Count)
-                            > Menu.Item(this.Name + "MaxTargetsMeanHealth").GetValue<Slider>().Value)
-                        {
-                            executions.Remove(execution);
-                        }
-
-                        // Max Health Percentage Difference
-                        if ((execution.AffectedEnemies.Sum(x => x.HealthPercent) / execution.AffectedEnemies.Count)
-                            - GlobalVariables.Player.HealthPercent
-                            > advanced.Item(advanced.Name + "MaxHealthPercDifference").GetValue<Slider>().Value)
-                        {
-                            executions.Remove(execution);
-                        }
-
-                        if (advanced.Item(advanced.Name + "OverkillCheck").GetValue<bool>() && execution.IsOverkill)
-                        {
-                            executions.Remove(execution);
-                        }
-                    }
-                }
-
-                #endregion
-
-                Common.Objects.LastBreath possibleExecution = null;
-
-                // TODO: ADD safetyvalue/dangervalue
-                if (executions.Any())
-                {
-                    switch (advanced.Item(advanced.Name + "EvaluationLogic").GetValue<StringList>().SelectedIndex)
-                    {
-                        // Damage
-                        case 0:
-                            possibleExecution = EnumerableExtensions.MaxOrDefault(executions, x => x.DamageDealt);
-                            break;
-                        // Count
-                        case 1:
-                            possibleExecution = EnumerableExtensions.MaxOrDefault(
-                                executions,
-                                x => x.AffectedEnemies.Count);
-                            break;
-                        // Priority
-                        case 2:
-                            possibleExecution = EnumerableExtensions.MaxOrDefault(executions, x => x.Priority);
-                            break;
-                        // Auto
-                        case 3:
-                            break;
-                    }
-                }
-
-                if (possibleExecution != null)
-                {
-                    Execute(possibleExecution);
-                }
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
+
+            this.BuildExecutions();
+
+            this.ValidateExecutions();
+
+            this.DecideAndExecute();
         }
 
         #endregion
@@ -186,7 +121,7 @@
         /// </summary>
         protected override void OnInitialize()
         {
-            this.Provider = new LastBreathLogicProvider();
+            this.provider = new LastBreathLogicProvider();
 
             base.OnInitialize();
         }
@@ -198,20 +133,85 @@
         {
             this.Menu = new Menu(this.Name, this.Name);
 
-            Blacklist = new Blacklist(this.Menu, "Blacklist");
+            this.BlacklistMenu = new BlacklistMenu(this.Menu, "Blacklist");
 
-            this.AdvancedMenu();
-            this.GeneralSettings();
+            this.SetupAdvancedMenu();
+
+            this.SetupGeneralMenu();
 
             this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
 
             this.Parent.Menu.AddSubMenu(this.Menu);
         }
 
+        private void BuildExecutions()
+        {
+            foreach (var hero in HeroManager.Enemies.Where(x => x.IsAirbone()))
+            {
+                var execution = new Common.Objects.LastBreath(hero);
+
+                if (!this.executions.Contains(execution))
+                {
+                    this.executions.Add(execution);
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Decides for an execution and executes.
+        /// </summary>
+        private void DecideAndExecute()
+        {
+            var advanced = Menu.SubMenu(this.Name + "Advanced");
+
+            if (!this.executions.Any())
+            {
+                return;
+            }
+
+            // TODO: ADD safetyvalue/dangervalue auto mode
+            switch (advanced.Item(advanced.Name + "EvaluationLogic").GetValue<StringList>().SelectedIndex)
+            {
+                // Damage
+                case 0:
+                    ValidExecution = this.executions.MaxOrDefault(x => x.DamageDealt);
+                    break;
+                // Count
+                case 1:
+                    ValidExecution = this.executions.MaxOrDefault(x => x.AffectedEnemies.Count);
+                    break;
+                // Priority
+                case 2:
+                    ValidExecution = this.executions.MaxOrDefault(x => x.Priority);
+                    break;
+                // Auto
+                case 3:
+                    break;
+            }
+
+            if (ValidExecution != null)
+            {
+                Execute(ValidExecution);
+            }
+        }
+
+        /// <summary>
+        ///     Executes the specified execution.
+        /// </summary>
+        /// <param name="execution">The execution.</param>
+        private void Execute(Common.Objects.LastBreath execution)
+        {
+            if (this.provider.ShouldCastNow(execution, SweepingBlade.PathCopy))
+            {
+                GlobalVariables.Spells[SpellSlot.R].CastOnUnit(execution.Target);
+            }
+        }
+
+        // TODO: Dynamic Menu
         /// <summary>
         ///     Method to set advanced settings.
         /// </summary>
-        private void AdvancedMenu()
+        private void SetupAdvancedMenu()
         {
             var advanced = new Menu("Advanced", this.Name + "Advanced");
 
@@ -236,21 +236,9 @@
         }
 
         /// <summary>
-        ///     Executes the specified execution.
-        /// </summary>
-        /// <param name="execution">The execution.</param>
-        private void Execute(Common.Objects.LastBreath execution)
-        {
-            if (Provider.ShouldCastNow(execution, SweepingBlade.PathCopy))
-            {
-                GlobalVariables.Spells[SpellSlot.R].CastOnUnit(execution.Target);
-            }
-        }
-
-        /// <summary>
         ///     Method to set general settings.
         /// </summary>
-        private void GeneralSettings()
+        private void SetupGeneralMenu()
         {
             this.Menu.AddItem(
                 new MenuItem(this.Name + "MinHitAOE", "Min HitCount for AOE").SetValue(new Slider(2, 1, 5)));
@@ -260,6 +248,70 @@
 
             this.Menu.AddItem(
                 new MenuItem(this.Name + "MaxTargetsMeanHealth", "Max Target(s) Health (%)").SetValue(new Slider(80)));
+        }
+
+        /// <summary>
+        ///     Resets the properties
+        /// </summary>
+        private void SoftReset()
+        {
+            if (!this.executions.Any() || this.ValidExecution == null
+                || !this.ValidExecution.IsValid())
+            {
+                return;
+            }
+
+            this.executions = new List<Common.Objects.LastBreath>();
+            this.ValidExecution = new Common.Objects.LastBreath();
+        }
+
+        /// <summary>
+        ///     Validates the executions.
+        /// </summary>
+        private void ValidateExecutions()
+        {
+            var advanced = Menu.SubMenu(this.Name + "Advanced");
+
+            if (!this.executions.Any())
+            {
+                return;
+            }
+
+            foreach (var execution in this.executions.ToList())
+            {
+                // Invalid
+                if (!execution.IsValid())
+                {
+                    this.executions.Remove(execution);
+                }
+
+                // Count
+                if (execution.AffectedEnemies.Count < this.Menu.Item(this.Name + "MinHitAOE").GetValue<Slider>().Value)
+                {
+                    this.executions.Remove(execution);
+                }
+
+                // Mean Health
+                if ((execution.AffectedEnemies.Sum(x => x.HealthPercent) / execution.AffectedEnemies.Count)
+                    > this.Menu.Item(this.Name + "MaxTargetsMeanHealth").GetValue<Slider>().Value)
+                {
+                    this.executions.Remove(execution);
+                }
+
+                // Max Health Percentage Difference
+                if ((execution.AffectedEnemies.Sum(x => x.HealthPercent) / execution.AffectedEnemies.Count)
+                    - GlobalVariables.Player.HealthPercent
+                    > advanced.Item(advanced.Name + "MaxHealthPercDifference").GetValue<Slider>().Value)
+                {
+                    this.executions.Remove(execution);
+                }
+
+                // Overkill
+                if (advanced.Item(advanced.Name + "OverkillCheck").GetValue<bool>() && execution.IsOverkill)
+                {
+                    this.executions.Remove(execution);
+                }
+            }
         }
 
         #endregion

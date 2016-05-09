@@ -9,7 +9,7 @@
 
     using SharpDX;
 
-    using Yasuo.Common.Provider;
+    using Yasuo.Common.LogicProvider;
 
     using SpellDatabase = LeagueSharp.SDK.SpellDatabase;
 

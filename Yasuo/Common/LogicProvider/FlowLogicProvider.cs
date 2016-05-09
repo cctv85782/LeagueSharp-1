@@ -1,6 +1,6 @@
 ﻿// OBSERVATION: After some Event I don't know yet, its not accurate anymore, until Max Flow.
 
-namespace Yasuo.Common.Provider
+namespace Yasuo.Common.LogicProvider
 {
     using LeagueSharp.Common;
 
@@ -44,19 +44,19 @@ namespace Yasuo.Common.Provider
         {
             if ((int)GlobalVariables.Player.Mana == (int)GlobalVariables.Player.MaxMana)
             {
-                Reset();
+                this.Reset();
                 return;
             }
 
-            if (!lastPosition.Equals(Vector3.Zero))
+            if (!this.lastPosition.Equals(Vector3.Zero))
             {
-                this.TraveledDistance += GlobalVariables.Player.Position.Distance(lastPosition);
+                this.TraveledDistance += GlobalVariables.Player.Position.Distance(this.lastPosition);
             }
-            lastPosition = GlobalVariables.Player.Position;
+            this.lastPosition = GlobalVariables.Player.Position;
 
             if (this.TraveledDistance >= this.GetUnitsUntilMaxFlow())
             {
-                Reset();
+                this.Reset();
             }
         }
 
@@ -87,9 +87,9 @@ namespace Yasuo.Common.Provider
         /// </summary>
         private void Reset()
         {
-            lastReset = Helper.GetTick();
+            this.lastReset = Helper.GetTick();
             this.TraveledDistance = 0;
-            lastPosition = Vector3.Zero;
+            this.lastPosition = Vector3.Zero;
         }
 
         #endregion

@@ -1,5 +1,7 @@
 ﻿namespace Yasuo.Common.Objects
 {
+    #region Using Directives
+
     using System.Collections.Generic;
     using System.Linq;
 
@@ -10,16 +12,16 @@
 
     using SharpDX;
 
-    using Yasuo.Common.Provider;
+    using Yasuo.Common.LogicProvider;
 
     using Color = System.Drawing.Color;
     using Geometry = LeagueSharp.Common.Geometry;
 
+    #endregion
+
     public class Dash
     {
         #region Fields
-
-        public WallDashLogicProvider ProviderWallDash = new WallDashLogicProvider();
 
         /// <summary>
         ///     The direction
@@ -37,19 +39,21 @@
         public Vector3 EndPosition;
 
         /// <summary>
+        ///     The knocked up heroes
+        /// </summary>
+        public List<Obj_AI_Hero> HeroesHitCircular = new List<Obj_AI_Hero>();
+
+        /// <summary>
         ///     Indicates if dash through skillshot
         /// </summary>
         public bool InSkillshot;
 
         /// <summary>
-        ///     The knocked up heroes
-        /// </summary>
-        public List<Obj_AI_Hero> KnockUpHeroes = new List<Obj_AI_Hero>();
-
-        /// <summary>
         ///     The knocked up minions
         /// </summary>
-        public List<Obj_AI_Base> KnockUpMinions = new List<Obj_AI_Base>();
+        public List<Obj_AI_Base> MinionsHitCircular = new List<Obj_AI_Base>();
+
+        public WallDashLogicProvider ProviderWallDash = new WallDashLogicProvider();
 
         /// <summary>
         ///     The start position
@@ -71,24 +75,24 @@
         /// <param name="from">From.</param>
         /// <param name="unit">The unit.</param>
         public Dash(Vector3 from, Obj_AI_Base unit)
+            : this(from, unit.ServerPosition)
         {
             this.Unit = unit;
+        }
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="Dash" /> class.
+        /// </summary>
+        /// <param name="from">From.</param>
+        /// <param name="direction">The direction.</param>
+        public Dash(Vector3 from, Vector3 direction)
+        {
             this.StartPosition = from;
-            this.EndPosition = Geometry.Extend(
-                this.StartPosition,
-                unit.ServerPosition,
-                GlobalVariables.Spells[SpellSlot.E].Range);
+            this.EndPosition = Geometry.Extend(this.StartPosition, direction, GlobalVariables.Spells[SpellSlot.E].Range);
 
-            this.SetDashLength();
-            this.SetDangerValue();
+            this.Direction = EndPosition;
 
-            this.CheckWallDash();
-
-            this.Distance = Geometry.Distance(this.StartPosition, EndPosition);
-
-            this.CheckKnockups();
-            this.CheckSkillshots();
+            this.Setup();
         }
 
         /// <summary>
@@ -96,23 +100,9 @@
         /// </summary>
         /// <param name="unit">The unit.</param>
         public Dash(Obj_AI_Base unit)
+            : this(GlobalVariables.Player.ServerPosition, unit.ServerPosition)
         {
             this.Unit = unit;
-
-            this.StartPosition = GlobalVariables.Player.ServerPosition;
-            this.EndPosition = Geometry.Extend(
-                this.StartPosition,
-                unit.ServerPosition,
-                GlobalVariables.Spells[SpellSlot.E].Range);
-
-            this.SetDashLength();
-            this.SetDangerValue();
-
-            this.CheckWallDash();
-
-            this.Distance = Geometry.Distance(this.StartPosition, EndPosition);
-
-            this.CheckKnockups();
         }
 
         /// <summary>
@@ -120,20 +110,9 @@
         /// </summary>
         /// <param name="direction">The direction.</param>
         public Dash(Vector3 direction)
+            : this(GlobalVariables.Player.ServerPosition, direction)
         {
             this.Direction = direction;
-
-            this.StartPosition = GlobalVariables.Player.ServerPosition;
-            this.EndPosition = Geometry.Extend(this.StartPosition, direction, GlobalVariables.Spells[SpellSlot.E].Range);
-
-            this.SetDashLength();
-            this.SetDangerValue();
-
-            this.CheckWallDash();
-
-            this.Distance = Geometry.Distance(this.StartPosition, EndPosition);
-
-            this.CheckKnockups();
         }
 
         #endregion
@@ -215,9 +194,9 @@
         {
             foreach (var enemy in HeroManager.Enemies)
             {
-                if (Geometry.Distance(enemy, EndPosition) <= 375 && enemy.IsValid)
+                if (Geometry.Distance(enemy, EndPosition) <= 350 && enemy.IsValid)
                 {
-                    KnockUpHeroes.Add(enemy);
+                    this.HeroesHitCircular.Add(enemy);
                 }
             }
 
@@ -225,7 +204,7 @@
             {
                 if (minion.IsValid)
                 {
-                    KnockUpMinions.Add(minion);
+                    this.MinionsHitCircular.Add(minion);
                 }
             }
         }
@@ -239,21 +218,21 @@
 
             foreach (var skillshot in Tracker.DetectedSkillshots)
             {
-                var Polygon = new Geometry.Polygon();
+                var polygon = new Geometry.Polygon();
 
                 switch (skillshot.SData.SpellType)
                 {
                     case SpellType.SkillshotLine:
-                        Polygon = new Geometry.Polygon.Rectangle(
+                        polygon = new Geometry.Polygon.Rectangle(
                             skillshot.StartPosition,
                             skillshot.EndPosition,
                             skillshot.SData.Radius);
                         break;
                     case SpellType.SkillshotCircle:
-                        Polygon = new Geometry.Polygon.Circle(skillshot.EndPosition, skillshot.SData.Radius);
+                        polygon = new Geometry.Polygon.Circle(skillshot.EndPosition, skillshot.SData.Radius);
                         break;
                     case SpellType.SkillshotArc:
-                        Polygon = new Geometry.Polygon.Sector(
+                        polygon = new Geometry.Polygon.Sector(
                             skillshot.StartPosition,
                             skillshot.Direction,
                             skillshot.SData.Angle,
@@ -261,7 +240,7 @@
                         break;
                 }
 
-                skillshotDict.Add(skillshot, Polygon);
+                skillshotDict.Add(skillshot, polygon);
             }
 
             foreach (var skillshot in skillshotDict)
@@ -324,6 +303,22 @@
         private void SetDashTime()
         {
             this.DashTime = this.DashLenght / GlobalVariables.Spells[SpellSlot.E].Speed;
+        }
+
+        /// <summary>
+        ///     Setups this instance.
+        /// </summary>
+        private void Setup()
+        {
+            this.SetDashLength();
+            this.SetDangerValue();
+
+            this.CheckWallDash();
+
+            this.Distance = Geometry.Distance(this.StartPosition, EndPosition);
+
+            this.CheckKnockups();
+            this.CheckSkillshots();
         }
 
         #endregion

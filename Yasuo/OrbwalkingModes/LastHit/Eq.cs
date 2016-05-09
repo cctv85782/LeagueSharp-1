@@ -20,7 +20,7 @@
 
     #endregion
 
-    internal class SteelTempest : Child<LastHit>
+    internal class Eq : Child<LastHit>
     {
         #region Fields
 
@@ -45,9 +45,19 @@
         protected List<Obj_AI_Base> Minions;
 
         /// <summary>
+        /// The dashes
+        /// </summary>
+        protected List<Dash> Dashes;
+
+        /// <summary>
+        /// The dash
+        /// </summary>
+        private Dash dash;
+
+        /// <summary>
         /// The good circumstances
         /// </summary>
-        private bool goodCircumstances;
+        private bool validCircumstances;
 
         #endregion
 
@@ -57,7 +67,7 @@
         ///     Initializes a new instance of the <see cref="SteelTempest" /> class.
         /// </summary>
         /// <param name="parent">The parent.</param>
-        public SteelTempest(LastHit parent)
+        public Eq(LastHit parent)
             : base(parent)
         {
             this.OnLoad();
@@ -73,7 +83,7 @@
         /// <value>
         ///     The name.
         /// </value>
-        public override string Name => "(Q) Steel Tempest";
+        public override string Name => "EQ-Combo";
 
         #endregion
 
@@ -88,24 +98,30 @@
             this.SoftReset();
 
             if (GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.LastHit
-                || !GlobalVariables.Spells[SpellSlot.Q].IsReady() || GlobalVariables.Player.Spellbook.IsCharging
-                || GlobalVariables.Player.Spellbook.IsChanneling)
+                || !GlobalVariables.Spells[SpellSlot.Q].IsReady() || !GlobalVariables.Spells[SpellSlot.E].IsReady())
             {
                 return;
             }
 
-            this.GetMinions();
-
-            this.CheckCircumstances();
-
-            if (!goodCircumstances)
+            if (!GlobalVariables.Player.IsDashing())
             {
-                return;
+                this.GetMinions();
+
+                this.CheckCircumstances();
+
+                if (!this.validCircumstances)
+                {
+                    return;
+                }
+
+                this.BuildDashes();
+
+                this.ValidateDashes();
+
+                this.LogicE();
             }
 
-            this.LogicStacking();
-
-            this.LogicLastHit();
+            this.LogicQ();
         }
 
         /// <summary>
@@ -113,29 +129,75 @@
         /// </summary>
         private void CheckCircumstances()
         {
-            if (this.providerQ.HasQ3()
-                && GlobalVariables.Player.CountEnemiesInRange(
-                    this.Menu.Item(this.Name + "NoQ3Range").GetValue<Slider>().Value)
-                >= this.Menu.Item(this.Name + "NoQ3Count").GetValue<Slider>().Value)
+            if (providerQ.HasQ3() && Menu.Item(this.Name + "OnlyNotStacked").GetValue<bool>())
             {
-                goodCircumstances = false;
+                this.validCircumstances = false;
+                return;
+            }
+
+            if (!this.Minions.Any())
+            {
+                this.validCircumstances = false;
                 return;
             }
 
             var settingsAdv = this.Menu.SubMenu(this.Name + "Advanced");
 
-            if (!this.Minions.Any())
-            {
-                goodCircumstances = false;
-                return;
-            }
-
             if (settingsAdv.Item(settingsAdv.Name + "TurretCheck").GetValue<bool>())
             {
                 if (!this.providerTurret.IsSafePosition(GlobalVariables.Player.ServerPosition))
                 {
-                    goodCircumstances = false;
+                    this.validCircumstances = false;
                     return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Builds the dashes.
+        /// </summary>
+        private void BuildDashes()
+        {
+            if (!Minions.Any())
+            {
+                return;
+            }
+
+            foreach (var minion in Minions)
+            {
+                Dashes.Add(new Dash(minion));
+            }
+        }
+
+        /// <summary>
+        /// Validates the dashes.
+        /// </summary>
+        private void ValidateDashes()
+        {
+            if (!Dashes.Any())
+            {
+                return;
+            }
+
+            foreach (var entry in Dashes.ToList())
+            {
+                if (this.Menu.Item(this.Name + "NoTurretDive").GetValue<bool>()
+                    && !this.providerTurret.IsSafePosition(entry.EndPosition))
+                {
+                    this.Dashes.Remove(entry);
+                }
+
+                if (this.Menu.Item(this.Name + "MinHitAOE").GetValue<Slider>().Value
+                    > entry.MinionsHitCircular.Count(x => x.Health <= this.providerQ.GetDamage(x)))
+                {
+                    this.Dashes.Remove(entry);
+                }
+
+                if (entry.MinionsHitCircular.Contains(entry.Unit) &&
+                    providerE.GetDamage(entry.Unit) >= entry.Unit.Health * 1.2
+                    && entry.MinionsHitCircular.Count == 1)
+                {
+                    Dashes.Remove(entry);
                 }
             }
         }
@@ -147,7 +209,7 @@
         {
             this.Minions = MinionManager.GetMinions(
                 GlobalVariables.Player.ServerPosition,
-                GlobalVariables.Spells[SpellSlot.Q].Range,
+                GlobalVariables.Spells[SpellSlot.E].Range,
                 MinionTypes.All,
                 MinionTeam.NotAlly,
                 MinionOrderTypes.None);
@@ -158,9 +220,16 @@
         /// </summary>
         private void SoftReset()
         {
-            goodCircumstances = true;
+            if (GlobalVariables.Player.IsDashing())
+            {
+                return;
+            }
+
+            this.validCircumstances = true;
 
             Minions = new List<Obj_AI_Base>();
+            Dashes = new List<Dash>();
+            dash = null;
         }
 
         #endregion
@@ -195,6 +264,7 @@
             this.providerTurret = new TurretLogicProvider();
 
             this.Minions = new List<Obj_AI_Base>();
+            this.Dashes = new List<Dash>();
 
             base.OnInitialize();
         }
@@ -221,77 +291,40 @@
         }
 
         /// <summary>
-        ///     Executes on the specified unit.
+        /// Logics the e.
         /// </summary>
-        /// <param name="unit">The unit.</param>
-        private static void Execute(Obj_AI_Base unit)
+        private void LogicE()
         {
-            if (unit.IsValid)
+            if (GlobalVariables.Player.IsDashing() || !Dashes.Any())
             {
-                GlobalVariables.Spells[SpellSlot.Q].Cast(unit);
+                return;
+            }
+
+            dash = Dashes.MaxOrDefault(x => x.MinionsHitCircular.Count);
+
+            if (dash != null)
+            {
+                GlobalVariables.Spells[SpellSlot.E].CastOnUnit(dash.Unit);
+
+                Orbwalking.Attack = false;
             }
         }
 
         /// <summary>
-        ///     Executes on the specified position.
+        ///     LastHits with Q while dashing
         /// </summary>
-        /// <param name="position">The position.</param>
-        private static void Execute(Vector2 position)
+        private void LogicQ()
         {
-            if (position.IsValid())
+            if (!GlobalVariables.Player.IsDashing() || dash == null)
             {
-                GlobalVariables.Spells[SpellSlot.Q].Cast(position);
+                Orbwalking.Attack = true;
+
+                return;
             }
-        }
 
-        /// <summary>
-        ///     LastHits with normal Q
-        /// </summary>
-        private void LogicLastHit()
-        {
-            var validunits =
-                Minions.Where(
-                    x =>
-                    x.IsValidTarget(GlobalVariables.Spells[SpellSlot.Q].Range - x.BoundingRadius / 2)
-                    && x.Health <= this.providerQ.GetDamage(x));
+            GlobalVariables.Spells[SpellSlot.Q].Cast(Game.CursorPos);
 
-            var unit = validunits.MaxOrDefault(x => x.FlatGoldRewardMod);
-
-            if (unit != null)
-            {
-                Execute(unit);
-            }
-        }
-
-        /// <summary>
-        ///     LastHits with ranged/stacked Q
-        /// </summary>
-        private void LogicStacking()
-        {
-            var validunits =
-                Minions.Where(
-                    x =>
-                    x.IsValidTarget(GlobalVariables.Spells[SpellSlot.Q].Range - x.BoundingRadius / 2)
-                    && x.Health <= this.providerQ.GetDamage(x)).ToList();
-
-            var farmlocation = MinionManager.GetBestLineFarmLocation(
-                validunits.ToVector3S().To2D(),
-                GlobalVariables.Spells[SpellSlot.Q].Width,
-                GlobalVariables.Spells[SpellSlot.Q].Range);
-
-            var unit = validunits.MaxOrDefault(x => x.FlatGoldRewardMod);
-
-            if (!farmlocation.Position.IsValid())
-            {
-                if (unit != null)
-                {
-                    Execute(unit);
-                }
-            }
-            else
-            {
-                Execute(farmlocation.Position);
-            }
+            Orbwalking.Attack = true;
         }
 
         /// <summary>
@@ -304,7 +337,7 @@
             settingsAdv.AddItem(
                 new MenuItem(settingsAdv.Name + "TurretCheck", "Check for enemy turret").SetValue(true)
                     .SetTooltip(
-                        "if this is enabled, the assembly will try to not use stacked/charged Q inside the enemy turret. But it will use them if the turret is focusing something else!"));
+                        "if this is enabled, the assembly will try to not use spells inside the enemy turret. But it will use them if the turret is focusing something else!"));
 
             this.Menu.AddSubMenu(settingsAdv);
         }
@@ -314,13 +347,13 @@
         /// </summary>
         private void SetupEqMenu()
         {
-            this.Menu.AddItem(new MenuItem(this.Name + "EQ", "Use while dashing (EQ)").SetValue(true));
-
-            this.Menu.AddItem(new MenuItem(this.Name + "EQ.MinHitAOE", "Min Hit Count").SetValue(new Slider(1, 1, 15)));
+            this.Menu.AddItem(new MenuItem(this.Name + "MinHitAOE", "Min Hit Count").SetValue(new Slider(1, 1, 15)));
 
             this.Menu.AddItem(
-                new MenuItem(this.Name + "EQ.OnlyNotStacked", "(EQ) Only Cast if Q not charged").SetValue(true)
+                new MenuItem(this.Name + "OnlyNotStacked", "Don't cast if ").SetValue(true)
                     .SetTooltip("If this is enabled, the assembly won't do EQ if you have stacked/charged Q"));
+
+            this.Menu.AddItem(new MenuItem(this.Name + "NoTurretDive", "Don't dash into turret").SetValue(true));
         }
 
         /// <summary>
@@ -328,6 +361,7 @@
         /// </summary>
         private void SetupGeneralMenu()
         {
+            return;
             this.Menu.AddItem(
                 new MenuItem(this.Name + "NoQ3Count", "Don't use Q3 if >= Enemies around").SetValue(
                     new Slider(2, 0, 5)));

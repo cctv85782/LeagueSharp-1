@@ -78,6 +78,7 @@
                                 new OrbwalkingModes.LaneClear.SweepingBlade(laneclear),
                                 new OrbwalkingModes.LastHit.SteelTempest(lasthit),
                                 new OrbwalkingModes.LastHit.SweepingBlade(lasthit),
+                                new OrbwalkingModes.LastHit.Eq(lasthit),
                                 new OrbwalkingModes.Mixed.SteelTempest(mixed),
                                 new OrbwalkingModes.Mixed.SweepingBlade(mixed),
 
@@ -91,8 +92,13 @@
                                 //new WindWallProtector(protector)
                             });
 
-                    foreach (var feature in GlobalVariables.Assembly.Features)
+                    foreach (var feature in GlobalVariables.Assembly.Features.Where(feature => !feature.Handled))
                     {
+                        if (GlobalVariables.Debug)
+                        {
+                            Console.WriteLine(@"Loading Feature: {0}, Enabled: {1}", feature.Name, feature.Enabled);
+                        }
+
                         feature.HandleEvents();
                     }
 
@@ -116,7 +122,7 @@
         /// <param name="name">Name of the assembly</param>
         /// <param name="version">Version of the assembly</param>
         /// <param name="displayTime">Time of displaying</param>
-        private void DrawBanner(String name, int version, int displayTime)
+        private static void DrawBanner(String name, int version, int displayTime)
         {
             Notifications.AddNotification(string.Format("[{0}] {1} - loaded successfully!", name, version), displayTime, true);
 

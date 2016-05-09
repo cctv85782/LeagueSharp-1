@@ -72,14 +72,17 @@
                     this.UpdateAvailable = false;
                     this.ForceUpdate = false;
                 }
-                if (differential > 0)
-                {
-                    UpdateAvailable = true;
 
-                    if (differential > 9)
-                    {
-                        ForceUpdate = true;
-                    }
+                if (differential <= 0)
+                {
+                    return;
+                }
+
+                this.UpdateAvailable = true;
+
+                if (differential > 9)
+                {
+                    this.ForceUpdate = true;
                 }
             }
             catch (Exception ex)
@@ -119,7 +122,7 @@
             }
             catch (Exception)
             {
-                Console.WriteLine(@"MediaSuo: Failed to get new Version!");
+                Console.WriteLine(@"{0}: Failed to get new Version!", GlobalVariables.Name);
             }
             return new Version();
         }

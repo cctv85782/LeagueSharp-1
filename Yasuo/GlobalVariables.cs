@@ -19,6 +19,11 @@ namespace Yasuo
         /// </summary>
         public static void SetSpells()
         {
+            if (Spells == null)
+            {
+                return;
+            }
+
             var q = Spells[SpellSlot.Q];
             var w = Spells[SpellSlot.W];
             var e = Spells[SpellSlot.E];
@@ -60,7 +65,7 @@ namespace Yasuo
         /// <summary>
         ///     Debugstate
         /// </summary>
-        public static bool Debug = false;
+        public static bool Debug = true;
 
         /// <summary>
         ///     If Stop is active the assembly will stop loading
@@ -118,19 +123,19 @@ namespace Yasuo
         public static string GitHubPath = string.Format("{0}/{1}/{2}", GitHubProfile, "LeagueSharp/tree/master", Name);
 
         /// <summary>
-        ///     The name of the assembly
-        /// </summary>
-        public static string Name => "MediaSuo";
-
-        /// <summary>
         ///     The Author of the assembly
         /// </summary>
         public static string Author => "Media";
-
+        
+        /// <summary>
+        ///     The name of the assembly
+        /// </summary>
+        public static string Name => string.Format("[{2}] {0}: {1}", Author, "Yasuo", Prefix);
+        
         /// <summary>
         ///     Different prefixes of the assembly. aka: WIP, BETA, ALPHA, TOBEUPDATED, BEST
         /// </summary>
-        public static string Prefix => "Alpha";
+        public static string Prefix => "WIP";
 
         /// <summary>
         ///     Dictionary containing all spells

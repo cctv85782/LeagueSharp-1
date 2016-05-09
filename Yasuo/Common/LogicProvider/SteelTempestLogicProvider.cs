@@ -1,19 +1,59 @@
-﻿namespace Yasuo.Common.Provider
+﻿namespace Yasuo.Common.LogicProvider
 {
+    #region Using Directives
+
+    using System;
     using System.Linq;
 
     using LeagueSharp;
-    using LeagueSharp.SDK;
-
-    using SebbyLib.Prediction;
+    using LeagueSharp.Common;
 
     using SharpDX;
 
+
+    using Prediction = SebbyLib.Prediction.Prediction;
     using PredictionInput = SebbyLib.Prediction.PredictionInput;
     using PredictionOutput = SebbyLib.Prediction.PredictionOutput;
+    using SkillshotType = SebbyLib.Prediction.SkillshotType;
+
+    #endregion
 
     public class SteelTempestLogicProvider
     {
+        #region Fields
+
+        /// <summary>
+        ///     The stacked buff name
+        /// </summary>
+        private string stackedBuffName = "yasuoq3w";
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        ///     Gets or sets the name of the stacked buff.
+        /// </summary>
+        /// <value>
+        ///     The name of the stacked buff.
+        /// </value>
+        public string StackedBuffName
+        {
+            get
+            {
+                return this.stackedBuffName;
+            }
+            set
+            {
+                if (value.Length > 0)
+                {
+                    this.stackedBuffName = value;
+                }
+            }
+        }
+
+        #endregion
+
         #region Public Methods and Operators
 
         /// <summary>
@@ -24,13 +64,23 @@
         {
             if (this.HasQ3())
             {
-                var first = GlobalVariables.Player.Buffs.FirstOrDefault(x => x.Name.Contains("yasuoq3w"));
-                if (first != null)
-                {
-                    return first.EndTime - Game.Time;
-                }
+                return float.MaxValue;
             }
-            return float.MaxValue;
+
+            var first = GlobalVariables.Player.Buffs.FirstOrDefault(x => x.Name.Contains(StackedBuffName));
+
+            if (first == null)
+            {
+                return float.MaxValue;
+            }
+
+            if (GlobalVariables.Debug)
+            {
+                Console.WriteLine(
+                    string.Format("SteelTempestLogicProvider > BuffTime() = {0}", first.EndTime - Game.Time));
+            }
+
+            return first.EndTime - Game.Time;
         }
 
         /// <summary>
@@ -40,16 +90,21 @@
         /// <returns>float</returns>
         public float GetDamage(Obj_AI_Base unit)
         {
+            if (unit == null)
+            {
+                return 0;
+            }
+
             var physicalDmg = 0f;
             var magicDmg = 0f;
 
             #region Sheen
 
-            if (Items.HasItem((int)ItemId.Sheen)
-                && (Items.CanUseItem((int)ItemId.Sheen) || GlobalVariables.Player.HasBuff("Sheen")))
-            {
-                physicalDmg = GlobalVariables.Player.BaseAttackDamage;
-            }
+            //if (Items.HasItem((int)ItemId.Sheen)
+            //    && (Items.CanUseItem((int)ItemId.Sheen) || GlobalVariables.Player.HasBuff("Sheen")))
+            //{
+            //    physicalDmg = GlobalVariables.Player.BaseAttackDamage;
+            //}
 
             #endregion Sheen
 
@@ -65,8 +120,7 @@
 
             #region Statikk Shiv
 
-            if (Items.HasItem((int)ItemId.Statikk_Shiv) && (Items.CanUseItem((int)ItemId.Statikk_Shiv))
-                || GlobalVariables.Player.GetBuffCount("StattikShiv") == 100)
+            if (Items.HasItem((int)ItemId.Statikk_Shiv) && Items.CanUseItem((int)ItemId.Statikk_Shiv))
             {
                 #region unit is Minion
 
@@ -117,7 +171,7 @@
                     }
                 }
                     #endregion
-                    #region unit is Hero
+                #region unit is Hero
 
                 else if (unit is Obj_AI_Hero)
                 {
@@ -185,8 +239,8 @@
 
             if (physicalDmg > 0 || magicDmg > 0)
             {
-                physicalDmg = (float)GlobalVariables.Player.CalculateDamage(unit, DamageType.Physical, physicalDmg);
-                magicDmg = (float)GlobalVariables.Player.CalculateDamage(unit, DamageType.Magical, magicDmg);
+                physicalDmg = (float)GlobalVariables.Player.CalcDamage(unit, Damage.DamageType.Physical, physicalDmg);
+                magicDmg = (float)GlobalVariables.Player.CalcDamage(unit, Damage.DamageType.Magical, magicDmg);
             }
             return GlobalVariables.Spells[SpellSlot.Q].GetDamage(unit) + physicalDmg + magicDmg;
         }

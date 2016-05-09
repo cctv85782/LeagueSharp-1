@@ -8,8 +8,8 @@
     using LeagueSharp.Common;
 
     using Yasuo.Common.Classes;
+    using Yasuo.Common.LogicProvider;
     using Yasuo.Common.Objects;
-    using Yasuo.Common.Provider;
 
     internal class WallDash : Child<Modules>
     {
@@ -63,7 +63,8 @@
         public void OnDraw(EventArgs args)
         {
             if (GlobalVariables.Player.IsDead || GlobalVariables.Player.IsDashing()
-                || !this.Menu.Item(this.Name + "Keybind").GetValue<KeyBind>().Active)
+                || !this.Menu.Item(this.Name + "Keybind").GetValue<KeyBind>().Active
+                || !GlobalVariables.Debug)
             {
                 return;
             }

@@ -1,6 +1,6 @@
 ﻿// TODO: Much.
 
-namespace Yasuo.Common.Provider
+namespace Yasuo.Common.LogicProvider
 {
     using LeagueSharp.Common;
 
@@ -33,7 +33,7 @@ namespace Yasuo.Common.Provider
             if (amount == 0)
             {
             }
-            return PotionValue(amount);
+            return this.PotionValue(amount);
         }
 
         /// <summary>

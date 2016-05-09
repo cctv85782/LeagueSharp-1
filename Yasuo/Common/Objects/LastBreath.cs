@@ -13,7 +13,7 @@ namespace Yasuo.Common.Objects
     using SharpDX;
 
     using Yasuo.Common.Extensions;
-    using Yasuo.Common.Provider;
+    using Yasuo.Common.LogicProvider;
 
     using Color = System.Drawing.Color;
 
@@ -72,6 +72,8 @@ namespace Yasuo.Common.Objects
                 this.SetPriority();
             }
         }
+
+        public LastBreath() { }
 
         #endregion
 

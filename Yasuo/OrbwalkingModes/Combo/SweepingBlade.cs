@@ -1,27 +1,26 @@
 ﻿namespace Yasuo.OrbwalkingModes.Combo
 {
+    #region Using Directives
+
     using System;
     using System.Collections.Generic;
+    using System.Drawing;
     using System.Linq;
 
     using LeagueSharp;
     using LeagueSharp.Common;
-    using LeagueSharp.SDK;
 
-    using SharpDX;
-
-    using Yasuo.Common.Algorithm.Djikstra;
     using Yasuo.Common.Classes;
     using Yasuo.Common.Extensions;
     using Yasuo.Common.Extensions.MenuExtensions;
+    using Yasuo.Common.LogicProvider;
     using Yasuo.Common.Objects;
-    using Yasuo.Common.Provider;
+    using Yasuo.Common.Objects.Pathfinding;
     using Yasuo.Common.Utility;
 
-    using Color = System.Drawing.Color;
     using Dash = Yasuo.Common.Objects.Dash;
-    using Geometry = LeagueSharp.Common.Geometry;
-    using TargetSelector = LeagueSharp.Common.TargetSelector;
+
+    #endregion
 
     internal class SweepingBlade : Child<Combo>
     {
@@ -30,16 +29,11 @@
         /// <summary>
         ///     The path copy
         /// </summary>
-        internal static Path PathCopy = new Path();
+        internal static Path PathCopy;
 
         #endregion
 
         #region Fields
-
-        /// <summary>
-        ///     The blacklist
-        /// </summary>
-        public Blacklist Blacklist;
 
         /// <summary>
         ///     The blacklist champions
@@ -47,24 +41,39 @@
         public List<Obj_AI_Base> BlacklistChampions = new List<Obj_AI_Base>();
 
         /// <summary>
-        ///     The provider e
+        ///     The blacklist Menu
         /// </summary>
-        public SweepingBladeLogicProvider ProviderE;
+        public BlacklistMenu BlacklistMenu;
 
         /// <summary>
-        ///     The provider turret
+        ///     The pathfinder Menu
         /// </summary>
-        public TurretLogicProvider ProviderTurret;
-
-        /// <summary>
-        ///     The grid
-        /// </summary>
-        internal Grid Grid;
+        public PathfindingMenu PathfindingMenu;
 
         /// <summary>
         ///     The path
         /// </summary>
         internal Path Path;
+
+        /// <summary>
+        ///     The pathfinder
+        /// </summary>
+        private Pathfinder pathfinder;
+
+        /// <summary>
+        ///     The provider e
+        /// </summary>
+        private SweepingBladeLogicProvider providerE;
+
+        /// <summary>
+        ///     The provider turret
+        /// </summary>
+        private TurretLogicProvider providerTurret;
+
+        /// <summary>
+        /// The targets
+        /// </summary>
+        protected List<Obj_AI_Hero> Targets; 
 
         #endregion
 
@@ -179,253 +188,54 @@
             }
         }
 
-        // TODO: Decompositing
         /// <summary>
         ///     Raises the <see cref="E:Update" /> event.
         /// </summary>
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         public void OnUpdate(EventArgs args)
         {
-            try
+            this.SoftReset();
+
+            if (GlobalVariables.Player.IsDead || GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo
+                || !GlobalVariables.Spells[SpellSlot.E].IsReady())
             {
-                Path = null;
-                PathCopy = null;
-
-                if (GlobalVariables.Player.IsDead || GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo
-                    || !GlobalVariables.Spells[SpellSlot.E].IsReady())
-                {
-                    return;
-                }
-
-                #region Cast on Champion
-
-                var targetE = TargetSelector.SelectedTarget
-                              ?? TargetSelector.GetTarget(
-                                  GlobalVariables.Spells[SpellSlot.E].Range,
-                                  TargetSelector.DamageType.Magical);
-
-                if (targetE != null && !this.BlacklistChampions.Contains(targetE)
-                    && Geometry.Distance(targetE, GlobalVariables.Player.ServerPosition) <= GlobalVariables.Spells[SpellSlot.E].Range)
-                {
-                    var dash = new Dash(GlobalVariables.Player.ServerPosition, targetE);
-
-                    if (targetE.Health < ProviderE.GetDamage(targetE))
-                    {
-                        var meanvector =
-                            Helper.GetMeanVector3(
-                                HeroManager.Enemies.Where(x => Geometry.Distance(x, dash.EndPosition) <= 1000)
-                                    .Select(x => x.ServerPosition)
-                                    .ToList());
-
-                        if (GlobalVariables.Player.Health
-                            > Menu.SubMenu(this.Name + "EOnChampionMenu")
-                                  .Item(this.Name + "MaxHealthDashOut")
-                                  .GetValue<Slider>()
-                                  .Value)
-                        {
-                            if (Geometry.Distance(dash.EndPosition, meanvector)
-                                <= Geometry.Distance(GlobalVariables.Player, meanvector))
-                            {
-                                Execute(targetE);
-                            }
-                        }
-                        else
-                        {
-                            if (Geometry.Distance(dash.EndPosition, meanvector)
-                                >= Geometry.Distance(GlobalVariables.Player, meanvector))
-                            {
-                                Execute(targetE);
-                            }
-                        }
-                    }
-                    if (GlobalVariables.Player.HasQ3())
-                    {
-                        // 1 v 1
-                        if (dash.EndPosition.CountEnemiesInRange(1000) == 1)
-                        {
-                            if (dash.KnockUpHeroes.Contains(targetE))
-                            {
-                                Execute(targetE);
-                            }
-                        }
-                        else
-                        {
-                            var heroes = HeroManager.Enemies.Where(x => Geometry.Distance(x, dash.EndPosition) <= 1000);
-
-                            if (dash.KnockUpHeroes.Count >= (heroes.Count() / 2))
-                            {
-                                Execute(targetE);
-                            }
-                        }
-                    }
-                }
-
-                #endregion
-
-                #region Pathfinding
-
-                #region Dash to XY-Vector
-
-                if (Menu.SubMenu(this.Name + "PathfindingMenu").Item("Enabled").GetValue<bool>())
-                {
-                    var pathfindingMenu = Menu.SubMenu(this.Name + "PathfindingMenu");
-
-                    var targetedVector = Vector3.Zero;
-
-                    switch (pathfindingMenu.Item("ModeTarget").GetValue<StringList>().SelectedIndex)
-                    {
-                        case 0:
-                            targetedVector = Game.CursorPos;
-                            break;
-                        case 1:
-                            var target = TargetSelector.GetTarget(5000, TargetSelector.DamageType.Physical);
-
-                            if (target != null && !target.IsValid && !target.IsZombie)
-                            {
-                                if (this.BlacklistChampions.Any() && !this.BlacklistChampions.Contains(target))
-                                {
-                                    if (this.Menu.Item("Prediction").GetValue<bool>())
-                                    {
-                                        targetedVector =
-                                            Prediction.GetPrediction(
-                                                target,
-                                                Geometry.Distance(GlobalVariables.Player, target) / ProviderE.Speed())
-                                                .UnitPosition;
-                                    }
-                                    else
-                                    {
-                                        targetedVector = target.ServerPosition;
-                                    }
-                                }
-                                else
-                                {
-                                    targetedVector = Game.CursorPos;
-                                }
-                            }
-                            else
-                            {
-                                targetedVector = Game.CursorPos;
-                            }
-                            break;
-                    }
-
-                    #endregion
-
-                    #region Path Settings
-
-                    ProviderE.GenerateGrid(
-                        GlobalVariables.Player.ServerPosition,
-                        targetedVector,
-                        SweepingBladeLogicProvider.Units.All);
-
-                    if (this.ProviderE.GridGenerator.Grid == null
-                        || !this.ProviderE.GridGenerator.Grid.Connections.Any())
-                    {
-                        return;
-                    }
-
-                    // TODO: PRIORITY MEDIUM > Make some more settings for this, such as Danger Value of skillshot etc.
-                    if (pathfindingMenu.Item("PathAroundSkillShots").GetValue<bool>())
-                    {
-                        var skillshotList = Tracker.DetectedSkillshots.Where(x => x.SData.DangerValue > 1).ToList();
-
-                        this.ProviderE.GridGenerator.RemovePathesThroughSkillshots(skillshotList);
-                    }
-
-                    // TODO: PRIORITY MEDIUM > Make some more settings for this, such as minions under turret etc. Ref; TurretLP
-                    if (pathfindingMenu.Item("DontDashUnderTurret").GetValue<bool>())
-                    {
-                        foreach (var connection in this.ProviderE.GridGenerator.Grid.Connections)
-                        {
-                            if (!ProviderTurret.IsSafePosition(connection.To.Position))
-                            {
-                                this.ProviderE.GridGenerator.Grid.Connections.Remove(connection);
-                            }
-                        }
-                        this.ProviderE.FinalizeGrid();
-                    }
-
-                    this.ProviderE.FinalizeGrid();
-
-                    this.Path = this.ProviderE.GetPath(targetedVector);
-
-                    #endregion
-
-                    #region Path Execute
-
-                    if (this.Path != null && Path.Connections != null)
-                    {
-                        PathCopy = Path;
-                        // Auto-Dashing
-                        if (this.Path.Connections.FirstOrDefault(x => x.IsDash) != null)
-                        {
-                            if (pathfindingMenu.Item("AutoDashing").GetValue<bool>()
-                                && Geometry.Distance(
-                                    GlobalVariables.Player,
-                                    this.Path.Connections.First().Unit.ServerPosition)
-                                <= GlobalVariables.Spells[SpellSlot.E].Range
-                                && Geometry.Distance(
-                                    this.Path.Connections.First().To.Position,
-                                    Geometry.Extend(
-                                        GlobalVariables.Player.ServerPosition,
-                                        Path.Connections.First().Unit.ServerPosition,
-                                        GlobalVariables.Spells[SpellSlot.E].Range)) <= 50)
-                            {
-                                Execute(this.Path.Connections.First().Unit);
-                            }
-                        }
-
-                        // TODO: Priority Low - Med
-                        // Notice: Make it a way that it won't cancel AA
-                        if (!this.Path.Connections.First().IsDash && !GlobalVariables.Player.IsWindingUp)
-                        {
-                            // Auto-Walk-To-Dash
-                            if (pathfindingMenu.Item("AutoWalkToDash").GetValue<bool>())
-                            {
-                                // Connection considered to walk behind a unit
-                                if (Path.Connections.First().Lenght <= 50)
-                                {
-                                    // Walk logic here
-                                }
-                            }
-
-                            // Auto-Walking
-                            if (pathfindingMenu.Item("AutoWalking").GetValue<bool>())
-                            {
-                                if (Geometry.Distance(
-                                    GlobalVariables.Player.ServerPosition,
-                                    Path.Connections.First().To.Position) <= 50)
-                                {
-                                    Path.RemoveConnection(Path.Connections.First());
-                                }
-
-                                if (Path.Connections.First().Lenght > 50)
-                                {
-                                    // Walk logic here
-                                }
-                            }
-                        }
-                    }
-
-                    #endregion
-                }
-
-                #endregion
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
+
+            this.GetTargets();
+
+            this.LogicOnChampion();
+
+            this.pathfinder.CalculatePath();
+
+            this.pathfinder.ExecutePath();
+
+            Path = this.pathfinder.Path;
+
+            PathCopy = this.pathfinder.Path;
         }
 
-        private void OnChampion()
+        /// <summary>
+        /// Gets the targets.
+        /// </summary>
+        private void GetTargets()
         {
-            
+            Targets =
+                HeroManager.Enemies.Where(
+                    x =>
+                    x.Health > 0 && x.IsValid
+                    && x.Distance(GlobalVariables.Player.ServerPosition) <= 1000).ToList();
         }
 
-        private void Pathfinding()
+        /// <summary>
+        /// Resets the fields/properties
+        /// </summary>
+        private void SoftReset()
         {
-            
+            this.Targets = new List<Obj_AI_Hero>();
+            this.Path = new Path();
+
+            PathCopy = new Path();
         }
 
         #endregion
@@ -459,8 +269,10 @@
         /// </summary>
         protected override void OnInitialize()
         {
-            this.ProviderE = new SweepingBladeLogicProvider();
-            this.ProviderTurret = new TurretLogicProvider();
+            this.providerE = new SweepingBladeLogicProvider();
+            this.providerTurret = new TurretLogicProvider();
+
+            this.Targets = new List<Obj_AI_Hero>();
 
             base.OnInitialize();
         }
@@ -472,47 +284,119 @@
         {
             this.Menu = new Menu(this.Name, this.Name);
 
-            Blacklist = new Blacklist(this.Menu, "Blacklist");
+            this.BlacklistMenu = new BlacklistMenu(this.Menu, "Blacklist");
 
+            this.PathfindingMenu = new PathfindingMenu(this.Menu, "Pathfinder");
 
-            #region E on Champion
+            this.pathfinder = new Pathfinder(PathfindingMenu);
 
-            var onchampion = new Menu("Dash On Champion", this.Name + "EOnChampionMenu");
+            this.SetupOnChampionMenu();
 
-            onchampion.AddItem(
-                new MenuItem(this.Name + "MaxHealthDashOut", "Dash defensively if Health % <=").SetValue(new Slider(30)));
+            this.SetupGeneralMenu();
 
-            onchampion.AddItem(
-                new MenuItem(this.Name + "OnlyKillableCombo", "Only dash on champion if killable by Combo").SetValue(
-                    true));
+            this.SetupDrawingMenu();
 
-            onchampion.AddItem(new MenuItem(this.Name + "Whirlwind", "Smart EQ").SetValue(true));
+            this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
 
-            this.Menu.AddSubMenu(onchampion);
+            this.Parent.Menu.AddSubMenu(this.Menu);
+        }
 
-            #endregion
+        /// <summary>
+        ///     Executes on the specified unit.
+        /// </summary>
+        /// <param name="unit">The unit.</param>
+        private static void Execute(Obj_AI_Base unit)
+        {
+            if (unit == null || !unit.IsValidTarget() || unit.HasBuff("YasuoDashWrapper"))
+            {
+                return;
+            }
 
-            #region EQ
+            GlobalVariables.Spells[SpellSlot.E].CastOnUnit(unit);
+        }
 
-            this.Menu.AddItem(
-                new MenuItem(this.Name + "EQ", "Try to E for EQ").SetValue(true)
-                    .SetTooltip("The assembly will try to E on a minion in order to Q"));
+        /// <summary>
+        ///     Executes Logic to dash on champion
+        /// </summary>
+        private void LogicOnChampion()
+        {
+            var target = TargetSelector.SelectedTarget
+                            ?? TargetSelector.GetTarget(
+                                GlobalVariables.Spells[SpellSlot.E].Range,
+                                TargetSelector.DamageType.Magical);
 
-            this.Menu.AddItem(
-                new MenuItem(this.Name + "MinHitAOE", "Min HitCount for AOE").SetValue(new Slider(1, 1, 5)));
+            if (target == null || this.BlacklistChampions.Contains(target)
+                || !target.IsValidTarget(GlobalVariables.Spells[SpellSlot.E].Range))
+            {
+                return;
+            }
+            
+            var dash = new Dash(GlobalVariables.Player.ServerPosition, target);
 
-            this.Menu.AddItem(
-                new MenuItem(this.Name + "MinOwnHealth", "Min Player Health%").SetValue(new Slider(15, 1))
-                    .SetTooltip("The assembly will try to E on a minion in order to Q"));
+            if (target.Health < this.providerE.GetDamage(target) && !GlobalVariables.Spells[SpellSlot.Q].IsReady())
+            {
+                var meanvector =
+                    Helper.GetMeanVector3(
+                        Targets.Where(x => x.Distance(dash.EndPosition) <= 1000)
+                            .Select(x => x.ServerPosition)
+                            .ToList());
 
-            this.Menu.AddItem(
-                new MenuItem(this.Name + "DontDashUnderTurret", "Don't Dash under turret").SetValue(true)
-                    .SetTooltip("Assembly won't tower dive"));
+                if (meanvector == target.ServerPosition)
+                {
+                    Execute(target);
+                }
 
-            #endregion
+                if (GlobalVariables.Player.Health
+                    > Menu.SubMenu(this.Name + "EOnChampionMenu")
+                            .Item(this.Name + "MaxHealthDashOut")
+                            .GetValue<Slider>()
+                            .Value)
+                {
+                    if (dash.EndPosition.Distance(meanvector)
+                        <= GlobalVariables.Player.Distance(meanvector))
+                    {
+                        Execute(target);
+                    }
+                }
+                else
+                {
+                    if (dash.EndPosition.Distance(meanvector)
+                        >= GlobalVariables.Player.Distance(meanvector))
+                    {
+                        Execute(target);
+                    }
+                }
+            }
 
-            #region Drawings
+            if (!GlobalVariables.Player.HasQ3())
+            {
+                return;
+            }
 
+            // 1 v 1
+            if (dash.EndPosition.CountEnemiesInRange(1000) == 1)
+            {
+                if (dash.HeroesHitCircular.Contains(target))
+                {
+                    Execute(target);
+                }
+            }
+            else
+            {
+                var heroes = Targets.Where(x => x.Distance(dash.EndPosition) <= 1000);
+
+                if (dash.HeroesHitCircular.Count >= (heroes.Count() / 2))
+                {
+                    Execute(target);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Setups the drawing menu.
+        /// </summary>
+        private void SetupDrawingMenu()
+        {
             var drawingMenu = new Menu("Drawings", this.Name + "Drawings");
 
             drawingMenu.AddItem(
@@ -546,29 +430,48 @@
             drawingMenu.AddItem(new MenuItem(this.Name + "CirclesRadius", "Radius").SetValue(new Slider(40, 10, 475)));
 
             this.Menu.AddSubMenu(drawingMenu);
-
-            #endregion
-
-            this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
-
-            this.Parent.Menu.AddSubMenu(this.Menu);
         }
 
-        private void Execute(Obj_AI_Base unit)
-        {
-            try
-            {
-                if (unit == null || !Utility.IsValidTarget(unit) || unit.HasBuff("YasuoDashWrapper"))
-                {
-                    return;
-                }
 
-                GlobalVariables.Spells[SpellSlot.E].CastOnUnit(unit);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(@"Skills/Combo/SweepingBlade/Execute(): " + ex);
-            }
+        /// <summary>
+        /// Setups the general menu.
+        /// </summary>
+        private void SetupGeneralMenu()
+        {
+            this.Menu.AddItem(
+                new MenuItem(this.Name + "EQ", "Try to E for EQ").SetValue(true)
+                    .SetTooltip("The assembly will try to E on a minion in order to Q"));
+
+            this.Menu.AddItem(
+                new MenuItem(this.Name + "MinHitAOE", "Min HitCount for AOE").SetValue(new Slider(1, 1, 5)));
+
+            this.Menu.AddItem(
+                new MenuItem(this.Name + "MinOwnHealth", "Min Player Health%").SetValue(new Slider(15, 1))
+                    .SetTooltip("The assembly will try to E on a minion in order to Q"));
+
+            this.Menu.AddItem(
+                new MenuItem(this.Name + "DontDashUnderTurret", "Don't Dash under turret").SetValue(true)
+                    .SetTooltip("Assembly won't tower dive"));
+        }
+
+
+        /// <summary>
+        /// Setups the on champion menu.
+        /// </summary>
+        private void SetupOnChampionMenu()
+        {
+                var onchampion = new Menu("Dash On Champion", this.Name + "EOnChampionMenu");
+
+            onchampion.AddItem(
+                new MenuItem(this.Name + "MaxHealthDashOut", "Dash defensively if Health % <=").SetValue(new Slider(30)));
+
+            onchampion.AddItem(
+                new MenuItem(this.Name + "OnlyKillableCombo", "Only dash on champion if killable by Combo").SetValue(
+                    true));
+
+            onchampion.AddItem(new MenuItem(this.Name + "Whirlwind", "Smart EQ").SetValue(true));
+
+            this.Menu.AddSubMenu(onchampion);
         }
 
         #endregion

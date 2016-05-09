@@ -1,9 +1,12 @@
 ﻿namespace Yasuo.Common.Extensions.MenuExtensions
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
     using LeagueSharp.Common;
+    using LeagueSharp.Common.Data;
+    using LeagueSharp.SDK;
 
     public class DynamicMenu
     {
@@ -78,6 +81,19 @@
 
             this.Menu.AddSubMenu(this.AttachedMenu);
 
+            if (GlobalVariables.Debug)
+            {
+                Console.WriteLine(@" ");
+                Console.WriteLine(@"==== Setting up new DynamicMenu ====");
+                Console.WriteLine(@"DisplayName: " + this.DisplayName);
+                Console.WriteLine(@"Internal Menu Name: " + this.Menu.Name + this.DisplayName);
+                Console.WriteLine(@"MenuSets Amount: " + this.MenuSets.Count);
+                Console.WriteLine(@"Internal Selecter Name: " + this.Selecter.Name);
+                Console.WriteLine(@"Displaying Selecter Name: " + this.Selecter.DisplayName);
+                Console.WriteLine(@"Example Naming: " + this.DisplayName + @"SomeItemName");
+                Console.WriteLine(@" ");
+            }
+
             var value = this.Selecter.GetValue<StringList>();
 
             this.AttachedMenu.AddItem(
@@ -104,10 +120,18 @@
             {
                 foreach (var item in itemSet)
                 {
-                    item.Name = Menu.Name + item.Name;
+                    item.Name = this.AttachedMenu.Name + item.Name;
                     this.AttachedMenu.AddItem(item).SetTag(tag);
                 }
                 tag++;
+            }
+
+            if (GlobalVariables.Debug)
+            {
+                foreach (var item in AttachedMenu.Items)
+                {
+                    Console.WriteLine(@"DisplayName: {0}, Internal Name: {1}", item.DisplayName, item.Name);
+                }
             }
 
             MenuExtensions.RefreshTagBased(
