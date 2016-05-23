@@ -1,149 +1,60 @@
 ﻿namespace Yasuo
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net.Configuration;
-    using System.Reflection;
+    #region Using Directives
 
-    using LeagueSharp;
+    using System;
+
+    using global::Yasuo.CommonEx.Classes;
+    using global::Yasuo.Yasuo;
+
     using LeagueSharp.Common;
 
-
-    using SharpDX;
-    using SharpDX.Direct3D9;
-
-    using Yasuo.Common.Classes;
-    using Yasuo.Modules.Auto;
-    using Yasuo.Modules.Protector;
-    using Yasuo.Modules.WallDash;
-    using Yasuo.OrbwalkingModes.Combo;
-    using Yasuo.OrbwalkingModes.LaneClear;
-    using Yasuo.OrbwalkingModes.LastHit;
-    using Yasuo.OrbwalkingModes.Mixed;
-    using Yasuo.Properties;
+    #endregion
 
     /// <summary>
     ///     Class that loads every component of the assembly. Should only get called once.
     /// </summary>
     internal class Bootstrap
     {
+        #region Methods
+
         /// <summary>
-        ///     Constructor
+        ///     Initializes this instance.
         /// </summary>
-        public Bootstrap()
+        internal void Initialize()
         {
             try
             {
-                GlobalVariables.Assembly = new Assembly(GlobalVariables.Name);
-                
-
-                if (GlobalVariables.Stop) { return; }
-
-                #region parents
-
-                // Core
-                var assembly = new Modules.Assembly.Assembly();
-
-                // Orbwalking Modes
-                var combo = new Combo();
-                var laneclear = new LaneClear();
-                var lasthit = new LastHit();
-                var mixed = new Mixed();
-
-                // Extra Features
-                var module = new Modules.Modules();
-                var protector = new Protector();
-
-                #endregion
-                
-                #region features
-
                 CustomEvents.Game.OnGameLoad += delegate
-                {
-                    GlobalVariables.Assembly.Features.AddRange(
-                        new List<IChild>
-                            {
-                                // Core
-                                new Modules.Assembly.Version(assembly),
-                                new Modules.Assembly.Debug(assembly),
-
-                                // Orbwalking Modes
-                                new OrbwalkingModes.Combo.SteelTempest(combo),
-                                new OrbwalkingModes.Combo.SweepingBlade(combo),
-                                new OrbwalkingModes.Combo.LastBreath(combo),
-                                new OrbwalkingModes.Combo.Flash(combo),
-
-                                new OrbwalkingModes.LaneClear.SteelTempest(laneclear),
-                                new OrbwalkingModes.LaneClear.SweepingBlade(laneclear),
-                                new OrbwalkingModes.LastHit.SteelTempest(lasthit),
-                                new OrbwalkingModes.LastHit.SweepingBlade(lasthit),
-                                new OrbwalkingModes.LastHit.Eq(lasthit),
-                                new OrbwalkingModes.Mixed.SteelTempest(mixed),
-                                new OrbwalkingModes.Mixed.SweepingBlade(mixed),
-
-                                new Modules.Auto.Potions(module),
-                                new Modules.Auto.KillSteal(module),
-                                new Modules.WallDash.WallDash(module),
-
-                                new Modules.Flee.SweepingBlade(module),
-
-                                // Extra Features - Disabled due to SDK/Core problems
-                                //new WindWallProtector(protector)
-                            });
-
-                    foreach (var feature in GlobalVariables.Assembly.Features.Where(feature => !feature.Handled))
                     {
-                        if (GlobalVariables.Debug)
+                        if (GlobalVariables.ChampionDependent)
                         {
-                            Console.WriteLine(@"Loading Feature: {0}, Enabled: {1}", feature.Name, feature.Enabled);
+                            if (
+                                GlobalVariables.SupportedChampions.Contains(
+                                    GlobalVariables.Player.ChampionName.ToLower()))
+                            {
+                                switch (GlobalVariables.Player.ChampionName)
+                                {
+                                    case "Yasuo":
+                                        GlobalVariables.Assembly = new Assembly(new Champion());
+                                        break;
+                                }
+                            }
+
+                            GlobalVariables.Assembly = new Assembly(new DefaultChampion());
                         }
-
-                        feature.HandleEvents();
-                    }
-
-                    DrawBanner(GlobalVariables.Prefix + " " + GlobalVariables.Name, 1337, 6000);
-                };
-
-                #endregion
+                    };
             }
 
             catch (Exception ex)
             {
-                Console.WriteLine(@"Failed to load the assembly: " + ex);
+                Console.WriteLine(
+                    string.Format(
+                        "[{0}]: Bootstrap.Initialize() Failed loading the assembly. Exception: " + ex,
+                        GlobalVariables.Name));
             }
         }
 
-        // TODO: Add Version & Name
-        // TODO: Add Fade in & Fade out - probably SDK/Common can't offer that and I have to do it by myself
-        /// <summary>
-        ///     Method to display a banner and a text
-        /// </summary>
-        /// <param name="name">Name of the assembly</param>
-        /// <param name="version">Version of the assembly</param>
-        /// <param name="displayTime">Time of displaying</param>
-        private static void DrawBanner(String name, int version, int displayTime)
-        {
-            Notifications.AddNotification(string.Format("[{0}] {1} - loaded successfully!", name, version), displayTime, true);
-
-            if (Game.Time <= 6000000)
-            {
-                var banner = new Render.Sprite(Resources.BannerLoading, new Vector2());
-
-                // centered but a little above the screens center
-                
-                banner.Scale = new Vector2(1 / (Drawing.Width / 3),  1 / (Drawing.Height / 3)).Normalized();
-                var position = new Vector2((Drawing.Width / 2) - banner.Width / 2, (Drawing.Height / 2) - banner.Height / 2 - 50);
-                banner.Position = position;
-
-
-                
-                banner.Add(0);
-
-                banner.OnDraw();
-
-                Utility.DelayAction.Add(displayTime, () => banner.Remove());
-            }
-        }
+        #endregion
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Linq;
-
-using LeagueSharp;
-using LeagueSharp.Common;
-
-namespace Yasuo
+﻿namespace Yasuo
 {
     class Program
     {
@@ -14,7 +8,9 @@ namespace Yasuo
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            var instance = new Bootstrap();
+            var bootstrap = new Bootstrap();
+
+            bootstrap.Initialize();
         }           
     }
 }

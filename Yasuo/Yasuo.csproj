@@ -54,29 +54,29 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="clipper_library">
-      <HintPath>C:\LeagueSharp\System\clipper_library.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\LeagueSharp\System\clipper_library.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp">
-      <HintPath>C:\LeagueSharp\System\LeagueSharp.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\LeagueSharp\System\LeagueSharp.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.Common">
-      <HintPath>C:\LeagueSharp\System\LeagueSharp.Common.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\LeagueSharp\System\LeagueSharp.Common.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.Data">
-      <HintPath>C:\LeagueSharp\System\LeagueSharp.Data.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\LeagueSharp\System\LeagueSharp.Data.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.SDK">
-      <HintPath>C:\LeagueSharp\System\LeagueSharp.SDK.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\LeagueSharp\System\LeagueSharp.SDK.dll</HintPath>
     </Reference>
     <Reference Include="SebbyLib">
-      <HintPath>C:\LeagueSharp\System\SebbyLib.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\LeagueSharp\System\SebbyLib.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX">
-      <HintPath>C:\LeagueSharp\System\SharpDX.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\LeagueSharp\System\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D9, Version=2.6.3.0, Culture=neutral, PublicKeyToken=345b829e6e492981, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\LeagueSharp\System\SharpDX.Direct3D9.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\LeagueSharp\System\SharpDX.Direct3D9.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -90,77 +90,46 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrap.cs" />
-    <Compile Include="Common\Algorithm\Djikstra\Connection.cs" />
-    <Compile Include="Common\Algorithm\Djikstra\Djikstra.cs" />
-    <Compile Include="Common\Algorithm\Djikstra\Grid.cs" />
-    <Compile Include="Common\Algorithm\Djikstra\Point.cs" />
-    <Compile Include="Common\Algorithm\Media\GridGenerator.cs" />
-    <Compile Include="Common\Classes\Base.cs" />
-    <Compile Include="Common\Classes\Child.cs" />
-    <Compile Include="Common\Classes\IChild.cs" />
-    <Compile Include="Common\Classes\Parent.cs" />
-    <Compile Include="Common\Classes\Template.cs" />
-    <Compile Include="Common\Data\Debuffs.cs" />
-    <Compile Include="Common\Extensions\Extensions.cs" />
-    <Compile Include="Common\Extensions\MenuExtensions\ChampionSliderMenu.cs" />
-    <Compile Include="Common\Extensions\MenuExtensions\PathfindingMenu.cs" />
-    <Compile Include="Common\Extensions\MenuExtensions\WhitelistMenu.cs" />
-    <Compile Include="Common\Extensions\MenuExtensions\BlacklistMenu.cs" />
-    <Compile Include="Common\Extensions\MenuExtensions\DynamicMenu.cs" />
-    <Compile Include="Common\Extensions\MenuExtensions\MenuExtensions.cs" />
-    <Compile Include="Common\LogicProvider\ItemLogicProvider.cs" />
-    <Compile Include="Common\Objects\Dash.cs" />
-    <Compile Include="Common\Objects\LastBreath.cs" />
-    <Compile Include="Common\Objects\Path.cs" />
-    <Compile Include="Common\Objects\Pathfinding\Pathfinder.cs" />
-    <Compile Include="Common\Objects\WindWall.cs" />
-    <Compile Include="Common\Predictions\PredictionOktw.cs" />
-    <Compile Include="Common\LogicProvider\ComboLogicProvider.cs" />
-    <Compile Include="Common\LogicProvider\FlashLogicProvider.cs" />
-    <Compile Include="Common\LogicProvider\FlowLogicProvider.cs" />
-    <Compile Include="Common\LogicProvider\LastBreathLogicProvider.cs" />
-    <Compile Include="Common\LogicProvider\PotionLogicProvider.cs" />
-    <Compile Include="Common\LogicProvider\SafeZoneLogicProvider.cs" />
-    <Compile Include="Common\LogicProvider\SteelTempestLogicProvider.cs" />
-    <Compile Include="Common\LogicProvider\SweepingBladeLogicProvider.cs" />
-    <Compile Include="Common\LogicProvider\TurretLogicProvider.cs" />
-    <Compile Include="Common\LogicProvider\WallDashLogicProvider.cs" />
-    <Compile Include="Common\LogicProvider\WindWallLogicProvider.cs" />
-    <Compile Include="Common\Utility\HealthComparer.cs" />
-    <Compile Include="Common\Utility\VersionChecker.cs" />
-    <Compile Include="Common\Utility\Helper.cs" />
-    <Compile Include="Common\Utility\Logger.cs" />
-    <Compile Include="Drawings\Flow.cs" />
-    <Compile Include="Drawings\Drawings.cs" />
-    <Compile Include="Modules\Assembly\Debug.cs" />
-    <Compile Include="Modules\Auto\Killsteal.cs" />
-    <Compile Include="Modules\Evade\SweepingBlade.cs" />
-    <Compile Include="Modules\Evade\WindWall.cs" />
-    <Compile Include="Modules\Flee\Flee.cs" />
-    <Compile Include="Modules\Flee\SweepingBlade.cs" />
-    <Compile Include="Modules\Assembly\Version.cs" />
-    <Compile Include="Modules\Assembly\Assembly.cs" />
-    <Compile Include="Modules\Modules.cs" />
-    <Compile Include="Modules\Auto\Potions.cs" />
-    <Compile Include="Modules\Protector\Protector.cs" />
-    <Compile Include="Modules\Protector\WindWallProtector.cs" />
-    <Compile Include="Modules\WallDash\WallDash.cs" />
-    <Compile Include="OrbwalkingModes\LastHit\LastHit.cs" />
-    <Compile Include="OrbwalkingModes\LastHit\SteelTempest.cs" />
-    <Compile Include="OrbwalkingModes\LastHit\Eq.cs" />
-    <Compile Include="OrbwalkingModes\LastHit\SweepingBlade.cs" />
-    <Compile Include="OrbwalkingModes\Mixed\Mixed.cs" />
-    <Compile Include="OrbwalkingModes\Mixed\SteelTempest.cs" />
-    <Compile Include="OrbwalkingModes\Mixed\SweepingBlade.cs" />
-    <Compile Include="OrbwalkingModes\LaneClear\LaneClear.cs" />
-    <Compile Include="OrbwalkingModes\LaneClear\SteelTempest.cs" />
-    <Compile Include="OrbwalkingModes\LaneClear\SweepingBlade.cs" />
-    <Compile Include="OrbwalkingModes\Combo\Flash.cs" />
-    <Compile Include="OrbwalkingModes\Combo\LastBreath.cs" />
-    <Compile Include="OrbwalkingModes\Combo\Combo.cs" />
+    <Compile Include="CommonEx\Algorithm\Djikstra\Connection.cs" />
+    <Compile Include="CommonEx\Algorithm\Djikstra\Djikstra.cs" />
+    <Compile Include="CommonEx\Algorithm\Djikstra\Grid.cs" />
+    <Compile Include="CommonEx\Algorithm\Djikstra\Point.cs" />
+    <Compile Include="CommonEx\Algorithm\Media\GridGenerator.cs" />
+    <Compile Include="CommonEx\CastManager\CastManager.cs" />
+    <Compile Include="CommonEx\Classes\Base.cs" />
+    <Compile Include="CommonEx\Classes\Child.cs" />
+    <Compile Include="CommonEx\Classes\DefaultChampion.cs" />
+    <Compile Include="CommonEx\Classes\IChampion.cs" />
+    <Compile Include="CommonEx\Classes\IChild.cs" />
+    <Compile Include="CommonEx\Classes\Parent.cs" />
+    <Compile Include="CommonEx\Classes\Template.cs" />
+    <Compile Include="CommonEx\Data\Debuffs.cs" />
+    <Compile Include="CommonEx\Events.cs" />
+    <Compile Include="CommonEx\Extensions\Extensions.cs" />
+    <Compile Include="CommonEx\Menu\Interfaces\Interfaces\MenuSet.cs" />
+    <Compile Include="CommonEx\Menu\MenuExtensions.cs" />
+    <Compile Include="CommonEx\Menu\MenuGenerator.cs" />
+    <Compile Include="CommonEx\Menu\MenuTranslator.cs" />
+    <Compile Include="CommonEx\Menu\Presets\BlacklistMenu.cs" />
+    <Compile Include="CommonEx\Menu\Presets\ChampionSliderMenu.cs" />
+    <Compile Include="CommonEx\Menu\Presets\DynamicMenu.cs" />
+    <Compile Include="CommonEx\Menu\Presets\PathfindingMenu.cs" />
+    <Compile Include="CommonEx\Menu\Presets\WhitelistMenu.cs" />
+    <Compile Include="CommonEx\Objects\Dash.cs" />
+    <Compile Include="CommonEx\Objects\LastBreath.cs" />
+    <Compile Include="CommonEx\Objects\Path.cs" />
+    <Compile Include="CommonEx\Objects\Pathfinding\Pathfinder.cs" />
+    <Compile Include="CommonEx\Objects\WindWall.cs" />
+    <Compile Include="CommonEx\PriorityQuequev2\PriorityQueque.cs" />
+    <Compile Include="CommonEx\PriorityQueue\DefaultPriorityQueque.cs" />
+    <Compile Include="CommonEx\PriorityQueue\IPriorityQueque.cs" />
+    <Compile Include="CommonEx\PriorityQueue\PriorityQuequeItem.cs" />
+    <Compile Include="CommonEx\PriorityQueue\PriorityQueue.cs" />
+    <Compile Include="CommonEx\Utility\HealthComparer.cs" />
+    <Compile Include="CommonEx\Utility\VersionChecker.cs" />
+    <Compile Include="CommonEx\Utility\Helper.cs" />
+    <Compile Include="CommonEx\Utility\Logger.cs" />
     <Compile Include="Assembly.cs" />
-    <Compile Include="OrbwalkingModes\Combo\SteelTempest.cs" />
-    <Compile Include="OrbwalkingModes\Combo\SweepingBlade.cs" />
     <Compile Include="GlobalVariables.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -174,6 +143,70 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Yasuo\Champion.cs" />
+    <Compile Include="Yasuo\LogicProvider\ComboLogicProvider.cs" />
+    <Compile Include="Yasuo\LogicProvider\FlashLogicProvider.cs" />
+    <Compile Include="Yasuo\LogicProvider\FlowLogicProvider.cs" />
+    <Compile Include="Yasuo\LogicProvider\ItemLogicProvider.cs" />
+    <Compile Include="Yasuo\LogicProvider\LastBreathLogicProvider.cs" />
+    <Compile Include="Yasuo\LogicProvider\PotionLogicProvider.cs" />
+    <Compile Include="Yasuo\LogicProvider\SafeZoneLogicProvider.cs" />
+    <Compile Include="Yasuo\LogicProvider\SteelTempestLogicProvider.cs" />
+    <Compile Include="Yasuo\LogicProvider\SweepingBladeLogicProvider.cs" />
+    <Compile Include="Yasuo\LogicProvider\TurretLogicProvider.cs" />
+    <Compile Include="Yasuo\LogicProvider\WallDashLogicProvider.cs" />
+    <Compile Include="Yasuo\LogicProvider\WindWallLogicProvider.cs" />
+    <Compile Include="Yasuo\Menu\MenuSets\BaseMenus\BaseMenuLastBreath.cs" />
+    <Compile Include="Yasuo\Menu\MenuSets\BaseMenus\BaseMenuSteelTempest.cs" />
+    <Compile Include="Yasuo\Menu\MenuSets\BaseMenus\BaseMenuSweepingBlade.cs" />
+    <Compile Include="Yasuo\Menu\MenuSets\BaseMenus\BaseMenuWindWall.cs" />
+    <Compile Include="Yasuo\Menu\MenuSets\OrbwalkingModes\Combo\LastBreathMenu.cs" />
+    <Compile Include="Yasuo\Menu\MenuSets\OrbwalkingModes\Combo\SteelTempestMenu.cs" />
+    <Compile Include="Yasuo\Menu\MenuSets\OrbwalkingModes\Combo\SweepingBladeMenu.cs" />
+    <Compile Include="Yasuo\Menu\MenuSets\OrbwalkingModes\LaneClear\SteelTempestMenu.cs" />
+    <Compile Include="Yasuo\Menu\MenuSets\OrbwalkingModes\LaneClear\SweepingBladeMenu.cs" />
+    <Compile Include="Yasuo\Menu\MenuSets\OrbwalkingModes\LastHit\SteelTempestMenu.cs" />
+    <Compile Include="Yasuo\Menu\MenuSets\OrbwalkingModes\LastHit\SweepingBladeMenu.cs" />
+    <Compile Include="Yasuo\Menu\MenuSets\OrbwalkingModes\Mixed\SteelTempestMenu.cs" />
+    <Compile Include="Yasuo\Menu\MenuSets\OrbwalkingModes\Mixed\SweepingBladeMenu.cs" />
+    <Compile Include="Yasuo\Menu\Translations\English.cs" />
+    <Compile Include="Yasuo\Menu\Translations\German.cs" />
+    <Compile Include="Yasuo\Menu\Translations\ITranslation.cs" />
+    <Compile Include="Yasuo\Modules\Assembly\Assembly.cs" />
+    <Compile Include="Yasuo\Modules\Assembly\CastManager.cs" />
+    <Compile Include="Yasuo\Modules\Assembly\Debug.cs" />
+    <Compile Include="Yasuo\Modules\Assembly\Notifications.cs" />
+    <Compile Include="Yasuo\Modules\Assembly\SpellManager.cs" />
+    <Compile Include="Yasuo\Modules\Assembly\Version.cs" />
+    <Compile Include="Yasuo\Modules\Auto\Killsteal.cs" />
+    <Compile Include="Yasuo\Modules\Auto\Potions.cs" />
+    <Compile Include="Yasuo\Modules\Drawings\Drawings.cs" />
+    <Compile Include="Yasuo\Modules\Drawings\Flow.cs" />
+    <Compile Include="Yasuo\Modules\Evade\SweepingBlade.cs" />
+    <Compile Include="Yasuo\Modules\Evade\WindWall.cs" />
+    <Compile Include="Yasuo\Modules\Flee\Flee.cs" />
+    <Compile Include="Yasuo\Modules\Flee\SweepingBlade.cs" />
+    <Compile Include="Yasuo\Modules\Modules.cs" />
+    <Compile Include="Yasuo\Modules\Protector\Protector.cs" />
+    <Compile Include="Yasuo\Modules\Protector\WindWallProtector.cs" />
+    <Compile Include="Yasuo\Modules\WallDash\WallDash.cs" />
+    <Compile Include="Yasuo\OrbwalkingModes\Combo\Combo.cs" />
+    <Compile Include="Yasuo\OrbwalkingModes\Combo\Flash.cs" />
+    <Compile Include="Yasuo\OrbwalkingModes\Combo\LastBreath.cs" />
+    <Compile Include="Yasuo\OrbwalkingModes\Combo\SteelTempest.cs" />
+    <Compile Include="Yasuo\OrbwalkingModes\Combo\SweepingBlade.cs" />
+    <Compile Include="Yasuo\OrbwalkingModes\LaneClear\Eq.cs" />
+    <Compile Include="Yasuo\OrbwalkingModes\LaneClear\LaneClear.cs" />
+    <Compile Include="Yasuo\OrbwalkingModes\LaneClear\SteelTempest.cs" />
+    <Compile Include="Yasuo\OrbwalkingModes\LaneClear\SweepingBlade.cs" />
+    <Compile Include="Yasuo\OrbwalkingModes\LastHit\Eq.cs" />
+    <Compile Include="Yasuo\OrbwalkingModes\LastHit\LastHit.cs" />
+    <Compile Include="Yasuo\OrbwalkingModes\LastHit\SteelTempest.cs" />
+    <Compile Include="Yasuo\OrbwalkingModes\LastHit\SweepingBlade.cs" />
+    <Compile Include="Yasuo\OrbwalkingModes\Mixed\Eq.cs" />
+    <Compile Include="Yasuo\OrbwalkingModes\Mixed\Mixed.cs" />
+    <Compile Include="Yasuo\OrbwalkingModes\Mixed\SteelTempest.cs" />
+    <Compile Include="Yasuo\OrbwalkingModes\Mixed\SweepingBlade.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -202,10 +235,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Items\Combo\" />
-    <Folder Include="Items\LaneClear\" />
-    <Folder Include="Items\LastHit\" />
-    <Folder Include="Items\Mixed\" />
+    <Folder Include="Yasuo\Modules\Items\Combo\" />
+    <Folder Include="Yasuo\Modules\Items\LaneClear\" />
+    <Folder Include="Yasuo\Modules\Items\LastHit\" />
+    <Folder Include="Yasuo\Modules\Items\Mixed\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\BannerLoading.bmp" />
