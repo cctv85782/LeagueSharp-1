@@ -111,14 +111,12 @@
                 // if walking is requires less time than remaining knockup time
                 if (playerpathtime <= execution.MinRemainingAirboneTime + buffer + Game.Ping)
                 {
-                    Game.PrintChat("walk to target");
                     return false;
                 }
 
                 // Instant Ult in 1 v 1 because armor pen and less time for enemiy to get spells up also you can't gapclose
                 if (execution.EndPosition.CountEnemiesInRange(1500) == 0 && !execution.Target.InAutoAttackRange())
                 {
-                    Game.PrintChat("insta 1v1 ult");
                     return true;
                 }
             }
@@ -128,12 +126,11 @@
             {
                 if (path.PathTime <= execution.MinRemainingAirboneTime + buffer + Game.Ping)
                 {
-                    Game.PrintChat("path given");
                     return false;
                 }
             }
 
-            return execution.MinRemainingAirboneTime <= (Game.Ping + buffer);
+            return execution.MinRemainingAirboneTime <= Game.Ping + buffer;
         }
 
         #endregion

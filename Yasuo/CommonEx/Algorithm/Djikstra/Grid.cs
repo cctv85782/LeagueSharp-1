@@ -62,10 +62,6 @@
             }
             catch (Exception ex)
             {
-                if (this.Connections != null)
-                {
-                    Game.PrintChat("Failed creating a grid with: " + this.Connections.Count + "Connections");
-                }
                 Console.WriteLine(@"Exeption: " + ex);
             }
         }

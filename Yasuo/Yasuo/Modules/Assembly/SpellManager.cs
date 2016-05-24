@@ -96,47 +96,37 @@
                 return;
             }
 
-            var q = GlobalVariables.Spells[SpellSlot.Q];
-            var w = GlobalVariables.Spells[SpellSlot.W];
-            var e = GlobalVariables.Spells[SpellSlot.E];
-            var r = GlobalVariables.Spells[SpellSlot.R];
-
             if (GlobalVariables.Player.IsDashing())
             {
-                q.SetSkillshot(GlobalVariables.providerQ.GetQDelay, 350, float.MaxValue, false, SkillshotType.SkillshotCircle);
-                q.Range = 0;
-                q.MinHitChance = HitChance.High;
+                GlobalVariables.Spells[SpellSlot.Q].SetSkillshot(GlobalVariables.providerQ.GetQDelay, 350, float.MaxValue, false, SkillshotType.SkillshotCircle);
+                GlobalVariables.Spells[SpellSlot.Q].Range = 0;
+                GlobalVariables.Spells[SpellSlot.Q].MinHitChance = HitChance.High;
             }
             else
             {
                 if (GlobalVariables.Player.HasQ3())
                 {
-                    q.SetSkillshot(GlobalVariables.providerQ.GetQDelay, 90, 1200, false, SkillshotType.SkillshotLine);
-                    q.Range = 950;
-                    q.MinHitChance = HitChance.VeryHigh;
+                    GlobalVariables.Spells[SpellSlot.Q].SetSkillshot(GlobalVariables.providerQ.GetQDelay, 90, 1200, false, SkillshotType.SkillshotLine);
+                    GlobalVariables.Spells[SpellSlot.Q].Range = 950;
+                    GlobalVariables.Spells[SpellSlot.Q].MinHitChance = HitChance.VeryHigh;
                 }
                 else
                 {
-                    q.SetSkillshot(GlobalVariables.providerQ.GetQDelay, 20, float.MaxValue, false, SkillshotType.SkillshotLine);
-                    q.Range = 475;
-                    q.MinHitChance = HitChance.VeryHigh;
+                    GlobalVariables.Spells[SpellSlot.Q].SetSkillshot(GlobalVariables.providerQ.GetQDelay, 20, float.MaxValue, false, SkillshotType.SkillshotLine);
+                    GlobalVariables.Spells[SpellSlot.Q].Range = 475;
+                    GlobalVariables.Spells[SpellSlot.Q].MinHitChance = HitChance.VeryHigh;
                 }
             }
 
-            w.SetSkillshot(0, 250 + (w.Level * 50), 400, false, SkillshotType.SkillshotCone);
-            w.Range = 400;
+            GlobalVariables.Spells[SpellSlot.W].SetSkillshot(0, 250 + (GlobalVariables.Spells[SpellSlot.W].Level * 50), 400, false, SkillshotType.SkillshotCone);
+            GlobalVariables.Spells[SpellSlot.W].Range = 400;
 
-            e.SetTargetted(0, 1025);
-            e.Speed = 1000;
-            e.Range = 475;
+            GlobalVariables.Spells[SpellSlot.E].SetTargetted(0, 1025);
+            GlobalVariables.Spells[SpellSlot.E].Speed = 1000;
+            GlobalVariables.Spells[SpellSlot.E].Range = 475;
 
-            r.SetTargetted(0, float.MaxValue);
-            r.Range = 900;
-
-            GlobalVariables.Spells[SpellSlot.Q] = q;
-            GlobalVariables.Spells[SpellSlot.W] = w;
-            GlobalVariables.Spells[SpellSlot.E] = e;
-            GlobalVariables.Spells[SpellSlot.R] = r;
+            GlobalVariables.Spells[SpellSlot.R].SetTargetted(0, float.MaxValue);
+            GlobalVariables.Spells[SpellSlot.R].Range = 900;
         }
 
 

@@ -1,20 +1,23 @@
 ﻿namespace Yasuo.CommonEx.Algorithm.Media
 {
+    #region Using Directives
+
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    using Djikstra;
-    using Objects;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra;
 
     using LeagueSharp;
+    using LeagueSharp.Common;
     using LeagueSharp.Data.Enumerations;
     using LeagueSharp.SDK;
 
     using SharpDX;
 
     using Geometry = LeagueSharp.Common.Geometry;
-    using Point = CommonEx.Algorithm.Djikstra.Point;
+
+    #endregion
 
     // TODO: PRIORITY LOW > Adding offset, different dash types - to make the logic behind this usable for every other dash in the game too
     // TODO: PRIORITY LOW > Making GridGenerator universal
@@ -30,7 +33,8 @@
         /// <summary>
         ///     The base point (where everything starts, most likely the Player Position)
         /// </summary>
-        public Point BasePoint = new Point(GlobalVariables.Player.ServerPosition);
+        public Djikstra.Point BasePoint =
+            new Djikstra.Point(GlobalVariables.Player.ServerPosition);
 
         /// <summary>
         ///     The grid
@@ -55,7 +59,8 @@
         /// <summary>
         ///     The shared points
         /// </summary>
-        private List<Point> sharedPoints = new List<Point>();
+        private List<Djikstra.Point> sharedPoints =
+            new List<Djikstra.Point>();
 
         #endregion
 
@@ -76,7 +81,7 @@
             }
 
             this.EndPosition = endPosition;
-            this.EndPoint = new Point(this.EndPosition);
+            this.EndPoint = new Djikstra.Point(this.EndPosition);
         }
 
         #endregion
@@ -135,7 +140,7 @@
         /// <value>
         ///     The end point.
         /// </value>
-        public Point EndPoint { get; }
+        public Djikstra.Point EndPoint { get; }
 
         /// <summary>
         ///     Gets or sets the end position.
@@ -204,7 +209,7 @@
         #region Public Methods and Operators
 
         /// <summary>
-        ///     Generates a new connection for every open connection to "to"
+        ///     Connects all points.
         /// </summary>
         public void ConnectAllPoints()
         {
@@ -215,7 +220,7 @@
                     Console.WriteLine(@"GridGenerator.Cs > ConnectAllPoints()");
                 }
 
-                foreach (var x in this.Grid.Connections.ToList())
+                foreach (var x in this.Grid.Connections.Where(x => x.IsDash).ToList())
                 {
                     var path = GlobalVariables.Player.GetPath(x.To.Position, this.EndPosition);
 
@@ -223,14 +228,14 @@
 
                     for (var i = 0; i < path.Count() - 1; i++)
                     {
-                        var start = new Point(path[i]);
+                        var start = new Djikstra.Point(path[i]);
 
                         if (i == 0)
                         {
                             start = firstpoint;
                         }
 
-                        var end = new Point(path[i + 1]);
+                        var end = new Djikstra.Point(path[i + 1]);
 
                         if (i == path.Count() - 2)
                         {
@@ -260,6 +265,8 @@
         {
             try
             {
+                this.SoftReset();
+
                 if (GlobalVariables.Debug)
                 {
                     Console.WriteLine(@"GridGenerator.Cs > Initialize()");
@@ -268,9 +275,12 @@
                 // Setting up the first points
                 foreach (var unit in
                     this.Units.Where(
-                        x => Geometry.Distance(x, this.BasePoint.Position) <= GlobalVariables.Spells[SpellSlot.E].Range))
+                        x => Geometry.Distance(x, this.BasePoint.Position) <= GlobalVariables.Spells[SpellSlot.E].Range)
+                    )
                 {
-                    var pointToAdd = new Point(new Dash(GlobalVariables.Player.ServerPosition, unit).EndPosition);
+                    var pointToAdd =
+                        new Djikstra.Point(
+                            new global::Yasuo.CommonEx.Objects.Dash(GlobalVariables.Player.ServerPosition, unit).EndPosition);
                     this.sharedPoints.Add(pointToAdd);
                     this.sharedConnections.Add(new Connection(this.BasePoint, pointToAdd, unit));
                 }
@@ -280,14 +290,14 @@
 
                 for (var i = 0; i < path2.Count() - 1; i++)
                 {
-                    var start = new Point(path2[i]);
+                    var start = new Djikstra.Point(path2[i]);
 
                     if (i == 0)
                     {
                         start = this.BasePoint;
                     }
 
-                    var end = new Point(path2[i + 1]);
+                    var end = new Djikstra.Point(path2[i + 1]);
 
                     if (i == path2.Count() - 2)
                     {
@@ -344,7 +354,7 @@
             }
             catch (Exception ex)
             {
-                // this.SoftReset();
+                this.SoftReset();
                 Console.WriteLine(ex);
             }
         }
@@ -518,7 +528,9 @@
                     foreach (var connection in this.Grid.Connections)
                     {
                         var clipperpath = skillshot.Value.ToClipperPath();
-                        var connectionpolygon = new Geometry.Polygon.Line(connection.From.Position, connection.To.Position);
+                        var connectionpolygon = new Geometry.Polygon.Line(
+                            connection.From.Position,
+                            connection.To.Position);
                         var connectionclipperpath = connectionpolygon.ToClipperPath();
 
                         if (clipperpath.Intersect(connectionclipperpath).Any())
@@ -544,7 +556,7 @@
         /// <param name="from">the starting point</param>
         /// <param name="limit">limit of backtrace amount</param>
         /// <returns></returns>
-        private List<Obj_AI_Base> Backtrace(Point from, int limit)
+        private List<Obj_AI_Base> Backtrace(Djikstra.Point from, int limit)
         {
             try
             {
@@ -620,7 +632,7 @@
         /// </summary>
         /// <param name="from">the starting point</param>
         /// <returns></returns>
-        private List<Connection> Backtrace(Point from)
+        private List<Connection> Backtrace(Djikstra.Point from)
         {
             try
             {
@@ -658,7 +670,7 @@
         /// </summary>
         /// <param name="point"></param>
         /// <param name="blacklist"></param>
-        private void ProcessPoint(Point point, List<Obj_AI_Base> blacklist)
+        private void ProcessPoint(Djikstra.Point point, List<Obj_AI_Base> blacklist)
         {
             foreach (var unit in
                 this.Units.Where(
@@ -671,9 +683,9 @@
                 }
 
                 // Checking for wall
-                var dashObj = new Dash(point.Position, unit);
+                var dashObj = new global::Yasuo.CommonEx.Objects.Dash(point.Position, unit);
 
-                var endPoint = new Point(dashObj.EndPosition);
+                var endPoint = new Djikstra.Point(dashObj.EndPosition);
 
                 // Overriding Endpoint. Connection class does not contain any wallcheck. Dash class does.
                 var tempConnection = new Connection(point, endPoint, unit) { To = endPoint };
@@ -693,7 +705,7 @@
         private void Reset()
         {
             this.sharedConnections = new List<Connection>();
-            this.sharedPoints = new List<Point>();
+            this.sharedPoints = new List<Djikstra.Point>();
 
             this.Units = new List<Obj_AI_Base>();
             this.Grid = new Grid(new List<Connection>(), null);
@@ -710,7 +722,7 @@
         private void SoftReset()
         {
             this.sharedConnections = new List<Connection>();
-            this.sharedPoints = new List<Point>();
+            this.sharedPoints = new List<Djikstra.Point>();
 
             if (GlobalVariables.Debug)
             {

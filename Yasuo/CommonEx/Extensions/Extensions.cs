@@ -72,7 +72,6 @@
             if (skillshot.SData.SpellType == SpellType.SkillshotLine
                 || skillshot.SData.SpellType == SpellType.SkillshotMissileLine)
             {
-                Game.PrintChat("test");
                 var t = Math.Max(0, Utils.TickCount + delay - skillshot.StartTime - skillshot.SData.Delay);
                 t =
                     (int)

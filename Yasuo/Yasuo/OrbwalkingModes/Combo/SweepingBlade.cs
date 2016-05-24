@@ -119,76 +119,56 @@
                 return;
             }
 
-            if (this.Path != null && this.Path.Connections.Count > 0)
-            {
-                var drawingMenu = this.Menu.SubMenu(this.Name + "Drawings");
+            //if (this.Path != null && this.Path.Connections.Count > 0)
+            //{
+            //    var drawingMenu = this.Menu.SubMenu(this.Name + "Drawings");
 
-                if (drawingMenu.Item(this.Name + "Enabled").GetValue<bool>())
-                {
-                    if (drawingMenu.Item(this.Name + "SmartDrawings").GetValue<bool>())
-                    {
-                        if (!this.Path.BuildsUpShield && this.Path.Connections.All(x => !x.IsDash))
-                        {
-                            return;
-                        }
+            //    if (drawingMenu.Item(this.Name + "Enabled").GetValue<bool>())
+            //    {
+            //        if (drawingMenu.Item(this.Name + "SmartDrawings").GetValue<bool>())
+            //        {
+            //            if (!this.Path.BuildsUpShield && this.Path.Connections.All(x => !x.IsDash))
+            //            {
+            //                return;
+            //            }
 
-                        // TODO: Color Path light blue
-                        if (this.Path.BuildsUpShield)
-                        {
-                        }
-                    }
-                    if (drawingMenu.Item(this.Name + "PathDashColor").GetValue<Circle>().Active)
-                    {
-                        var linewidth = drawingMenu.Item(this.Name + "PathDashWidth").GetValue<Slider>().Value;
-                        var color = drawingMenu.Item(this.Name + "PathDashColor").GetValue<Circle>().Color;
+            //            // TODO: Color Path light blue
+            //            if (this.Path.BuildsUpShield)
+            //            {
+            //            }
+            //        }
+            //        if (drawingMenu.Item(this.Name + "PathDashColor").GetValue<Circle>().Active)
+            //        {
+            //            var linewidth = drawingMenu.Item(this.Name + "PathDashWidth").GetValue<Slider>().Value;
+            //            var color = drawingMenu.Item(this.Name + "PathDashColor").GetValue<Circle>().Color;
 
-                        this.Path.DashLineWidth = linewidth;
-                        this.Path.DashColor = color;
-                    }
+            //            this.Path.DashLineWidth = linewidth;
+            //            this.Path.DashColor = color;
+            //        }
 
-                    if (drawingMenu.Item(this.Name + "PathWalkColor").GetValue<Circle>().Active)
-                    {
-                        var linewidth = drawingMenu.Item(this.Name + "PathWalkWidth").GetValue<Slider>().Value;
-                        var color = drawingMenu.Item(this.Name + "PathWalkColor").GetValue<Circle>().Color;
+            //        if (drawingMenu.Item(this.Name + "PathWalkColor").GetValue<Circle>().Active)
+            //        {
+            //            var linewidth = drawingMenu.Item(this.Name + "PathWalkWidth").GetValue<Slider>().Value;
+            //            var color = drawingMenu.Item(this.Name + "PathWalkColor").GetValue<Circle>().Color;
 
-                        this.Path.WalkLineWidth = linewidth;
-                        this.Path.WalkColor = color;
-                    }
+            //            this.Path.WalkLineWidth = linewidth;
+            //            this.Path.WalkColor = color;
+            //        }
 
-                    if (drawingMenu.Item(this.Name + "CirclesColor").GetValue<Circle>().Active)
-                    {
-                        var linewidth = drawingMenu.Item(this.Name + "CirclesLineWidth").GetValue<Slider>().Value;
-                        var radius = drawingMenu.Item(this.Name + "CirclesRadius").GetValue<Slider>().Value;
-                        var color = drawingMenu.Item(this.Name + "CirclesColor").GetValue<Circle>().Color;
+            //        if (drawingMenu.Item(this.Name + "CirclesColor").GetValue<Circle>().Active)
+            //        {
+            //            var linewidth = drawingMenu.Item(this.Name + "CirclesLineWidth").GetValue<Slider>().Value;
+            //            var radius = drawingMenu.Item(this.Name + "CirclesRadius").GetValue<Slider>().Value;
+            //            var color = drawingMenu.Item(this.Name + "CirclesColor").GetValue<Circle>().Color;
 
-                        this.Path.CircleLineWidth = linewidth;
-                        this.Path.CircleRadius = radius;
-                        this.Path.CircleColor = color;
-                    }
+            //            this.Path.CircleLineWidth = linewidth;
+            //            this.Path.CircleRadius = radius;
+            //            this.Path.CircleColor = color;
+            //        }
 
-                    this.Path.Draw();
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Called when [process spell cast].
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="args">The <see cref="GameObjectProcessSpellCastEventArgs" /> instance containing the event data.</param>
-        private void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
-        {
-            if (sender != GlobalVariables.Player || args.SData.Name != "YasuoDashWrapper")
-            {
-                return;
-            }
-
-            var connectionToRemove = this.Path?.Connections?.First(x => x.Unit == args.Target);
-
-            if (connectionToRemove != null)
-            {
-                this.Path.RemoveConnection(connectionToRemove);
-            }
+            //        this.Path.Draw();
+            //    }
+            //}
         }
 
         /// <summary>
@@ -251,7 +231,6 @@
         protected override void OnDisable()
         {
             Events.OnUpdate -= this.OnUpdate;
-            Obj_AI_Base.OnProcessSpellCast -= this.OnProcessSpellCast;
             Drawing.OnDraw -= this.OnDraw;
             base.OnDisable();
         }
@@ -262,7 +241,6 @@
         protected override void OnEnable()
         {
             Events.OnUpdate += this.OnUpdate;
-            Obj_AI_Base.OnProcessSpellCast += this.OnProcessSpellCast;
             Drawing.OnDraw += this.OnDraw;
             base.OnEnable();
         }

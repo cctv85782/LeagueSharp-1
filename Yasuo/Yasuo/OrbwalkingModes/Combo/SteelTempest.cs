@@ -575,7 +575,6 @@
                                         && unit.Distance(GlobalVariables.Player)
                                         <= GlobalVariables.Spells[SpellSlot.Q].Range)
                                     {
-                                        Game.PrintChat("Stacking Case2");
                                         this.Execute(unit);
                                     }
                                 }

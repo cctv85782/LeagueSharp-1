@@ -4,6 +4,8 @@ using LeagueSharp;
 
 namespace Yasuo.CommonEx
 {
+    using System.Threading;
+
     public delegate void EventHandler(EventArgs args);
 
     internal class Events

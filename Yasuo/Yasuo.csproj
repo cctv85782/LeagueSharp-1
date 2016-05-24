@@ -95,6 +95,7 @@
     <Compile Include="CommonEx\Algorithm\Djikstra\Grid.cs" />
     <Compile Include="CommonEx\Algorithm\Djikstra\Point.cs" />
     <Compile Include="CommonEx\Algorithm\Media\GridGenerator.cs" />
+    <Compile Include="CommonEx\Algorithm\Media\GridGeneratorV2.cs" />
     <Compile Include="CommonEx\CastManager\CastManager.cs" />
     <Compile Include="CommonEx\Classes\Base.cs" />
     <Compile Include="CommonEx\Classes\Child.cs" />
