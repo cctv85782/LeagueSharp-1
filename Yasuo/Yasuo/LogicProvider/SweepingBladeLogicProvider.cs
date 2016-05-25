@@ -214,7 +214,7 @@
                 if (GlobalVariables.Debug)
                 {
                     Console.WriteLine(
-                        @"[SweepingBladeLP] GetPath > CurrentConnections.Count: " + this.CurrentConnections.Count);
+                        @"[SweepingBladeLP] GeneratePath > CurrentConnections.Count: " + this.CurrentConnections.Count);
                 }
 
                 #endregion
@@ -228,7 +228,7 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine(@"[GetPath]: " + ex);
+                Console.WriteLine(@"[GeneratePath]: " + ex);
             }
             return null;
         }

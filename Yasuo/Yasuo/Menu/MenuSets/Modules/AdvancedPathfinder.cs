@@ -1,11 +1,14 @@
 ﻿// ReSharper disable AccessToForEachVariableInClosure
 
-namespace Yasuo.CommonEx.Menu.Presets
+namespace Yasuo.Yasuo.Menu.MenuSets.Modules
 {
     #region Using Directives
 
     using System.Collections.Generic;
     using System.Linq;
+
+    using global::Yasuo.CommonEx.Menu.Interfaces;
+    using global::Yasuo.CommonEx.Menu.Presets;
 
     using LeagueSharp;
     using LeagueSharp.Common;
@@ -13,7 +16,7 @@ namespace Yasuo.CommonEx.Menu.Presets
     #endregion
 
     // TODO: PRIORITY HIGH
-    public class PathfindingMenu
+    public class AdvancedPathfinderMenu : IMenuSet
     {
         #region Fields
 
@@ -35,7 +38,7 @@ namespace Yasuo.CommonEx.Menu.Presets
         /// <summary>
         ///     The main menu
         /// </summary>
-        public Menu Menu;
+        public Menu Menu { get; set; }
 
         /// <summary>
         ///     The settings
@@ -57,16 +60,14 @@ namespace Yasuo.CommonEx.Menu.Presets
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="dynamicMenu" /> class.
+        /// Initializes a new instance of the <see cref="AdvancedPathfinderMenu"/> class.
         /// </summary>
         /// <param name="menu">The menu.</param>
         /// <param name="displayName">The display name.</param>
-        public PathfindingMenu(Menu menu, string displayName)
+        public AdvancedPathfinderMenu(Menu menu, string displayName)
         {
             this.Menu = menu;
             this.DisplayName = displayName;
-
-            this.Setup();
         }
 
         #endregion
@@ -76,7 +77,7 @@ namespace Yasuo.CommonEx.Menu.Presets
         /// <summary>
         ///     Adds all menu items.
         /// </summary>
-        private void Setup()
+        public void Generate()
         {
             var selecter = new MenuItem("Mode", "Dash to: ").SetValue(new StringList(new[] { "Mouse", "Enemy" }));
 

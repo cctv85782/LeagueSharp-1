@@ -1,6 +1,6 @@
 ﻿namespace Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.LaneClear
 {
-    using global::Yasuo.CommonEx.Menu.Interfaces.Interfaces;
+    using global::Yasuo.CommonEx.Menu.Interfaces;
     using global::Yasuo.Yasuo.Menu.MenuSets.BaseMenus;
 
     using LeagueSharp.Common;

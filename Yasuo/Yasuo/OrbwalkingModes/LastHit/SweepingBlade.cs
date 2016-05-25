@@ -105,7 +105,9 @@
         {
             this.SoftReset();
 
-            if (GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.LastHit && GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.LaneClear
+            if (GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.LastHit 
+                && GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.LaneClear
+                && GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Mixed
                 || !GlobalVariables.Spells[SpellSlot.E].IsReady()
                 || GlobalVariables.Player.IsDashing()
                 || GlobalVariables.Player.IsWindingUp)

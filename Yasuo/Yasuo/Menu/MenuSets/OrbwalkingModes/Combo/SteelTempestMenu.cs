@@ -5,7 +5,7 @@ namespace Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.Combo
     using System.Collections.Generic;
 
     using global::Yasuo.CommonEx.Menu;
-    using global::Yasuo.CommonEx.Menu.Interfaces.Interfaces;
+    using global::Yasuo.CommonEx.Menu.Interfaces;
     using global::Yasuo.CommonEx.Menu.Presets;
     using global::Yasuo.Yasuo.Menu.MenuSets.BaseMenus;
 

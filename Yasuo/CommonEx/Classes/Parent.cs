@@ -40,15 +40,9 @@
         {
             this.Menu = new Menu(this.Name, this.Name);
 
-            Console.WriteLine("Test1");
-
             this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
 
-            Console.WriteLine("Test2");
-
             GlobalVariables.RootMenu.AddSubMenu(this.Menu);
-
-            Console.WriteLine("Test3");
 
             this.OnInitialize();
         }

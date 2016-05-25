@@ -1,4 +1,4 @@
-﻿namespace Yasuo.CommonEx.Menu.Interfaces.Interfaces
+﻿namespace Yasuo.CommonEx.Menu.Interfaces
 {
     using LeagueSharp.Common;
 

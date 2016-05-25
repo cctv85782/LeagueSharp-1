@@ -196,18 +196,7 @@
         /// </summary>
         private void BuildDashes()
         {
-            if (this.Units.Any())
-            {
-                this.Dashes =
-                    this.Units.Where(
-                        unit =>
-                        !unit.HasBuff("YasuoDashScalar")
-                        && unit.IsValidTarget()
-                        && unit.Distance(GlobalVariables.Player) <= GlobalVariables.Spells[SpellSlot.E].Range
-                        && unit.Health <= this.providerE.GetDamage(unit))
-                        .Select(minion => new Dash(minion))
-                        .ToList();
-            }
+
         }
 
         /// <summary>

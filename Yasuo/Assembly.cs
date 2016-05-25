@@ -80,10 +80,15 @@
         /// </summary>
         public Assembly(IChampion champion)
         {
-            GlobalVariables.RootMenu = new Menu($"[{GlobalVariables.Name}]: XY", string.Format("CY"), true);
+            if (champion == null)
+            {
+                return;
+            }
 
-            champion?.Load();
-            
+            GlobalVariables.RootMenu = new Menu($"[{GlobalVariables.Name}]: " + champion.Name, string.Format("Root"), true);
+
+            champion.Load();
+
             Events.Initialize();
 
             CustomEvents.Game.OnGameLoad += this.OnGameLoad;

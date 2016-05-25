@@ -1,6 +1,8 @@
 ﻿namespace Yasuo.CommonEx.Menu
 {
-    using global::Yasuo.CommonEx.Menu.Interfaces.Interfaces;
+    using global::Yasuo.CommonEx.Menu.Interfaces;
+
+    using LeagueSharp.Common;
 
     #region Using Directives
 
@@ -12,6 +14,9 @@
     {
         #region Fields
 
+        /// <summary>
+        /// The menu set
+        /// </summary>
         private readonly IMenuSet menuSet = null;
 
         private bool initialized;

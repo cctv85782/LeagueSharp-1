@@ -49,19 +49,11 @@
         public BlacklistMenu BlacklistMenu;
 
         /// <summary>
-        ///     The pathfinder Menu
-        /// </summary>
-        public PathfindingMenu PathfindingMenu;
-
-        /// <summary>
         ///     The path
         /// </summary>
         internal Path Path;
 
-        /// <summary>
-        ///     The pathfinder
-        /// </summary>
-        private Pathfinder pathfinder;
+        internal PathfindingContainer Pathfinder;
 
         /// <summary>
         ///     The provider e
@@ -189,13 +181,11 @@
 
             this.LogicOnChampion();
 
-            this.pathfinder.CalculatePath();
+            this.Pathfinder.ExecutePath();
 
-            this.pathfinder.ExecutePath();
+            this.Path = this.Pathfinder.GetPath();
 
-            this.Path = this.pathfinder.Path;
-
-            PathCopy = this.pathfinder.Path;
+            PathCopy = this.Path;
         }
 
         /// <summary>
@@ -271,9 +261,7 @@
 
             this.BlacklistMenu = new BlacklistMenu(this.Menu, "Blacklist");
 
-            this.PathfindingMenu = new PathfindingMenu(this.Menu, "Pathfinder");
-
-            this.pathfinder = new Pathfinder(this.PathfindingMenu);
+            this.Pathfinder = new PathfindingContainer(new AdvancedPathfinder(this.Menu));
 
             this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
 

@@ -4,7 +4,7 @@
 
     using System.Drawing;
 
-    using global::Yasuo.CommonEx.Menu.Interfaces.Interfaces;
+    using global::Yasuo.CommonEx.Menu.Interfaces;
 
     using LeagueSharp.Common;
 

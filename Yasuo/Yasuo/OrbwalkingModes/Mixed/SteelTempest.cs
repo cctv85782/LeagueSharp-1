@@ -105,8 +105,6 @@
             {
                 return;
             }
-
-            this.LogicLastHit();
         }
 
         private void ValidateMinions()
@@ -262,36 +260,6 @@
             if (position.IsValid())
             {
                 GlobalVariables.Spells[SpellSlot.Q].Cast(position);
-            }
-        }
-
-        /// <summary>
-        ///     LastHits with ranged/stacked Q
-        /// </summary>
-        private void LogicLastHit()
-        {
-            var validunits =
-                this.Units.Where(
-                    x =>
-                    x.IsValidTarget(GlobalVariables.Spells[SpellSlot.Q].Range - x.BoundingRadius / 2)).ToList();
-
-            var farmlocation = MinionManager.GetBestLineFarmLocation(
-                validunits.ToVector3S().To2D(),
-                GlobalVariables.Spells[SpellSlot.Q].Width,
-                GlobalVariables.Spells[SpellSlot.Q].Range);
-
-            var unit = validunits.MaxOrDefault(x => x.FlatGoldRewardMod);
-
-            if (!farmlocation.Position.IsValid())
-            {
-                if (unit != null)
-                {
-                    Execute(unit);
-                }
-            }
-            else
-            {
-                Execute(farmlocation.Position);
             }
         }
 

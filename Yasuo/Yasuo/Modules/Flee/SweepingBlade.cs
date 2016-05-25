@@ -1,44 +1,73 @@
 ﻿namespace Yasuo.Yasuo.Modules.Flee
 {
+    #region Using Directives
+
     using System;
+    using System.Collections.Generic;
     using System.Linq;
 
     using global::Yasuo.CommonEx;
-    using global::Yasuo.CommonEx.Algorithm.Djikstra;
     using global::Yasuo.CommonEx.Classes;
+    using global::Yasuo.CommonEx.Extensions;
+    using global::Yasuo.CommonEx.Menu;
+    using global::Yasuo.CommonEx.Menu.Presets;
     using global::Yasuo.CommonEx.Objects;
+    using global::Yasuo.CommonEx.Objects.Pathfinding;
+    using global::Yasuo.CommonEx.Utility;
     using global::Yasuo.Yasuo.LogicProvider;
+    using global::Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.Combo;
 
     using LeagueSharp;
     using LeagueSharp.Common;
 
-    using SharpDX;
+    using Dash = global::Yasuo.CommonEx.Objects.Dash;
+
+    #endregion
 
     internal class SweepingBlade : Child<Modules>
     {
+        #region Static Fields
+
+        /// <summary>
+        ///     The path copy
+        /// </summary>
+        internal static Path PathCopy;
+
+        #endregion
+
         #region Fields
 
         /// <summary>
         ///     The path
         /// </summary>
-        public Path Path;
+        internal Path Path;
 
         /// <summary>
-        ///     The E logicprovider
+        ///     The pathfinder
         /// </summary>
-        public SweepingBladeLogicProvider ProviderE;
+        private PathfindingContainer pathfinder;
 
         /// <summary>
-        ///     The Turret logicprovider
+        ///     The provider e
         /// </summary>
-        public TurretLogicProvider ProviderTurret;
+        private SweepingBladeLogicProvider providerE;
+
+        /// <summary>
+        ///     The provider turret
+        /// </summary>
+        private TurretLogicProvider providerTurret;
+
+        /// <summary>
+        /// The targets
+        /// </summary>
+        protected List<Obj_AI_Hero> Targets;
 
         #endregion
 
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="SweepingBlade" /> class.
+        /// Initializes a new instance of the <see cref="SweepingBlade"/> class.
         /// </summary>
         /// <param name="parent">The parent.</param>
         public SweepingBlade(Modules parent)
@@ -57,7 +86,7 @@
         /// <value>
         ///     The name.
         /// </value>
-        public override string Name => "Flee";
+        public override string Name => "Dash To Mouse";
 
         #endregion
 
@@ -67,72 +96,97 @@
         ///     Raises the <see cref="E:Draw" /> event.
         /// </summary>
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
-        public void OnDraw(EventArgs args)
+        private void OnDraw(EventArgs args)
         {
-            //if (this.Path = null)
-            //{
-            //    Console.WriteLine("Cant draw Path == null");
-            //}
-            //this.GapClosePath?.RealPath.Draw();
-            this.Path?.Draw();
-            //this.Path?.DashObject?.Draw();
-        }
-
-        /// <summary>
-        ///     Raises the<see cref="E:OnProcessSpellCast" /> event.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="args">The <see cref="GameObjectProcessSpellCastEventArgs" /> instance containing the event data.</param>
-        public void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
-        {
-            if (sender != GlobalVariables.Player || args.SData.Name != "YasuoDashWrapper")
+            if (GlobalVariables.Player.IsDead || GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo)
             {
                 return;
             }
 
-            var connectionToRemove = this.Path?.Connections.First(x => x.Unit == args.Target);
+            //if (this.Path != null && this.Path.Connections.Count > 0)
+            //{
+            //    var drawingMenu = this.Menu.SubMenu(this.Name + "Drawings");
 
-            if (connectionToRemove != null)
-            {
-                this.Path.RemoveConnection(connectionToRemove);
-            }
+            //    if (drawingMenu.Item(this.Name + "Enabled").GetValue<bool>())
+            //    {
+            //        if (drawingMenu.Item(this.Name + "SmartDrawings").GetValue<bool>())
+            //        {
+            //            if (!this.Path.BuildsUpShield && this.Path.Connections.All(x => !x.IsDash))
+            //            {
+            //                return;
+            //            }
+
+            //            // TODO: Color Path light blue
+            //            if (this.Path.BuildsUpShield)
+            //            {
+            //            }
+            //        }
+            //        if (drawingMenu.Item(this.Name + "PathDashColor").GetValue<Circle>().Active)
+            //        {
+            //            var linewidth = drawingMenu.Item(this.Name + "PathDashWidth").GetValue<Slider>().Value;
+            //            var color = drawingMenu.Item(this.Name + "PathDashColor").GetValue<Circle>().Color;
+
+            //            this.Path.DashLineWidth = linewidth;
+            //            this.Path.DashColor = color;
+            //        }
+
+            //        if (drawingMenu.Item(this.Name + "PathWalkColor").GetValue<Circle>().Active)
+            //        {
+            //            var linewidth = drawingMenu.Item(this.Name + "PathWalkWidth").GetValue<Slider>().Value;
+            //            var color = drawingMenu.Item(this.Name + "PathWalkColor").GetValue<Circle>().Color;
+
+            //            this.Path.WalkLineWidth = linewidth;
+            //            this.Path.WalkColor = color;
+            //        }
+
+            //        if (drawingMenu.Item(this.Name + "CirclesColor").GetValue<Circle>().Active)
+            //        {
+            //            var linewidth = drawingMenu.Item(this.Name + "CirclesLineWidth").GetValue<Slider>().Value;
+            //            var radius = drawingMenu.Item(this.Name + "CirclesRadius").GetValue<Slider>().Value;
+            //            var color = drawingMenu.Item(this.Name + "CirclesColor").GetValue<Circle>().Color;
+
+            //            this.Path.CircleLineWidth = linewidth;
+            //            this.Path.CircleRadius = radius;
+            //            this.Path.CircleColor = color;
+            //        }
+
+            //        this.Path.Draw();
+            //    }
+            //}
         }
 
         /// <summary>
         ///     Raises the <see cref="E:Update" /> event.
         /// </summary>
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
-        public void OnUpdate(EventArgs args)
+        private void OnUpdate(EventArgs args)
         {
-            try
+            this.SoftReset();
+
+            if (GlobalVariables.Player.IsDead || !this.Menu.Item(this.Name + "Keybind").GetValue<KeyBind>().Active
+                || !GlobalVariables.Spells[SpellSlot.E].IsReady())
             {
-                if (!this.Menu.Item(this.Name + "Keybind").GetValue<KeyBind>().Active
-                    || !GlobalVariables.Spells[SpellSlot.E].IsReady())
-                {
-                    return;
-                }
-
-                GlobalVariables.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
-
-                var targetedVector = Game.CursorPos;
-
-                if (targetedVector != Vector3.Zero)
-                {
-                    this.Path = this.ProviderE.GetPath(targetedVector);
-                }
-
-                // if a path is given, and the first unit of the path is in dash range
-                if (this.Path != null
-                    && GlobalVariables.Player.Distance(this.Path.Connections.First().Unit.ServerPosition)
-                    <= GlobalVariables.Spells[SpellSlot.E].Range)
-                {
-                    Execute(this.Path.Connections.First().Unit);
-                }
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
+
+            GlobalVariables.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
+
+            this.Path = this.pathfinder.GetPath();
+
+            this.pathfinder.ExecutePath();
+
+            PathCopy = this.Path;
+        }
+
+        /// <summary>
+        /// Resets the fields/properties
+        /// </summary>
+        private void SoftReset()
+        {
+            this.Targets = new List<Obj_AI_Hero>();
+            this.Path = null;
+
+            PathCopy = null;
         }
 
         #endregion
@@ -145,7 +199,6 @@
         protected override void OnDisable()
         {
             Events.OnUpdate -= this.OnUpdate;
-            Obj_AI_Base.OnProcessSpellCast -= this.OnProcessSpellCast;
             Drawing.OnDraw -= this.OnDraw;
             base.OnDisable();
         }
@@ -156,7 +209,6 @@
         protected override void OnEnable()
         {
             Events.OnUpdate += this.OnUpdate;
-            Obj_AI_Base.OnProcessSpellCast += this.OnProcessSpellCast;
             Drawing.OnDraw += this.OnDraw;
             base.OnEnable();
         }
@@ -166,8 +218,10 @@
         /// </summary>
         protected override void OnInitialize()
         {
-            this.ProviderE = new SweepingBladeLogicProvider();
-            this.ProviderTurret = new TurretLogicProvider();
+            this.providerE = new SweepingBladeLogicProvider();
+            this.providerTurret = new TurretLogicProvider();
+
+            this.Targets = new List<Obj_AI_Hero>();
 
             base.OnInitialize();
         }
@@ -178,16 +232,12 @@
         protected sealed override void OnLoad()
         {
             this.Menu = new Menu(this.Name, this.Name);
+
+            this.pathfinder = new PathfindingContainer(new SimplePathfinder(this.Menu));
+
+            this.Menu.AddItem(new MenuItem(this.Name + "Keybind", "Keybind").SetValue(new KeyBind('A', KeyBindType.Press)));
+
             this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
-
-            // Spell Settings
-            this.Menu.AddItem(
-                new MenuItem(this.Name + "Keybind", "Keybind").SetValue(new KeyBind('A', KeyBindType.Press)));
-
-            this.Menu.AddItem(
-                new MenuItem(this.Name + "PathAroundSkillShots", "[Experimental] Try to Path around Skillshots")
-                    .SetValue(true)
-                    .SetTooltip("if this is enabled, the assembly will path around a skillshot if a path is given"));
 
             this.Parent.Menu.AddSubMenu(this.Menu);
         }
@@ -198,19 +248,12 @@
         /// <param name="unit">The unit.</param>
         private static void Execute(Obj_AI_Base unit)
         {
-            try
+            if (unit == null || !unit.IsValidTarget())
             {
-                if (unit == null || !unit.IsValidTarget() || unit.HasBuff("YasuoDashWrapper"))
-                {
-                    return;
-                }
+                return;
+            }
 
-                GlobalVariables.CastManager.Queque.Enqueue(5, () => GlobalVariables.Spells[SpellSlot.E].CastOnUnit(unit));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(@"Modules/Flee/SweepingBlade/Execute(): " + ex);
-            }
+            GlobalVariables.CastManager.ForceAction(() => GlobalVariables.Spells[SpellSlot.E].CastOnUnit(unit));
         }
 
         #endregion
