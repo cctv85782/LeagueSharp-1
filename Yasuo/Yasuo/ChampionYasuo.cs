@@ -4,6 +4,7 @@
 
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     using global::Yasuo.CommonEx.Classes;
@@ -20,7 +21,7 @@
 
     #endregion
 
-    class Champion : IChampion
+    class ChampionYasuo : IChampion
     {
         #region Public Properties
 
@@ -30,6 +31,7 @@
 
         #region Public Methods and Operators
 
+        [SuppressMessage("ReSharper", "RedundantNameQualifier")]
         public void Load()
         {
             #region parents
@@ -63,7 +65,9 @@
                                 // Orbwalking Modes
                                 new OrbwalkingModes.Combo.SteelTempest(combo),
                                 new OrbwalkingModes.Combo.SweepingBlade(combo),
-                                new LastBreath(combo), new Flash(combo),
+                                
+                                new OrbwalkingModes.Combo.LastBreath(combo),
+                                //new Flash(combo),
                                 new OrbwalkingModes.LaneClear.SteelTempest(laneclear),
                                 new OrbwalkingModes.LaneClear.SweepingBlade(laneclear),
                                 new OrbwalkingModes.LaneClear.Eq(laneclear),
@@ -72,7 +76,9 @@
                                 new OrbwalkingModes.LastHit.Eq(lasthit),
                                 new OrbwalkingModes.Mixed.SteelTempest(mixed),
                                 new OrbwalkingModes.Mixed.SweepingBlade(mixed),
-                                new Potions(module), new KillSteal(module), new WallDash(module),
+                               // new Potions(module),
+                            //new KillSteal(module),
+                            new Modules.WallDash.WallDash(module),
                                 new Modules.Flee.SweepingBlade(module),
 
                                 // Extra Features - Disabled due to SDK/Core problems

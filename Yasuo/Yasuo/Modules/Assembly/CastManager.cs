@@ -69,7 +69,7 @@
 
             GlobalVariables.CastManager = new CommonEx.CastManager.CastManager();
 
-            this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(false));
+            this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
 
             this.Parent.Menu.AddSubMenu(this.Menu);
         }

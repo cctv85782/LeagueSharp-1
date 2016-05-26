@@ -7,7 +7,6 @@
     using System.Linq;
 
     using global::Yasuo.CommonEx;
-    using global::Yasuo.CommonEx.Algorithm.Djikstra;
     using global::Yasuo.CommonEx.Classes;
     using global::Yasuo.CommonEx.Extensions;
     using global::Yasuo.CommonEx.Menu;
@@ -21,8 +20,8 @@
 
     using SharpDX;
 
-    using HitChance = SebbyLib.Prediction.HitChance;
-    using PredictionOutput = SebbyLib.Prediction.PredictionOutput;
+    //using HitChance = SebbyLib.Prediction.HitChance;
+    //using PredictionOutput = SebbyLib.Prediction.PredictionOutput;
 
     #endregion
 
@@ -34,16 +33,6 @@
         ///     The blacklist
         /// </summary>
         public BlacklistMenu BlacklistMenu;
-
-        /// <summary>
-        ///     The multi knockup menu
-        /// </summary>
-        public DynamicMenu MultiKnockupMenu;
-
-        /// <summary>
-        ///     The stacking menu
-        /// </summary>
-        public DynamicMenu StackingMenu;
 
         /// <summary>
         ///     The path
@@ -193,7 +182,7 @@
             {
                 GlobalVariables.CastManager.Queque.Enqueue(
                     2,
-                    () => GlobalVariables.Spells[SpellSlot.Q].Cast(predictionOutput.UnitPosition));
+                    () => GlobalVariables.Spells[SpellSlot.Q].Cast(predictionOutput.CastPosition));
             }
         }
 
@@ -223,10 +212,8 @@
 
             if (this.Targets.Any())
             {
-                foreach (
-                    var target in
-                        this.Targets.Where(x => x.IsValid && x.IsValidTarget(GlobalVariables.Spells[SpellSlot.Q].Range))
-                    )
+                foreach (var target in
+                    this.Targets.Where(x => x.IsValid && x.IsValidTarget(GlobalVariables.Spells[SpellSlot.Q].Range)))
                 {
                     var pred = this.providerQ.GetPrediction(target, true);
 
@@ -310,7 +297,7 @@
 
                     //            switch (multiknockupsettings.Item("PriorityMode").GetValue<StringList>().SelectedIndex)
                     //            {
-                    //                // Champion Priority (Target Selector)
+                    //                // ChampionYasuo Priority (Target Selector)
                     //                case 0:
                     //                    scoreDic.Add(pred, pred.AoeTargetsHit.Sum(x => TargetSelector.GetPriority(x)));
                     //                    break;
@@ -355,7 +342,7 @@
 
             if (GlobalVariables.Player.IsDashing())
             {
-                var dash = new CommonEx.Objects.Dash(GlobalVariables.Player.GetDashInfo().Unit);
+                var dash = new global::Yasuo.CommonEx.Objects.Dash(GlobalVariables.Player.GetDashInfo().Unit);
 
                 if (dash.EndPosition.Distance(this.Target.ServerPosition) > GlobalVariables.Spells[SpellSlot.Q].Range)
                 {
@@ -367,7 +354,7 @@
                     Console.WriteLine(@"OrbwalkingModes > Combo > Steel Tempest > EQ Trigger");
                 }
 
-                this.Execute(this.Target);
+                GlobalVariables.CastManager.ForceAction(() => GlobalVariables.Spells[SpellSlot.Q].Cast(this.Target.ServerPosition));
             }
             else
             {
@@ -550,8 +537,7 @@
                             {
                                 if (GlobalVariables.Player.IsDashing())
                                 {
-                                    this.Execute(
-                                        this.Path.Connections.FirstOrDefault(x => x.Unit != null)?.Unit);
+                                    this.Execute(this.Path.Connections.FirstOrDefault(x => x.Unit != null)?.Unit);
                                 }
                             }
 

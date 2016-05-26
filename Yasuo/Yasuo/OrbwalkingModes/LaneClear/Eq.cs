@@ -316,7 +316,7 @@
                 return;
             }
 
-            GlobalVariables.CastManager.Queque.Enqueue(3, () => GlobalVariables.Spells[SpellSlot.Q].Cast(this.dash.Unit.ServerPosition));
+            GlobalVariables.CastManager.Queque.Enqueue(1, () => GlobalVariables.Spells[SpellSlot.Q].Cast(this.dash.Unit.ServerPosition));
 
             Orbwalking.Attack = true;
         }

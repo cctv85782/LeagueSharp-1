@@ -146,7 +146,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Yasuo\Champion.cs" />
+    <Compile Include="Yasuo\ChampionYasuo.cs" />
     <Compile Include="Yasuo\LogicProvider\ComboLogicProvider.cs" />
     <Compile Include="Yasuo\LogicProvider\FlashLogicProvider.cs" />
     <Compile Include="Yasuo\LogicProvider\FlowLogicProvider.cs" />

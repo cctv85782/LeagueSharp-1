@@ -27,6 +27,11 @@
             {
                 CustomEvents.Game.OnGameLoad += delegate
                     {
+                        if (GlobalVariables.Assembly != null)
+                        {
+                            return;
+                        }
+
                         if (GlobalVariables.ChampionDependent)
                         {
                             if (
@@ -36,7 +41,7 @@
                                 switch (GlobalVariables.Player.ChampionName)
                                 {
                                     case "Yasuo":
-                                        GlobalVariables.Assembly = new Assembly(new Champion());
+                                        GlobalVariables.Assembly = new Assembly(new ChampionYasuo());
                                         break;
                                 }
                             }

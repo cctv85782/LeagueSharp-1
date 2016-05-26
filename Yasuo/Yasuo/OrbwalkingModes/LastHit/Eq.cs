@@ -322,11 +322,8 @@
 
             this.dash.CheckKnockups();
 
-            if (this.dash.MinionsHitCircular.Count(x => x.Health <= this.providerQ.GetDamage(x))
-                >= this.Menu.Item(this.Name + "MinHitAOE").GetValue<Slider>().Value)
-            {
-                GlobalVariables.CastManager.Queque.Enqueue(3, () => GlobalVariables.Spells[SpellSlot.Q].Cast(this.dash.Unit.ServerPosition));
-            }
+            GlobalVariables.CastManager.Queque.Enqueue(1, () => GlobalVariables.Spells[SpellSlot.Q].Cast(this.dash.Unit.ServerPosition));
+
         }
 
         /// <summary>

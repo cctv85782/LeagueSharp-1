@@ -79,7 +79,7 @@ namespace Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.Combo
                                     new MenuItem("SegmentAmount", "Amount of calculations: ").SetValue(
                                         new Slider(50, 1, 500)),
                                     new MenuItem("PriorityMode", "Priority/Decisison MOde: ").SetValue(
-                                        new StringList(new[] { "Champion Priority (TargetSelector)", "TODO: Killable" })),
+                                        new StringList(new[] { "ChampionYasuo Priority (TargetSelector)", "TODO: Killable" })),
                                 };
 
             var dynamicMenu = new DynamicMenu(this.Menu, "Multi-Knockup Settings", selecter, new[] { custom });

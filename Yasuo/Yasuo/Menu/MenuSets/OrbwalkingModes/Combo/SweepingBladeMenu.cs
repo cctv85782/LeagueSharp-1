@@ -119,7 +119,7 @@
         /// </summary>
         private void SetupUpChampionMenu()
         {
-            this.OnChampionMenu = new Menu("Dash On Champion", this.Menu.Name + "EOnChampionMenu");
+            this.OnChampionMenu = new Menu("Dash On ChampionYasuo", this.Menu.Name + "EOnChampionMenu");
 
             this.OnChampionMenu.AddItem(
                 new MenuItem(this.Menu.Name + "MaxHealthDashOut", "Dash defensively if Health % <=").SetValue(

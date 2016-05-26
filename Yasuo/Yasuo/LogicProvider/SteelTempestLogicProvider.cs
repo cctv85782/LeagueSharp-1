@@ -10,10 +10,10 @@
 
     using SharpDX;
 
-    using Prediction = SebbyLib.Prediction.Prediction;
-    using PredictionInput = SebbyLib.Prediction.PredictionInput;
-    using PredictionOutput = SebbyLib.Prediction.PredictionOutput;
-    using SkillshotType = SebbyLib.Prediction.SkillshotType;
+    //using Prediction = SebbyLib.Prediction.Prediction;
+    //using PredictionInput = SebbyLib.Prediction.PredictionInput;
+    //using PredictionOutput = SebbyLib.Prediction.PredictionOutput;
+    //using SkillshotType = SebbyLib.Prediction.SkillshotType;
 
     #endregion
 
@@ -76,7 +76,7 @@
         /// <returns>float</returns>
         public float BuffTime()
         {
-            if (this.HasQ3())
+            if (!this.HasQ3())
             {
                 return float.MaxValue;
             }
