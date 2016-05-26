@@ -84,7 +84,7 @@
 
             this.LogicMassClear();
 
-            this.LogicLastHit();
+            this.LogicSingleClear();
         }
 
         #endregion
@@ -149,18 +149,6 @@
             GlobalVariables.CastManager.Queque.Enqueue(4, () => GlobalVariables.Spells[SpellSlot.Q].Cast(position));
         }
 
-        /// <summary>
-        ///     Executes the LastHit logic.
-        /// </summary>
-        private void LogicLastHit()
-        {
-            if (GlobalVariables.Player.IsWindingUp || GlobalVariables.Player.Spellbook.IsCharging
-                || GlobalVariables.Player.Spellbook.IsChanneling)
-            {
-                return;
-            }
-        }
-
         // TODO: Player path based mode
         /// <summary>
         ///     Executes the mass clear.
@@ -194,6 +182,26 @@
 
             }
             else
+            {
+                Execute(farmlocation.Position.To3D());
+            }
+        }
+
+        private void LogicSingleClear()
+        {
+            if (GlobalVariables.Player.IsWindingUp || GlobalVariables.Player.Spellbook.IsCharging
+                || GlobalVariables.Player.Spellbook.IsChanneling || !this.Units.Any()
+                || this.providerQ.HasQ3())
+            {
+                return;
+            }
+
+            var farmlocation = MinionManager.GetBestLineFarmLocation(
+                this.Units.Where(x => x.Health - this.providerQ.GetDamage(x) > 10).ToList().ToVector3S().To2D(),
+                GlobalVariables.Spells[SpellSlot.Q].Width,
+                GlobalVariables.Spells[SpellSlot.Q].Range);
+
+            if (farmlocation.MinionsHit > 0)
             {
                 Execute(farmlocation.Position.To3D());
             }

@@ -163,8 +163,7 @@
         {
             this.SoftReset();
 
-            if (GlobalVariables.Player.IsDead || !this.Menu.Item(this.Name + "Keybind").GetValue<KeyBind>().Active
-                || !GlobalVariables.Spells[SpellSlot.E].IsReady())
+            if (GlobalVariables.Player.IsDead || !this.Menu.Item(this.Name + "Keybind").GetValue<KeyBind>().Active)
             {
                 return;
             }

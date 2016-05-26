@@ -181,7 +181,7 @@
             {
                 GlobalVariables.CastManager.Queque.Enqueue(
                     2,
-                    () => GlobalVariables.Spells[SpellSlot.Q].Cast(predictionOutput.CastPosition));
+                    () => GlobalVariables.Spells[SpellSlot.Q].Cast(predictionOutput.UnitPosition));
             }
         }
 
@@ -327,7 +327,6 @@
             }
         }
 
-        // TODO: Non-Dash
         // TODO: Prediction while dashing
         /// <summary>
         ///     Method to Q single targets.

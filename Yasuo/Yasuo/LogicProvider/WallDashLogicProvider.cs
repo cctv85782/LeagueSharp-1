@@ -5,57 +5,8 @@ namespace Yasuo.Yasuo.LogicProvider
 
     using SharpDX;
 
-    // TODO: https://github.com/Aferii/LeagueSharp/tree/master/NavMeshRemake
-    // TODO: Working around properties, all types of dashes supported (enums)
-
     public class WallDashLogicProvider
     {
-        #region Enums
-
-        /// <summary>
-        ///     The dash range
-        /// </summary>
-        private enum DashRange
-        {
-            Fixed,
-
-            Dynamic
-        }
-
-        /// <summary>
-        ///     The dash type
-        /// </summary>
-        private enum DashType
-        {
-            Unit,
-
-            Dynamic,
-
-            Static,
-
-            NoDash
-        }
-
-        /// <summary>
-        ///     The unit type
-        /// </summary>
-        private enum UnitType
-        {
-            All,
-
-            Allied,
-
-            NotAllied,
-
-            Enemy,
-
-            NotAllyForEnemy,
-
-            Neutral
-        }
-
-        #endregion
-
         #region Public Methods and Operators
 
         // BUG Navmesh seems broken
@@ -153,7 +104,7 @@ namespace Yasuo.Yasuo.LogicProvider
             {
                 var wallWidth = this.GetWallWidth(firstWallPoint, dashEndPos);
 
-                if (wallWidth > minWallWidth && wallWidth - firstWallPoint.Distance(dashEndPos) < wallWidth * 0.4f)
+                if (wallWidth > minWallWidth && wallWidth - firstWallPoint.Distance(dashEndPos) < wallWidth * 0.6f)
                 {
                     return true;
                 }

@@ -57,7 +57,6 @@
 
         #region Public Methods and Operators
 
-        // TODO: Settings
         /// <summary>
         ///     Raises the <see cref="E:Draw" /> event.
         /// </summary>

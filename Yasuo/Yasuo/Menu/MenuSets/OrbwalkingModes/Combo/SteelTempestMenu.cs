@@ -94,12 +94,12 @@ namespace Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.Combo
         {
             var selecter =
                 new MenuItem("Mode", "Mode").SetValue(
-                    new StringList(new[] { "Custom", "Always (Brain-Dead)", "Path Based", "Disabled" }));
+                    new StringList(new[] { "Custom", "Path Based", "Disabled" }));
 
             var custom = new List<MenuItem>()
                              {
                                  new MenuItem("MinDistance", "Don't Stack if Distance to enemy <= ").SetValue(
-                                     new Slider(600, 0, 4000)),
+                                     new Slider(900, 0, 4000)),
                                  new MenuItem("MaxDistance", "Don't Stack if Distance to enemy >= ").SetValue(
                                      new Slider(1500, 0, 4000)),
                                  new MenuItem("MaxCooldownQ", "Don't Stack if Q Cooldown is >= (milliseconds)").SetValue

@@ -79,7 +79,6 @@
         /// </summary>
         public static string GitHubPath = $"{GitHubProfile}/LeagueSharp/tree/master/{Name}";
 
-        // TODO: Move
         /// <summary>
         ///     Dictionary containing all spells
         /// </summary>

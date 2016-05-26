@@ -16,7 +16,6 @@ namespace Yasuo.Yasuo.Menu.MenuSets.Modules
 
     #endregion
 
-    // TODO: PRIORITY HIGH
     public class SimplePathfinderMenu : IMenuSet
     {
         #region Fields

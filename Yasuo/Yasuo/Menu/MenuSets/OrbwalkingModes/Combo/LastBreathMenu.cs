@@ -33,7 +33,6 @@
 
         #region Methods
 
-        // TODO: Dynamic Menu
         /// <summary>
         ///     Method to set advanced settings.
         /// </summary>
