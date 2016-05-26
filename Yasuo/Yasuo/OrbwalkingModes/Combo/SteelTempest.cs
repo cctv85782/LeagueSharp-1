@@ -179,7 +179,7 @@
 
             Console.WriteLine(predictionOutput.CastPosition);
 
-            if (predictionOutput.Hitchance >= HitChance.High)
+            if (predictionOutput.Hitchance >= HitChance.VeryHigh)
             {
                 GlobalVariables.CastManager.Queque.Enqueue(
                     2,
@@ -245,7 +245,7 @@
                             && mostKnockedUp.AoeTargetsHitCount
                             >= multiknockupsettings.Item(multiknockupsettings.Name + "MinHitAOECustom")
                                    .GetValue<Slider>()
-                                   .Value && mostKnockedUp.Hitchance >= HitChance.High)
+                                   .Value && mostKnockedUp.Hitchance >= HitChance.VeryHigh)
                         {
                             GlobalVariables.CastManager.Queque.Enqueue(
                                 2,

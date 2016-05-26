@@ -106,13 +106,13 @@
             {
                 if (GlobalVariables.Player.HasQ3())
                 {
-                    GlobalVariables.Spells[SpellSlot.Q].SetSkillshot(GlobalVariables.providerQ.GetQDelay, 90, 1200, false, SkillshotType.SkillshotLine);
+                    GlobalVariables.Spells[SpellSlot.Q].SetSkillshot(GlobalVariables.providerQ.GetQDelay, 90, 1250, false, SkillshotType.SkillshotLine);
                     GlobalVariables.Spells[SpellSlot.Q].Range = 950;
                     GlobalVariables.Spells[SpellSlot.Q].MinHitChance = HitChance.VeryHigh;
                 }
                 else
                 {
-                    GlobalVariables.Spells[SpellSlot.Q].SetSkillshot(GlobalVariables.providerQ.GetQDelay, 20, 50000, false, SkillshotType.SkillshotLine);
+                    GlobalVariables.Spells[SpellSlot.Q].SetSkillshot(GlobalVariables.providerQ.GetQDelay, 20, 5000000000, false, SkillshotType.SkillshotLine);
                     GlobalVariables.Spells[SpellSlot.Q].Range = 475;
                     GlobalVariables.Spells[SpellSlot.Q].MinHitChance = HitChance.VeryHigh;
                 }
