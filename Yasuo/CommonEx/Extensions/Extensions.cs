@@ -11,6 +11,8 @@
 
     using SharpDX;
 
+    using SpellType = LeagueSharp.SDK.SpellType;
+
     internal static class Extensions
     {
         #region Public Methods and Operators

@@ -11,6 +11,7 @@
     using SharpDX;
 
     using Geometry = LeagueSharp.Common.Geometry;
+    using MinionTypes = LeagueSharp.Common.MinionTypes;
 
     // Credits to Mayomie for OnTarget
     internal class TurretLogicProvider

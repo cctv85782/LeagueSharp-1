@@ -80,7 +80,7 @@
         /// </summary>
         public Assembly(IChampion champion)
         {
-            if (champion == null)
+            if (champion == null || GlobalVariables.RootMenu != null)
             {
                 return;
             }
@@ -91,32 +91,13 @@
 
             Events.Initialize();
 
-            CustomEvents.Game.OnGameLoad += this.OnGameLoad;
-        }
+            var orbWalkingMenu = new Menu("Orbwalking", "Orbwalking");
 
-        #endregion
+            GlobalVariables.RootMenu.AddSubMenu(orbWalkingMenu);
 
-        #region Methods
+            GlobalVariables.Orbwalker = new Orbwalking.Orbwalker(GlobalVariables.RootMenu.SubMenu("Orbwalking"));
 
-        /// <summary>
-        ///     Called when the game loads
-        /// </summary>
-        /// <param name="args"></param>
-        private void OnGameLoad(EventArgs args)
-        {
-            try
-            {
-                var orbWalkingMenu = new Menu("Orbwalking", "Orbwalking");
-                GlobalVariables.RootMenu.AddSubMenu(orbWalkingMenu);
-
-                GlobalVariables.Orbwalker = new Orbwalking.Orbwalker(GlobalVariables.RootMenu.SubMenu("Orbwalking"));
-
-                GlobalVariables.RootMenu.AddToMainMenu();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
+            GlobalVariables.RootMenu.AddToMainMenu();
         }
 
         #endregion

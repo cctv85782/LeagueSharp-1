@@ -16,6 +16,7 @@
     using SharpDX;
 
     using Geometry = LeagueSharp.Common.Geometry;
+    using SpellType = LeagueSharp.SDK.SpellType;
 
     #endregion
 

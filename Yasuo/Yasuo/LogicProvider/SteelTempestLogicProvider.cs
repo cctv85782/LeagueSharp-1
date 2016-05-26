@@ -10,10 +10,10 @@
 
     using SharpDX;
 
-    //using Prediction = SebbyLib.Prediction.Prediction;
-    //using PredictionInput = SebbyLib.Prediction.PredictionInput;
-    //using PredictionOutput = SebbyLib.Prediction.PredictionOutput;
-    //using SkillshotType = SebbyLib.Prediction.SkillshotType;
+    using Prediction = SebbyLib.Prediction.Prediction;
+    using PredictionInput = SebbyLib.Prediction.PredictionInput;
+    using PredictionOutput = SebbyLib.Prediction.PredictionOutput;
+    using SkillshotType = SebbyLib.Prediction.SkillshotType;
 
     #endregion
 

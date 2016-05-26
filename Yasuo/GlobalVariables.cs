@@ -1,6 +1,4 @@
-﻿//TODO: Set collision (Spells Q - YasuoWall)
-
-namespace Yasuo
+﻿namespace Yasuo
 {
     #region Using Directives
 

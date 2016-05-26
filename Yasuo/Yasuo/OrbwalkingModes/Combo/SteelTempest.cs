@@ -20,8 +20,8 @@
 
     using SharpDX;
 
-    //using HitChance = SebbyLib.Prediction.HitChance;
-    //using PredictionOutput = SebbyLib.Prediction.PredictionOutput;
+    using HitChance = SebbyLib.Prediction.HitChance;
+    using PredictionOutput = SebbyLib.Prediction.PredictionOutput;
 
     #endregion
 
@@ -103,7 +103,6 @@
             this.SoftReset();
 
             if (GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo
-                && GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Mixed
                 || !GlobalVariables.Spells[SpellSlot.Q].IsReady())
             {
                 return;

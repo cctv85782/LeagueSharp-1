@@ -16,6 +16,7 @@
 
     using Color = System.Drawing.Color;
     using Geometry = LeagueSharp.Common.Geometry;
+    using SpellType = LeagueSharp.SDK.SpellType;
 
     #endregion
 

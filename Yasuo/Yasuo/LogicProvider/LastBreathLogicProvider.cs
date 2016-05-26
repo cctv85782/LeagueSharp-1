@@ -3,12 +3,12 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using global::Yasuo.CommonEx.Extensions;
     using global::Yasuo.CommonEx.Objects;
     using global::Yasuo.CommonEx.Utility;
 
     using LeagueSharp;
     using LeagueSharp.Common;
-    using LeagueSharp.SDK.Utils;
 
     /// <summary>
     ///     LogicProvider for (R) LastBreath
