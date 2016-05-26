@@ -8,12 +8,14 @@
     using LeagueSharp;
     using LeagueSharp.Common;
 
+    using LeagueSharp.SDK;
+
     using SharpDX;
 
-    using Prediction = SebbyLib.Prediction.Prediction;
-    using PredictionInput = SebbyLib.Prediction.PredictionInput;
-    using PredictionOutput = SebbyLib.Prediction.PredictionOutput;
-    using SkillshotType = SebbyLib.Prediction.SkillshotType;
+    using Items = LeagueSharp.Common.Items;
+    using PredictionInput = LeagueSharp.SDK.PredictionInput;
+    using PredictionOutput = LeagueSharp.SDK.PredictionOutput;
+    using SkillshotType = LeagueSharp.SDK.SkillshotType;
 
     #endregion
 
@@ -37,7 +39,7 @@
         {
             get
             {
-                if (GlobalVariables.Player.IsDashing())
+                if (LeagueSharp.Common.Dash.IsDashing(GlobalVariables.Player))
                 {
                     return 500;
                 }
@@ -263,7 +265,8 @@
         {
             var predInput = new PredictionInput
                                 {
-                                    From = GlobalVariables.Player.ServerPosition, Aoe = aoe,
+                                    From = GlobalVariables.Player.ServerPosition,
+                                    AoE = aoe,
                                     Collision = GlobalVariables.Spells[SpellSlot.Q].Collision,
                                     Speed = GlobalVariables.Spells[SpellSlot.Q].Speed,
                                     Delay = GlobalVariables.Spells[SpellSlot.Q].Delay,
@@ -271,28 +274,33 @@
                                     Type = SkillshotType.SkillshotLine
                                 };
 
-            return Prediction.GetPrediction(predInput);
+            Console.WriteLine(GlobalVariables.Spells[SpellSlot.Q].Speed);
+            Console.WriteLine(GlobalVariables.Spells[SpellSlot.Q].Delay);
+            Console.WriteLine(GlobalVariables.Spells[SpellSlot.Q].Range);
+            Console.WriteLine(GlobalVariables.Spells[SpellSlot.Q].Collision);
+
+            return Movement.GetPrediction(predInput);
         }
 
         public PredictionOutput GetPrediction(Vector3 from, Obj_AI_Base target, bool aoe, float delay)
         {
             var predInput = new PredictionInput
                                 {
-                                    From = from, Aoe = aoe, Collision = GlobalVariables.Spells[SpellSlot.Q].Collision,
+                                    From = from, AoE = aoe, Collision = GlobalVariables.Spells[SpellSlot.Q].Collision,
                                     Speed = GlobalVariables.Spells[SpellSlot.Q].Speed,
                                     Delay = GlobalVariables.Spells[SpellSlot.Q].Delay + delay,
                                     Radius = GlobalVariables.Spells[SpellSlot.Q].Range, Unit = target,
                                     Type = SkillshotType.SkillshotLine
                                 };
 
-            return Prediction.GetPrediction(predInput);
+            return Movement.GetPrediction(predInput);
         }
 
         public PredictionOutput GetPrediction(Obj_AI_Base target, bool aoe, SkillshotType skillshotType)
         {
             var predInput = new PredictionInput
                                 {
-                                    From = GlobalVariables.Player.ServerPosition, Aoe = aoe,
+                                    From = GlobalVariables.Player.ServerPosition, AoE = aoe,
                                     Collision = GlobalVariables.Spells[SpellSlot.Q].Collision,
                                     Speed = GlobalVariables.Spells[SpellSlot.Q].Speed,
                                     Delay = GlobalVariables.Spells[SpellSlot.Q].Delay,
@@ -300,7 +308,7 @@
                                     Type = skillshotType
                                 };
 
-            return Prediction.GetPrediction(predInput);
+            return Movement.GetPrediction(predInput);
         }
 
         /// <summary>

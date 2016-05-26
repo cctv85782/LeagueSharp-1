@@ -20,8 +20,8 @@
 
     using SharpDX;
 
-    using HitChance = SebbyLib.Prediction.HitChance;
-    using PredictionOutput = SebbyLib.Prediction.PredictionOutput;
+    using HitChance = LeagueSharp.SDK.HitChance;
+    using PredictionOutput = LeagueSharp.SDK.PredictionOutput;
 
     #endregion
 
@@ -177,11 +177,13 @@
         {
             var predictionOutput = this.providerQ.GetPrediction(target, aoe);
 
+            Console.WriteLine(predictionOutput.CastPosition);
+
             if (predictionOutput.Hitchance >= HitChance.High)
             {
                 GlobalVariables.CastManager.Queque.Enqueue(
                     2,
-                    () => GlobalVariables.Spells[SpellSlot.Q].Cast(predictionOutput.UnitPosition));
+                    () => GlobalVariables.Spells[SpellSlot.Q].Cast(predictionOutput.CastPosition));
             }
         }
 

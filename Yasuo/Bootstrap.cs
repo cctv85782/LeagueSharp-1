@@ -27,6 +27,8 @@
             {
                 CustomEvents.Game.OnGameLoad += delegate
                     {
+
+
                         if (GlobalVariables.Assembly != null)
                         {
                             return;
@@ -34,8 +36,7 @@
 
                         if (GlobalVariables.ChampionDependent)
                         {
-                            if (
-                                GlobalVariables.SupportedChampions.Contains(
+                            if (GlobalVariables.SupportedChampions.Contains(
                                     GlobalVariables.Player.ChampionName.ToLower()))
                             {
                                 switch (GlobalVariables.Player.ChampionName)

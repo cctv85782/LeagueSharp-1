@@ -76,8 +76,8 @@
                                 new OrbwalkingModes.LastHit.Eq(lasthit),
                                 new OrbwalkingModes.Mixed.SteelTempest(mixed),
                                 new OrbwalkingModes.Mixed.SweepingBlade(mixed),
-                               // new Potions(module),
-                            //new KillSteal(module),
+                                // new Potions(module),
+                                //new KillSteal(module),
                             new Modules.WallDash.WallDash(module),
                                 new Modules.Flee.SweepingBlade(module),
 

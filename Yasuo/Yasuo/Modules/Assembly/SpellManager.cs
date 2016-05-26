@@ -98,7 +98,7 @@
 
             if (GlobalVariables.Player.IsDashing())
             {
-                GlobalVariables.Spells[SpellSlot.Q].SetSkillshot(GlobalVariables.providerQ.GetQDelay, 350, float.MaxValue, false, SkillshotType.SkillshotCircle);
+                GlobalVariables.Spells[SpellSlot.Q].SetSkillshot(GlobalVariables.providerQ.GetQDelay, 350, 5000, false, SkillshotType.SkillshotCircle);
                 GlobalVariables.Spells[SpellSlot.Q].Range = 0;
                 GlobalVariables.Spells[SpellSlot.Q].MinHitChance = HitChance.High;
             }
@@ -112,7 +112,7 @@
                 }
                 else
                 {
-                    GlobalVariables.Spells[SpellSlot.Q].SetSkillshot(GlobalVariables.providerQ.GetQDelay, 20, float.MaxValue, false, SkillshotType.SkillshotLine);
+                    GlobalVariables.Spells[SpellSlot.Q].SetSkillshot(GlobalVariables.providerQ.GetQDelay, 20, 50000, false, SkillshotType.SkillshotLine);
                     GlobalVariables.Spells[SpellSlot.Q].Range = 475;
                     GlobalVariables.Spells[SpellSlot.Q].MinHitChance = HitChance.VeryHigh;
                 }

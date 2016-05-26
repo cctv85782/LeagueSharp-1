@@ -28,11 +28,6 @@
         public static Assembly Assembly = null;
 
         /// <summary>
-        /// The root menu
-        /// </summary>
-        public static Menu RootMenu;
-
-        /// <summary>
         ///     The cast manager
         /// </summary>
         public static CastManager CastManager = null;
@@ -48,9 +43,16 @@
         public static string GitHubProfile = "MediaGithub";
 
         /// <summary>
+        ///     The root menu
+        /// </summary>
+        public static Menu RootMenu;
+
+        /// <summary>
         ///     The champion(s) the assembly is for
         /// </summary>
         public static List<string> SupportedChampions = new List<string>() { "yasuo" };
+
+        internal static readonly SteelTempestLogicProvider providerQ = new SteelTempestLogicProvider();
 
         /// <summary>
         ///     If the assembly is limited to a specific champion
@@ -72,8 +74,6 @@
         /// </summary>
         internal static bool Stop = false;
 
-        internal static readonly SteelTempestLogicProvider providerQ = new SteelTempestLogicProvider();
-
         /// <summary>
         ///     The github path of the assembly
         /// </summary>
@@ -84,13 +84,9 @@
         /// </summary>
         public static Dictionary<SpellSlot, Spell> Spells = new Dictionary<SpellSlot, Spell>()
                                                                 {
-                                                                    { SpellSlot.Q, new Spell(SpellSlot.Q, 515) },
+                                                                    { SpellSlot.Q, new Spell(SpellSlot.Q, 475) },
                                                                     { SpellSlot.W, new Spell(SpellSlot.W, 400) },
-                                                                    {
-                                                                        SpellSlot.E,
-                                                                        new Spell(
-                                                                        SpellSlot.E,
-                                                                        475,
+                                                                    {SpellSlot.E, new Spell(SpellSlot.E, 475,
                                                                         TargetSelector.DamageType.Magical)
                                                                     },
                                                                     { SpellSlot.R, new Spell(SpellSlot.R, 1200) },
@@ -105,12 +101,12 @@
         /// </summary>
         public static string Author => "Media";
 
+        public static string DisplayName => string.Format("[{2}] {0}: {1}", Author, Name, Prefix);
+
         /// <summary>
         ///     The name of the assembly
         /// </summary>
         public static string Name => $"MediaSuo";
-
-        public static string DisplayName => string.Format("[{2}] {0}: {1}", Author, Name, Prefix);
 
         /// <summary>
         ///     The Orbwalker
@@ -126,11 +122,6 @@
         ///     Different prefixes of the assembly. aka: WIP, BETA, ALPHA, TOBEUPDATED, BEST
         /// </summary>
         public static string Prefix => "WIP";
-
-        #endregion
-
-        #region Public Methods and Operators
-
 
         #endregion
     }
