@@ -6,7 +6,7 @@ namespace Yasuo.Yasuo.OrbwalkingModes.LaneClear
 
     #endregion
 
-    internal class LaneClear : Parent
+    internal class LaneClear : FeatureParent
     {
         #region Public Properties
 

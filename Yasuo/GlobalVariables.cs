@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
 
+    using global::Yasuo.CommonEx.Algorithm.Media;
     using global::Yasuo.CommonEx.CastManager;
     using global::Yasuo.Yasuo.LogicProvider;
 
@@ -41,6 +42,11 @@
         ///     The profile name of the GitHub account
         /// </summary>
         public static string GitHubProfile = "MediaGithub";
+
+        /// <summary>
+        ///     The grid generator
+        /// </summary>
+        public static GridGeneratorContainer GridGenerator = null;
 
         /// <summary>
         ///     The root menu
@@ -86,7 +92,11 @@
                                                                 {
                                                                     { SpellSlot.Q, new Spell(SpellSlot.Q, 475) },
                                                                     { SpellSlot.W, new Spell(SpellSlot.W, 400) },
-                                                                    {SpellSlot.E, new Spell(SpellSlot.E, 475,
+                                                                    {
+                                                                        SpellSlot.E,
+                                                                        new Spell(
+                                                                        SpellSlot.E,
+                                                                        475,
                                                                         TargetSelector.DamageType.Magical)
                                                                     },
                                                                     { SpellSlot.R, new Spell(SpellSlot.R, 1200) },

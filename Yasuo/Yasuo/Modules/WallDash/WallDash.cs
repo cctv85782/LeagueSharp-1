@@ -6,6 +6,7 @@
     using CommonEx;
     using CommonEx.Classes;
 
+    using global::Yasuo.CommonEx.Utility;
     using global::Yasuo.Yasuo.LogicProvider;
 
     using LeagueSharp;
@@ -13,7 +14,7 @@
 
     using Dash = CommonEx.Objects.Dash;
 
-    internal class WallDash : Child<Modules>
+    internal class WallDash : FeatureChild<Modules>
     {
         #region Fields
 

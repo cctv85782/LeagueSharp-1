@@ -1,6 +1,6 @@
 namespace Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.LastHit
 {
-    using global::Yasuo.CommonEx.Menu.Interfaces;
+    using CommonEx.Menu.Interfaces;
     using global::Yasuo.Yasuo.Menu.MenuSets.BaseMenus;
 
     using LeagueSharp.Common;

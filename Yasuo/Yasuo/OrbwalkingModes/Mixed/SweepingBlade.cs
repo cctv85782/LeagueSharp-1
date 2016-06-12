@@ -10,6 +10,7 @@
     using CommonEx.Menu;
     using CommonEx.Menu.Presets;
 
+    using global::Yasuo.CommonEx.Utility;
     using global::Yasuo.Yasuo.LogicProvider;
     using global::Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.Mixed;
 
@@ -18,7 +19,7 @@
 
     using Dash = CommonEx.Objects.Dash;
 
-    internal class SweepingBlade : Child<Mixed>
+    internal class SweepingBlade : FeatureChild<Mixed>
     {
         #region Fields
 

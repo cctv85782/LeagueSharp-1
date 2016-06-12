@@ -6,26 +6,26 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using global::Yasuo.CommonEx;
-    using global::Yasuo.CommonEx.Classes;
-    using global::Yasuo.CommonEx.Extensions;
-    using global::Yasuo.CommonEx.Menu;
-    using global::Yasuo.CommonEx.Menu.Presets;
-    using global::Yasuo.CommonEx.Objects;
+    using CommonEx;
+    using CommonEx.Classes;
+    using CommonEx.Extensions;
+    using CommonEx.Menu;
+    using CommonEx.Menu.Presets;
+    using CommonEx.Objects;
+
+    using global::Yasuo.CommonEx.Utility;
     using global::Yasuo.Yasuo.LogicProvider;
     using global::Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.Combo;
 
     using LeagueSharp;
     using LeagueSharp.Common;
 
-    using SharpDX;
-
     using HitChance = LeagueSharp.SDK.HitChance;
     using PredictionOutput = LeagueSharp.SDK.PredictionOutput;
 
     #endregion
 
-    internal class SteelTempest : Child<Combo>
+    internal class SteelTempest : FeatureChild<Combo>
     {
         #region Fields
 
@@ -33,7 +33,7 @@
         ///     The blacklist
         /// </summary>
         public BlacklistMenu BlacklistMenu;
-
+        
         /// <summary>
         ///     The path
         /// </summary>
@@ -177,10 +177,10 @@
         {
             var predictionOutput = this.providerQ.GetPrediction(target, aoe);
 
-            Console.WriteLine(predictionOutput.CastPosition);
-
-            if (predictionOutput.Hitchance >= HitChance.VeryHigh)
+            if (predictionOutput.Hitchance >= HitChance.High)
             {
+                Console.WriteLine(predictionOutput.CastPosition);
+
                 GlobalVariables.CastManager.Queque.Enqueue(
                     2,
                     () => GlobalVariables.Spells[SpellSlot.Q].Cast(predictionOutput.CastPosition));
@@ -218,16 +218,7 @@
                 {
                     var pred = this.providerQ.GetPrediction(target, true);
 
-                    if (!pred.AoeTargetsHit.Contains(target))
-                    {
-                        pred.AoeTargetsHit.Add(target);
-                    }
-
-                    if (pred.CastPosition != Vector3.Zero && pred.CastPosition != Game.CursorPos
-                        && pred.CastPosition != GlobalVariables.Player.ServerPosition)
-                    {
-                        preds.Add(pred);
-                    }
+                    preds.Add(pred);
                 }
             }
 
@@ -239,20 +230,25 @@
                     // Custom
                     case 0:
 
-                        var mostKnockedUp = preds.MaxOrDefault(x => x.AoeTargetsHit.Count);
+                        var mostKnockedUp =
+                            preds.Where(
+                                x =>
+                                x.AoeTargetsHitCount
+                                >= multiknockupsettings.Item(multiknockupsettings.Name + "MinHitAOECustom")
+                                       .GetValue<Slider>()
+                                       .Value && x.Hitchance >= HitChance.VeryHigh)
+                                .MaxOrDefault(x => x.AoeTargetsHit.Count);
 
-                        if (mostKnockedUp != null
-                            && mostKnockedUp.AoeTargetsHitCount
-                            >= multiknockupsettings.Item(multiknockupsettings.Name + "MinHitAOECustom")
-                                   .GetValue<Slider>()
-                                   .Value && mostKnockedUp.Hitchance >= HitChance.VeryHigh)
+                        if (mostKnockedUp != null && !mostKnockedUp.CastPosition.IsZero)
                         {
+                            Console.WriteLine(@"MultiKnockUp Vector: " + mostKnockedUp.CastPosition);
                             GlobalVariables.CastManager.Queque.Enqueue(
                                 2,
                                 () => GlobalVariables.Spells[SpellSlot.Q].Cast(mostKnockedUp.CastPosition));
                         }
 
                         break;
+
 
                     //// Path Based
                     //// TODO: ADD calculation for arriving to that point on the path
@@ -342,7 +338,7 @@
 
             if (GlobalVariables.Player.IsDashing())
             {
-                var dash = new global::Yasuo.CommonEx.Objects.Dash(GlobalVariables.Player.GetDashInfo().Unit);
+                var dash = new CommonEx.Objects.Dash(GlobalVariables.Player.GetDashInfo().Unit);
 
                 if (dash.EndPosition.Distance(this.Target.ServerPosition) > GlobalVariables.Spells[SpellSlot.Q].Range)
                 {
@@ -354,7 +350,8 @@
                     Console.WriteLine(@"OrbwalkingModes > Combo > Steel Tempest > EQ Trigger");
                 }
 
-                GlobalVariables.CastManager.ForceAction(() => GlobalVariables.Spells[SpellSlot.Q].Cast(this.Target.ServerPosition));
+                GlobalVariables.CastManager.ForceAction(
+                    () => GlobalVariables.Spells[SpellSlot.Q].Cast(this.Target.ServerPosition));
             }
             else
             {

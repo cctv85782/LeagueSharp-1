@@ -66,10 +66,6 @@
             }
         }
 
-        public Grid()
-        {
-        }
-
         #endregion
 
         #region Public Properties

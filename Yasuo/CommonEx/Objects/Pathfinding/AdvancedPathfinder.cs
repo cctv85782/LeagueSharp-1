@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Yasuo.CommonEx.Objects.Pathfinding
+﻿namespace Yasuo.CommonEx.Objects.Pathfinding
 {
+    #region Using Directives
+
+    using System;
+    using System.Linq;
+
     using global::Yasuo.CommonEx.Menu;
-    using global::Yasuo.CommonEx.Menu.Presets;
     using global::Yasuo.Yasuo.LogicProvider;
     using global::Yasuo.Yasuo.Menu.MenuSets.Modules;
 
@@ -15,6 +13,8 @@ namespace Yasuo.CommonEx.Objects.Pathfinding
     using LeagueSharp.Common;
 
     using SharpDX;
+
+    #endregion
 
     class AdvancedPathfinder : IPathfinder
     {
@@ -30,6 +30,8 @@ namespace Yasuo.CommonEx.Objects.Pathfinding
         /// </summary>
         public Vector3 TargetedVector;
 
+        private readonly Menu menu;
+
         /// <summary>
         ///     The E logicprovider
         /// </summary>
@@ -40,9 +42,9 @@ namespace Yasuo.CommonEx.Objects.Pathfinding
         /// </summary>
         private TurretLogicProvider providerTurret;
 
-        private readonly Menu menu;
-
         #endregion
+
+        #region Constructors and Destructors
 
         public AdvancedPathfinder(Menu menu)
         {
@@ -52,6 +54,10 @@ namespace Yasuo.CommonEx.Objects.Pathfinding
 
             this.menu = menu.SubMenu(menu.Name + "Advanced Pathfinder");
         }
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         ///     Executes the path.
@@ -79,10 +85,13 @@ namespace Yasuo.CommonEx.Objects.Pathfinding
                         && connection.To.Position.Distance(
                             GlobalVariables.Player.ServerPosition.Extend(
                                 connection.Unit.ServerPosition,
-                                GlobalVariables.Spells[SpellSlot.E].Range)) <= 50)
+                                GlobalVariables.Spells[SpellSlot.E].Range)) <= 50
+                        && connection.To.Position.Distance(this.Path.EndPosition)
+                        >= GlobalVariables.Player.Distance(this.Path.EndPosition))
                     {
-                        GlobalVariables.CastManager.Queque.Enqueue(3, () =>
-                        GlobalVariables.Spells[SpellSlot.E].CastOnUnit(connection.Unit));
+                        GlobalVariables.CastManager.Queque.Enqueue(
+                            3,
+                            () => GlobalVariables.Spells[SpellSlot.E].CastOnUnit(connection.Unit));
                     }
                 }
 
@@ -114,12 +123,6 @@ namespace Yasuo.CommonEx.Objects.Pathfinding
             }
         }
 
-        public void Initialize()
-        {
-            this.providerE = new SweepingBladeLogicProvider();
-            this.providerTurret = new TurretLogicProvider();
-        }
-
         public Path GeneratePath()
         {
             this.FindTargetedVector();
@@ -128,6 +131,16 @@ namespace Yasuo.CommonEx.Objects.Pathfinding
 
             return this.Path;
         }
+
+        public void Initialize()
+        {
+            this.providerE = new SweepingBladeLogicProvider();
+            this.providerTurret = new TurretLogicProvider();
+        }
+
+        #endregion
+
+        #region Methods
 
         private Path CalculatePath(Vector3 position)
         {
@@ -162,7 +175,7 @@ namespace Yasuo.CommonEx.Objects.Pathfinding
                     if (this.providerTurret.IsSafePosition(connection.To.Position)) continue;
 
                     this.providerE.GridGenerator.Grid.Connections.Remove(connection);
-                    this.providerE.GridGenerator.RemoveDisconnectedConnections();
+                    //this.providerE.GridGenerator.RemoveDisconnectedConnections();
                 }
             }
 
@@ -187,10 +200,7 @@ namespace Yasuo.CommonEx.Objects.Pathfinding
 
                 // Enemy
                 case 1:
-                    var target = TargetSelector.GetTarget(
-                        5000,
-                        TargetSelector.DamageType.Physical,
-                        true);
+                    var target = TargetSelector.GetTarget(5000, TargetSelector.DamageType.Physical, true);
 
                     if (target == null || !target.IsValid || target.IsZombie
                         || Game.CursorPos.Distance(target.Position)
@@ -243,5 +253,7 @@ namespace Yasuo.CommonEx.Objects.Pathfinding
         {
             this.Path = null;
         }
+
+        #endregion
     }
 }

@@ -7,8 +7,8 @@ namespace Yasuo.Yasuo.Menu.MenuSets.Modules
     using System.Collections.Generic;
     using System.Linq;
 
-    using global::Yasuo.CommonEx.Menu.Interfaces;
-    using global::Yasuo.CommonEx.Menu.Presets;
+    using CommonEx.Menu.Interfaces;
+    using CommonEx.Menu.Presets;
 
     using LeagueSharp;
     using LeagueSharp.Common;

@@ -6,7 +6,7 @@ namespace Yasuo.Yasuo.OrbwalkingModes.LastHit
 
     #endregion
 
-    internal class LastHit : Parent
+    internal class LastHit : FeatureParent
     {
         #region Public Properties
 

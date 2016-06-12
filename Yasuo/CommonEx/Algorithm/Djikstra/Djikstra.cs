@@ -29,7 +29,7 @@
             try
             {
                 this.Connections = grid.Connections;
-                //this.Base = grid.Points;
+                //this.FeatureBase = grid.Points;
 
                 foreach (var connection in this.Connections)
                 {
@@ -121,17 +121,27 @@
         /// <returns>point path</returns>
         public List<Point> GetPointsTo(Point point)
         {
-            var path = new List<Point>();
-
-            path.Insert(0, point);
-
-            while (this.Previous[point] != null)
+            try
             {
-                point = this.Previous[point];
+                var path = new List<Point>();
+
                 path.Insert(0, point);
+
+                while (this.Previous.ContainsKey(point) && this.Previous[point] != null)
+                {
+                    point = this.Previous[point];
+                    path.Insert(0, point);
+                }
+
+                return path;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
             }
 
-            return path;
+
+            return null;
         }
 
         /// <summary>

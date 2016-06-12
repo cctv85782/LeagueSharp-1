@@ -6,12 +6,14 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using global::Yasuo.CommonEx;
-    using global::Yasuo.CommonEx.Classes;
-    using global::Yasuo.CommonEx.Extensions;
-    using global::Yasuo.CommonEx.Menu;
-    using global::Yasuo.CommonEx.Menu.Presets;
-    using global::Yasuo.CommonEx.Objects;
+    using CommonEx;
+    using CommonEx.Classes;
+    using CommonEx.Extensions;
+    using CommonEx.Menu;
+    using CommonEx.Menu.Presets;
+    using CommonEx.Objects;
+
+    using global::Yasuo.CommonEx.Utility;
     using global::Yasuo.Yasuo.LogicProvider;
     using global::Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.Combo;
     using global::Yasuo.Yasuo.OrbwalkingModes.Combo;
@@ -27,7 +29,7 @@
 
     #endregion
 
-    internal class SteelTempest : Child<Mixed>
+    internal class SteelTempest : FeatureChild<Mixed>
     {
         #region Fields
 
@@ -152,6 +154,7 @@
             base.OnInitialize();
         }
 
+        // BUG: Casts in fountain/movecommand in fountain.
         /// <summary>
         ///     Called when [load].
         /// </summary>
@@ -343,7 +346,7 @@
 
             if (GlobalVariables.Player.IsDashing())
             {
-                var dash = new global::Yasuo.CommonEx.Objects.Dash(GlobalVariables.Player.GetDashInfo().Unit);
+                var dash = new CommonEx.Objects.Dash(GlobalVariables.Player.GetDashInfo().Unit);
 
                 if (dash.EndPosition.Distance(this.Target.ServerPosition) > GlobalVariables.Spells[SpellSlot.Q].Range)
                 {

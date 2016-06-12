@@ -6,26 +6,27 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using global::Yasuo.CommonEx;
-    using global::Yasuo.CommonEx.Algorithm.Djikstra;
-    using global::Yasuo.CommonEx.Classes;
-    using global::Yasuo.CommonEx.Extensions;
-    using global::Yasuo.CommonEx.Menu;
-    using global::Yasuo.CommonEx.Menu.Presets;
-    using global::Yasuo.CommonEx.Objects;
-    using global::Yasuo.CommonEx.Objects.Pathfinding;
-    using global::Yasuo.CommonEx.Utility;
+    using CommonEx;
+    using CommonEx.Algorithm.Djikstra;
+    using CommonEx.Classes;
+    using CommonEx.Extensions;
+    using CommonEx.Menu;
+    using CommonEx.Menu.Presets;
+    using CommonEx.Objects;
+    using CommonEx.Objects.Pathfinding;
+    using CommonEx.Utility;
     using global::Yasuo.Yasuo.LogicProvider;
     using global::Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.Combo;
 
     using LeagueSharp;
     using LeagueSharp.Common;
 
-    using Dash = global::Yasuo.CommonEx.Objects.Dash;
+    using Dash = CommonEx.Objects.Dash;
+    using Math = global::Yasuo.CommonEx.Utility.Math;
 
     #endregion
 
-    internal class SweepingBlade : Child<Combo>
+    internal class SweepingBlade : FeatureChild<Combo>
     {
         #region Static Fields
 
@@ -303,7 +304,7 @@
             if (target.Health < this.providerE.GetDamage(target) && !GlobalVariables.Spells[SpellSlot.Q].IsReady())
             {
                 var meanvector =
-                    Helper.GetMeanVector3(this.Targets.Where(x => x.Distance(dash.EndPosition) <= 1000)
+                    Math.GetMeanVector3(this.Targets.Where(x => x.Distance(dash.EndPosition) <= 1000)
                             .Select(x => x.ServerPosition)
                             .ToList());
 

@@ -5,8 +5,10 @@
     using System;
     using System.Collections.Generic;
 
-    using global::Yasuo.CommonEx;
-    using global::Yasuo.CommonEx.Classes;
+    using CommonEx;
+    using CommonEx.Classes;
+
+    using global::Yasuo.CommonEx.Utility;
 
     using LeagueSharp.Common;
 
@@ -19,7 +21,7 @@
         /// <summary>
         ///     The features of the assembly
         /// </summary>
-        public List<IChild> Features = new List<IChild>();
+        public List<IFeatureChild> Features = new List<IFeatureChild>();
 
         #endregion
 
@@ -35,7 +37,7 @@
                 return;
             }
 
-            GlobalVariables.RootMenu = new Menu($"[{GlobalVariables.Name}]: " + champion.Name, string.Format("Root"), true);
+            GlobalVariables.RootMenu = new Menu($"[{GlobalVariables.Author}]: " + champion.Name, string.Format("Root"), true);
 
             champion.Load();
 

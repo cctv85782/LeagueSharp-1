@@ -1,8 +1,8 @@
 ﻿namespace Yasuo.Yasuo.Modules
 {
-    using global::Yasuo.CommonEx.Classes;
+    using CommonEx.Classes;
 
-    internal class Modules : Parent
+    internal class Modules : FeatureParent
     {
         public override string Name => "Modules";
     }

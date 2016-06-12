@@ -7,8 +7,8 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
-    using global::Yasuo.CommonEx.Classes;
-    using global::Yasuo.Yasuo.Modules.Assembly;
+    using global::Yasuo.Base.Modules.Assembly;
+    using CommonEx.Classes;
     using global::Yasuo.Yasuo.Modules.Auto;
     using global::Yasuo.Yasuo.Modules.Protector;
     using global::Yasuo.Yasuo.Modules.WallDash;
@@ -18,6 +18,8 @@
     using global::Yasuo.Yasuo.OrbwalkingModes.Mixed;
 
     using LeagueSharp.Common;
+
+    using Version = global::Yasuo.Base.Modules.Assembly.Version;
 
     #endregion
 
@@ -56,10 +58,10 @@
             CustomEvents.Game.OnGameLoad += delegate
                 {
                     GlobalVariables.Assembly.Features.AddRange(
-                        new List<IChild>
+                        new List<IFeatureChild>
                             {
                                 // Core
-                                new Modules.Assembly.Version(assembly),
+                                new Version(assembly),
                                 new Debug(assembly), new CastManager(assembly), new SpellManager(assembly),
 
                                 // Orbwalking Modes

@@ -54,29 +54,29 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="clipper_library">
-      <HintPath>E:\Program Files (x86)\LeagueSharp\System\clipper_library.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpNew\System\clipper_library.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp">
-      <HintPath>E:\Program Files (x86)\LeagueSharp\System\LeagueSharp.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpNew\System\LeagueSharp.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.Common">
-      <HintPath>E:\Program Files (x86)\LeagueSharp\System\LeagueSharp.Common.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpNew\System\LeagueSharp.Common.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.Data">
-      <HintPath>E:\Program Files (x86)\LeagueSharp\System\LeagueSharp.Data.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpNew\System\LeagueSharp.Data.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.SDK">
-      <HintPath>E:\Program Files (x86)\LeagueSharp\System\LeagueSharp.SDK.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpNew\System\LeagueSharp.SDK.dll</HintPath>
     </Reference>
     <Reference Include="SebbyLib">
-      <HintPath>E:\Program Files (x86)\LeagueSharp\System\SebbyLib.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpNew\System\SebbyLib.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX">
-      <HintPath>E:\Program Files (x86)\LeagueSharp\System\SharpDX.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpNew\System\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D9, Version=2.6.3.0, Culture=neutral, PublicKeyToken=345b829e6e492981, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Program Files (x86)\LeagueSharp\System\SharpDX.Direct3D9.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpNew\System\SharpDX.Direct3D9.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -95,17 +95,19 @@
     <Compile Include="CommonEx\Algorithm\Djikstra\Grid.cs" />
     <Compile Include="CommonEx\Algorithm\Djikstra\Point.cs" />
     <Compile Include="CommonEx\Algorithm\Media\GridGenerator.cs" />
+    <Compile Include="CommonEx\Algorithm\Media\GridGeneratorContainer.cs" />
     <Compile Include="CommonEx\Algorithm\Media\GridGeneratorV2.cs" />
+    <Compile Include="CommonEx\Algorithm\Media\IGridGenerator.cs" />
     <Compile Include="CommonEx\CastManager\CastManager.cs" />
-    <Compile Include="CommonEx\Classes\Base.cs" />
-    <Compile Include="CommonEx\Classes\Child.cs" />
-    <Compile Include="CommonEx\Classes\DefaultChampion.cs" />
+    <Compile Include="CommonEx\Classes\FeatureBase.cs" />
+    <Compile Include="CommonEx\Classes\FeatureChild.cs" />
+    <Compile Include="Base\BaseChampion.cs" />
     <Compile Include="CommonEx\Classes\IChampion.cs" />
-    <Compile Include="CommonEx\Classes\IChild.cs" />
-    <Compile Include="CommonEx\Classes\Parent.cs" />
+    <Compile Include="CommonEx\Classes\IFeatureChild.cs" />
+    <Compile Include="CommonEx\Classes\FeatureParent.cs" />
     <Compile Include="CommonEx\Classes\Template.cs" />
     <Compile Include="CommonEx\Data\Debuffs.cs" />
-    <Compile Include="CommonEx\Events.cs" />
+    <Compile Include="CommonEx\Utility\Events.cs" />
     <Compile Include="CommonEx\Extensions\Extensions.cs" />
     <Compile Include="CommonEx\Menu\Interfaces\MenuSet.cs" />
     <Compile Include="CommonEx\Menu\MenuExtensions.cs" />
@@ -128,9 +130,8 @@
     <Compile Include="CommonEx\PriorityQueue\IPriorityQueque.cs" />
     <Compile Include="CommonEx\PriorityQueue\PriorityQuequeItem.cs" />
     <Compile Include="CommonEx\PriorityQueue\PriorityQueue.cs" />
-    <Compile Include="CommonEx\Utility\HealthComparer.cs" />
+    <Compile Include="CommonEx\Utility\Math.cs" />
     <Compile Include="CommonEx\Utility\VersionChecker.cs" />
-    <Compile Include="CommonEx\Utility\Helper.cs" />
     <Compile Include="CommonEx\Utility\Logger.cs" />
     <Compile Include="Assembly.cs" />
     <Compile Include="GlobalVariables.cs" />
@@ -177,12 +178,12 @@
     <Compile Include="Yasuo\Menu\Translations\English.cs" />
     <Compile Include="Yasuo\Menu\Translations\German.cs" />
     <Compile Include="Yasuo\Menu\Translations\ITranslation.cs" />
-    <Compile Include="Yasuo\Modules\Assembly\Assembly.cs" />
-    <Compile Include="Yasuo\Modules\Assembly\CastManager.cs" />
-    <Compile Include="Yasuo\Modules\Assembly\Debug.cs" />
-    <Compile Include="Yasuo\Modules\Assembly\Notifications.cs" />
-    <Compile Include="Yasuo\Modules\Assembly\SpellManager.cs" />
-    <Compile Include="Yasuo\Modules\Assembly\Version.cs" />
+    <Compile Include="Base\Modules\Assembly\Assembly.cs" />
+    <Compile Include="Base\Modules\Assembly\CastManager.cs" />
+    <Compile Include="Base\Modules\Assembly\Debug.cs" />
+    <Compile Include="Base\Modules\Assembly\Notifications.cs" />
+    <Compile Include="Base\Modules\Assembly\SpellManager.cs" />
+    <Compile Include="Base\Modules\Assembly\Version.cs" />
     <Compile Include="Yasuo\Modules\Auto\Killsteal.cs" />
     <Compile Include="Yasuo\Modules\Auto\Potions.cs" />
     <Compile Include="Yasuo\Modules\Drawings\Drawings.cs" />
@@ -240,6 +241,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Base\Menu\" />
+    <Folder Include="CommonEx\LogicProvider\" />
     <Folder Include="Yasuo\Modules\Items\Combo\" />
     <Folder Include="Yasuo\Modules\Items\LaneClear\" />
     <Folder Include="Yasuo\Modules\Items\LastHit\" />

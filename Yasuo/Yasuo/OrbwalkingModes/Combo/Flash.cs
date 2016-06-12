@@ -9,6 +9,7 @@
     using global::Yasuo.CommonEx.Extensions;
     using global::Yasuo.CommonEx.Menu;
     using global::Yasuo.CommonEx.Menu.Presets;
+    using global::Yasuo.CommonEx.Utility;
     using global::Yasuo.Yasuo.LogicProvider;
 
     using LeagueSharp;
@@ -20,7 +21,7 @@
     using PredictionInput = SebbyLib.Prediction.PredictionInput;
     using PredictionOutput = SebbyLib.Prediction.PredictionOutput;
 
-    internal class Flash : Child<Combo>
+    internal class Flash : FeatureChild<Combo>
     {
         #region Fields
 

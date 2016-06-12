@@ -1,6 +1,6 @@
 ﻿namespace Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.Combo
 {
-    using global::Yasuo.CommonEx.Menu.Interfaces;
+    using CommonEx.Menu.Interfaces;
 
     using LeagueSharp.Common;
 

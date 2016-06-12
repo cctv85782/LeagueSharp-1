@@ -4,9 +4,9 @@ namespace Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.Combo
 
     using System.Collections.Generic;
 
-    using global::Yasuo.CommonEx.Menu;
-    using global::Yasuo.CommonEx.Menu.Interfaces;
-    using global::Yasuo.CommonEx.Menu.Presets;
+    using CommonEx.Menu;
+    using CommonEx.Menu.Interfaces;
+    using CommonEx.Menu.Presets;
     using global::Yasuo.Yasuo.Menu.MenuSets.BaseMenus;
 
     using LeagueSharp.Common;
@@ -58,7 +58,7 @@ namespace Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.Combo
         private void SetupMultiKnockupMenu()
         {
             var selecter =
-                new MenuItem("Mode", "Mode").SetValue(new StringList(new[] { "Custom", "Path Based", "Disabled" }, 1));
+                new MenuItem("Mode", "Mode").SetValue(new StringList(new[] { "Custom", "Disabled" }, 0));
 
             var custom = new List<MenuItem>()
                              {

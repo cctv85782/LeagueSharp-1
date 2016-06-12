@@ -6,25 +6,25 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using global::Yasuo.CommonEx;
-    using global::Yasuo.CommonEx.Classes;
-    using global::Yasuo.CommonEx.Extensions;
-    using global::Yasuo.CommonEx.Menu;
-    using global::Yasuo.CommonEx.Menu.Presets;
-    using global::Yasuo.CommonEx.Objects;
-    using global::Yasuo.CommonEx.Objects.Pathfinding;
-    using global::Yasuo.CommonEx.Utility;
+    using CommonEx;
+    using CommonEx.Classes;
+    using CommonEx.Extensions;
+    using CommonEx.Menu;
+    using CommonEx.Menu.Presets;
+    using CommonEx.Objects;
+    using CommonEx.Objects.Pathfinding;
+    using CommonEx.Utility;
     using global::Yasuo.Yasuo.LogicProvider;
     using global::Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.Combo;
 
     using LeagueSharp;
     using LeagueSharp.Common;
 
-    using Dash = global::Yasuo.CommonEx.Objects.Dash;
+    using Dash = CommonEx.Objects.Dash;
 
     #endregion
 
-    internal class SweepingBlade : Child<Modules>
+    internal class SweepingBlade : FeatureChild<Modules>
     {
         #region Static Fields
 

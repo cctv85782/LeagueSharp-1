@@ -11,6 +11,7 @@
     using global::Yasuo.CommonEx.Extensions;
     using global::Yasuo.CommonEx.Menu;
     using global::Yasuo.CommonEx.Menu.Presets;
+    using global::Yasuo.CommonEx.Utility;
     using global::Yasuo.Yasuo.LogicProvider;
     using global::Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.Combo;
 
@@ -19,7 +20,7 @@
 
     #endregion
 
-    internal class LastBreath : Child<Combo>
+    internal class LastBreath : FeatureChild<Combo>
     {
         #region Fields
 

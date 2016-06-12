@@ -87,52 +87,6 @@
 
         #endregion
 
-        #region Enums
-
-        /// <summary>
-        ///     The dash range
-        /// </summary>
-        private enum DashRange
-        {
-            Fixed,
-
-            Dynamic
-        }
-
-        /// <summary>
-        ///     The dash type
-        /// </summary>
-        private enum DashType
-        {
-            Unit,
-
-            Dynamic,
-
-            Static,
-
-            NoDash
-        }
-
-        /// <summary>
-        ///     The unit type
-        /// </summary>
-        private enum UnitType
-        {
-            All,
-
-            Allied,
-
-            NotAllied,
-
-            Enemy,
-
-            NotAllyForEnemy,
-
-            Neutral
-        }
-
-        #endregion
-
         #region Public Properties
 
         /// <summary>
@@ -279,41 +233,44 @@
                         x => Geometry.Distance(x, this.BasePoint.Position) <= GlobalVariables.Spells[SpellSlot.E].Range)
                     )
                 {
-                    var pointToAdd =
-                        new Djikstra.Point(
-                            new global::Yasuo.CommonEx.Objects.Dash(GlobalVariables.Player.ServerPosition, unit).EndPosition);
+                    var pointToAdd = new Djikstra.Point(new Objects.Dash(GlobalVariables.Player.ServerPosition, unit).EndPosition);
                     this.sharedPoints.Add(pointToAdd);
                     this.sharedConnections.Add(new Connection(this.BasePoint, pointToAdd, unit));
                 }
 
-                // Connectin StartPoint to EndPoint
+                // Connecting StartPoint to EndPoint
                 var path2 = GlobalVariables.Player.GetPath(this.BasePoint.Position, this.EndPosition);
 
-                for (var i = 0; i < path2.Count() - 1; i++)
+                if (path2 != null && path2.Length > 0)
                 {
-                    var start = new Djikstra.Point(path2[i]);
-
-                    if (i == 0)
+                    for (var i = 0; i < path2.Count() - 1; i++)
                     {
-                        start = this.BasePoint;
-                    }
+                        var start = new Djikstra.Point(path2[i]);
 
-                    var end = new Djikstra.Point(path2[i + 1]);
+                        if (i == 0)
+                        {
+                            start = this.BasePoint;
+                        }
 
-                    if (i == path2.Count() - 2)
-                    {
-                        end = this.EndPoint;
-                    }
+                        var end = new Djikstra.Point(path2[i + 1]);
 
-                    var connection = new Connection(start, end);
+                        if (i == path2.Count() - 2)
+                        {
+                            end = this.EndPoint;
+                        }
 
-                    if (!this.sharedConnections.Contains(connection))
-                    {
-                        this.sharedConnections.Add(connection);
+                        var connection = new Connection(start, end);
+
+                        if (!this.sharedConnections.Contains(connection))
+                        {
+                            this.sharedConnections.Add(connection);
+                        }
                     }
                 }
-
-                this.sharedPoints.Add(this.EndPoint);
+                else
+                {
+                    this.sharedConnections.Add(new Connection(this.BasePoint, this.EndPoint));
+                }
 
                 // Starts generating possible pathes
                 for (var i = 0; i < this.PathDeepness; i++)
@@ -350,6 +307,8 @@
                         this.sharedPoints.Remove(point);
                     }
                 }
+
+                this.sharedPoints.Add(this.EndPoint);
 
                 this.Grid = new Grid(this.sharedConnections, this.BasePoint, this.EndPoint);
             }
@@ -474,7 +433,7 @@
         {
             if (GlobalVariables.Debug)
             {
-                Console.WriteLine(@"GridGenerator.Cs > RemovePathesThroughSkillshots()");
+                Console.WriteLine($"GridGenerator.Cs > RemovePathesThroughSkillshots() > {skillshots.Count}");
             }
 
             if (this.Grid?.Connections == null || !this.Grid.Connections.Any() || this.Grid.Points == null)
@@ -526,7 +485,7 @@
                     //    }   
                     //}
 
-                    foreach (var connection in this.Grid.Connections)
+                    foreach (var connection in this.Grid.Connections.Where(x => x.IsDash))
                     {
                         var clipperpath = skillshot.Value.ToClipperPath();
                         var connectionpolygon = new Geometry.Polygon.Line(
@@ -585,7 +544,7 @@
 
                         if (GlobalVariables.Debug)
                         {
-                            Console.WriteLine(@"[BT] FINISHED: Reached Base Point");
+                            Console.WriteLine(@"[BT] FINISHED: Reached FeatureBase Point");
                         }
 
                         #endregion
@@ -684,7 +643,7 @@
                 }
 
                 // Checking for wall
-                var dashObj = new global::Yasuo.CommonEx.Objects.Dash(point.Position, unit);
+                var dashObj = new Objects.Dash(point.Position, unit);
 
                 var endPoint = new Djikstra.Point(dashObj.EndPosition);
 

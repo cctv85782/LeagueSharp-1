@@ -73,14 +73,14 @@
                     this.ForceUpdate = false;
                 }
 
-                if (differential <= 0)
+                if (differential < 0)
                 {
                     return;
                 }
 
                 this.UpdateAvailable = true;
 
-                if (differential > 9)
+                if (differential >= 10)
                 {
                     this.ForceUpdate = true;
                 }

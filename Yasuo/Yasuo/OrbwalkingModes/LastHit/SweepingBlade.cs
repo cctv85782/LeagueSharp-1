@@ -9,6 +9,7 @@
     using global::Yasuo.CommonEx.Extensions;
     using global::Yasuo.CommonEx.Menu;
     using global::Yasuo.CommonEx.Menu.Presets;
+    using global::Yasuo.CommonEx.Utility;
     using global::Yasuo.Yasuo.LogicProvider;
     using global::Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.LastHit;
 
@@ -17,7 +18,7 @@
 
     using Dash = global::Yasuo.CommonEx.Objects.Dash;
 
-    internal class SweepingBlade : Child<LastHit>
+    internal class SweepingBlade : FeatureChild<LastHit>
     {
         #region Fields
 

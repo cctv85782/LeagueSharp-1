@@ -5,10 +5,12 @@
     using CommonEx;
     using CommonEx.Classes;
 
+    using global::Yasuo.CommonEx.Utility;
+
     using LeagueSharp;
     using LeagueSharp.Common;
 
-    internal class KillSteal : Child<Modules>
+    internal class KillSteal : FeatureChild<Modules>
     {
         #region Constructors and Destructors
 

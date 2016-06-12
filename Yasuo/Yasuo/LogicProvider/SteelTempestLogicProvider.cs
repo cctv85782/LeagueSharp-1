@@ -39,7 +39,7 @@
         {
             get
             {
-                if (LeagueSharp.Common.Dash.IsDashing(GlobalVariables.Player))
+                if (Dash.IsDashing(GlobalVariables.Player))
                 {
                     return 500;
                 }
@@ -261,7 +261,7 @@
             return GlobalVariables.Spells[SpellSlot.Q].GetDamage(unit) + physicalDmg + magicDmg;
         }
 
-        public PredictionOutput GetPrediction(Obj_AI_Base target, bool aoe)
+        public PredictionOutput GetPrediction(Obj_AI_Base target, bool aoe = false)
         {
             var predInput = new PredictionInput
                                 {

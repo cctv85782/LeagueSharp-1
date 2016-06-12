@@ -6,11 +6,12 @@
 
     using global::Yasuo.CommonEx;
     using global::Yasuo.CommonEx.Classes;
+    using global::Yasuo.CommonEx.Utility;
 
     using LeagueSharp;
     using LeagueSharp.Common;
 
-    internal class Potions : Child<Modules>
+    internal class Potions : FeatureChild<Modules>
     {
         #region Fields
 

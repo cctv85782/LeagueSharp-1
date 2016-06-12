@@ -6,18 +6,20 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using global::Yasuo.CommonEx;
-    using global::Yasuo.CommonEx.Classes;
+    using CommonEx;
+    using CommonEx.Classes;
+
+    using global::Yasuo.CommonEx.Utility;
     using global::Yasuo.Yasuo.LogicProvider;
 
     using LeagueSharp;
     using LeagueSharp.Common;
 
-    using Dash = global::Yasuo.CommonEx.Objects.Dash;
+    using Dash = CommonEx.Objects.Dash;
 
     #endregion
 
-    internal class Eq : Child<LastHit>
+    internal class Eq : FeatureChild<LastHit>
     {
         #region Fields
 

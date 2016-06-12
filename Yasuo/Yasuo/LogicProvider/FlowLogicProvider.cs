@@ -2,7 +2,9 @@
 
 namespace Yasuo.Yasuo.LogicProvider
 {
-    using global::Yasuo.CommonEx.Utility;
+    using System;
+
+    using CommonEx.Utility;
 
     using LeagueSharp.Common;
 
@@ -87,9 +89,14 @@ namespace Yasuo.Yasuo.LogicProvider
         /// </summary>
         private void Reset()
         {
-            this.lastReset = Helper.GetTick();
+            this.lastReset = GetTick();
             this.TraveledDistance = 0;
             this.lastPosition = Vector3.Zero;
+        }
+
+        private static float GetTick()
+        {
+            return (int)DateTime.Now.Subtract(GlobalVariables.AssemblyLoadTime).TotalMilliseconds;
         }
 
         #endregion

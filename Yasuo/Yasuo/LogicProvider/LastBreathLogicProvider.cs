@@ -3,9 +3,9 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using global::Yasuo.CommonEx.Extensions;
-    using global::Yasuo.CommonEx.Objects;
-    using global::Yasuo.CommonEx.Utility;
+    using CommonEx.Extensions;
+    using CommonEx.Objects;
+    using CommonEx.Utility;
 
     using LeagueSharp;
     using LeagueSharp.Common;
@@ -106,7 +106,7 @@
             if (path == null)
             {
                 var playerpath = GlobalVariables.Player.GetPath(execution.Target.ServerPosition);
-                var playerpathtime = Helper.GetPathLenght(playerpath) / GlobalVariables.Player.MoveSpeed;
+                var playerpathtime = Math.GetPathLenght(playerpath) / GlobalVariables.Player.MoveSpeed;
 
                 // if walking is requires less time than remaining knockup time
                 if (playerpathtime <= execution.MinRemainingAirboneTime + buffer + Game.Ping)

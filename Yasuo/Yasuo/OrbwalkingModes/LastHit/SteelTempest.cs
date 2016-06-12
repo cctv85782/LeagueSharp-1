@@ -6,29 +6,38 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using CommonEx;
-    using CommonEx.Classes;
-    using CommonEx.Extensions;
-    using CommonEx.Menu;
-
+    using global::Yasuo.CommonEx.Classes;
+    using global::Yasuo.CommonEx.Extensions;
+    using global::Yasuo.CommonEx.Menu;
+    using global::Yasuo.CommonEx.Utility;
     using global::Yasuo.Yasuo.LogicProvider;
     using global::Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.LastHit;
 
     using LeagueSharp;
     using LeagueSharp.Common;
 
+    using SebbyLib;
+
     using SharpDX;
+
+    using HealthPrediction = SebbyLib.HealthPrediction;
+    using Orbwalking = LeagueSharp.Common.Orbwalking;
 
     #endregion
 
-    internal class SteelTempest : Child<LastHit>
+    internal class SteelTempest : FeatureChild<LastHit>
     {
         #region Fields
 
         /// <summary>
-        ///     The E logic provider
+        ///     The minions
         /// </summary>
-        private SweepingBladeLogicProvider providerE;
+        protected List<Obj_AI_Base> Units;
+
+        /// <summary>
+        ///     The good circumstances
+        /// </summary>
+        private bool goodCircumstances;
 
         /// <summary>
         ///     The Q logic provider
@@ -39,16 +48,6 @@
         ///     The Turret logic provider
         /// </summary>
         private TurretLogicProvider providerTurret;
-
-        /// <summary>
-        /// The minions
-        /// </summary>
-        protected List<Obj_AI_Base> Units;
-
-        /// <summary>
-        /// The good circumstances
-        /// </summary>
-        private bool goodCircumstances;
 
         #endregion
 
@@ -88,19 +87,18 @@
         {
             this.SoftReset();
 
-            if (GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.LastHit 
+            if (GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.LastHit
                 && GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.LaneClear
                 && GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Mixed
-                || !GlobalVariables.Spells[SpellSlot.Q].IsReady()
-                || GlobalVariables.Player.IsDashing()
+                || !GlobalVariables.Spells[SpellSlot.Q].IsReady() || GlobalVariables.Player.IsDashing()
                 || GlobalVariables.Player.IsWindingUp)
             {
                 return;
             }
 
-            this.GetMinions();
+            this.GetUnits();
 
-            this.ValidateMinions();
+            this.ValidateUnits();
 
             this.CheckCircumstances();
 
@@ -110,77 +108,6 @@
             }
 
             this.LogicLastHit();
-        }
-
-        /// <summary>
-        ///     Validates the minions.
-        /// </summary>
-        private void ValidateMinions()
-        {
-            if (!this.Units.Any())
-            {
-                return;
-            }
-
-            foreach (var unit in this.Units.ToList())
-            {
-                var predictedHealth = SebbyLib.HealthPrediction.GetHealthPrediction(unit, (int)this.providerQ.TravelTime(unit));
-
-                if (predictedHealth <= 0 || predictedHealth > this.providerQ.GetDamage(unit))
-                {
-                    this.Units.Remove(unit);
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Checks the circumstances.
-        /// </summary>
-        private void CheckCircumstances()
-        {
-            if (this.providerQ.HasQ3()
-                && GlobalVariables.Player.CountEnemiesInRange(
-                    this.Menu.Item(this.Name + "NoQ3Range").GetValue<Slider>().Value)
-                >= this.Menu.Item(this.Name + "NoQ3Count").GetValue<Slider>().Value)
-            {
-                this.goodCircumstances = false;
-                return;
-            }
-
-            var settingsAdv = this.Menu.SubMenu(this.Name + "Advanced");
-
-            if (!this.Units.Any())
-            {
-                this.goodCircumstances = false;
-                return;
-            }
-
-            if (settingsAdv.Item(settingsAdv.Name + "TurretCheck").GetValue<bool>())
-            {
-                if (!this.providerTurret.IsSafePosition(GlobalVariables.Player.ServerPosition))
-                {
-                    this.goodCircumstances = false;
-                    return;
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Gets the minions and targets.
-        /// </summary>
-        private void GetMinions()
-        {
-            this.Units = SebbyLib.Cache.GetMinions(GlobalVariables.Player.ServerPosition, GlobalVariables.Spells[SpellSlot.Q].Range, MinionTeam.NotAlly);
-        }
-
-        /// <summary>
-        /// Resets some fields
-        /// </summary>
-        private void SoftReset()
-        {
-            this.goodCircumstances = true;
-
-            this.Units = new List<Obj_AI_Base>();
         }
 
         #endregion
@@ -211,7 +138,7 @@
         protected override void OnInitialize()
         {
             this.providerQ = new SteelTempestLogicProvider();
-            this.providerE = new SweepingBladeLogicProvider();
+
             this.providerTurret = new TurretLogicProvider();
 
             this.Units = new List<Obj_AI_Base>();
@@ -219,7 +146,6 @@
             base.OnInitialize();
         }
 
-        // TODO: Decomposite
         /// <summary>
         ///     Called when [load].
         /// </summary>
@@ -227,12 +153,10 @@
         {
             this.Menu = new Menu(this.Name, this.Name);
 
-
             var menuGenerator = new MenuGenerator(new SteelTempestMenu(this.Menu));
 
             menuGenerator.Generate();
 
-            
             this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
 
             this.Parent.Menu.AddSubMenu(this.Menu);
@@ -257,7 +181,49 @@
         {
             if (!position.IsValid()) return;
 
-            GlobalVariables.CastManager.Queque.Enqueue(2, () => GlobalVariables.Spells[SpellSlot.Q].Cast(position)); ;
+            GlobalVariables.CastManager.Queque.Enqueue(2, () => GlobalVariables.Spells[SpellSlot.Q].Cast(position));
+        }
+
+        /// <summary>
+        ///     Checks the circumstances.
+        /// </summary>
+        private void CheckCircumstances()
+        {
+            if (this.providerQ.HasQ3()
+                && GlobalVariables.Player.CountEnemiesInRange(
+                    this.Menu.Item(this.Name + "NoQ3Range").GetValue<Slider>().Value)
+                >= this.Menu.Item(this.Name + "NoQ3Count").GetValue<Slider>().Value)
+            {
+                this.goodCircumstances = false;
+                return;
+            }
+
+            var settingsAdv = this.Menu.SubMenu(this.Name + "Advanced");
+
+            if (!this.Units.Any())
+            {
+                this.goodCircumstances = false;
+                return;
+            }
+
+            if (settingsAdv.Item(settingsAdv.Name + "TurretCheck").GetValue<bool>())
+            {
+                if (!this.providerTurret.IsSafePosition(GlobalVariables.Player.ServerPosition))
+                {
+                    this.goodCircumstances = false;
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Gets the minions and targets.
+        /// </summary>
+        private void GetUnits()
+        {
+            this.Units = Cache.GetMinions(
+                GlobalVariables.Player.ServerPosition,
+                GlobalVariables.Spells[SpellSlot.Q].Range,
+                MinionTeam.NotAlly);
         }
 
         /// <summary>
@@ -266,9 +232,8 @@
         private void LogicLastHit()
         {
             var validunits =
-                this.Units.Where(
-                    x =>
-                    x.IsValidTarget(GlobalVariables.Spells[SpellSlot.Q].Range - x.BoundingRadius / 2)).ToList();
+                this.Units.Where(x => x.IsValidTarget(GlobalVariables.Spells[SpellSlot.Q].Range - x.BoundingRadius / 2))
+                    .ToList();
 
             var farmlocation = MinionManager.GetBestLineFarmLocation(
                 validunits.ToVector3S().To2D(),
@@ -277,8 +242,7 @@
 
             var unit = validunits.MaxOrDefault(x => x.FlatGoldRewardMod);
 
-            if (unit != null 
-                && this.providerQ.HasQ3()
+            if (unit != null && this.providerQ.HasQ3()
                 && GlobalVariables.Player.Distance(unit) < GlobalVariables.Player.AttackRange + unit.Health)
             {
                 return;
@@ -294,6 +258,37 @@
             else
             {
                 Execute(farmlocation.Position);
+            }
+        }
+
+        /// <summary>
+        ///     Resets some fields
+        /// </summary>
+        private void SoftReset()
+        {
+            this.goodCircumstances = true;
+
+            this.Units = new List<Obj_AI_Base>();
+        }
+
+        /// <summary>
+        ///     Validates the minions.
+        /// </summary>
+        private void ValidateUnits()
+        {
+            if (!this.Units.Any())
+            {
+                return;
+            }
+
+            foreach (var unit in this.Units.ToList())
+            {
+                var predictedHealth = HealthPrediction.GetHealthPrediction(unit, (int)this.providerQ.TravelTime(unit));
+
+                if (predictedHealth <= 0 || predictedHealth > this.providerQ.GetDamage(unit))
+                {
+                    this.Units.Remove(unit);
+                }
             }
         }
 

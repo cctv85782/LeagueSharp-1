@@ -2,7 +2,7 @@
 {
     using global::Yasuo.CommonEx.Classes;
 
-    internal class Drawings : Parent
+    internal class Drawings : FeatureParent
     {
         public override string Name => "Drawings";
     }

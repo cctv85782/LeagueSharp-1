@@ -11,7 +11,7 @@ namespace Yasuo.Yasuo.Modules.Evade
     using LeagueSharp.Common;
     using LeagueSharp.SDK;
 
-    internal class SweepingBlade : Child<Modules>
+    internal class SweepingBlade : FeatureChild<Modules>
     {
         #region Fields
 

@@ -6,7 +6,7 @@ namespace Yasuo.Yasuo.OrbwalkingModes.Combo
 
     #endregion
 
-    internal class Combo : Parent
+    internal class Combo : FeatureParent
     {
         #region Public Properties
 

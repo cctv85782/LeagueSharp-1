@@ -18,8 +18,6 @@
     using SharpDX;
 
     using Color = System.Drawing.Color;
-    using Dash = global::Yasuo.CommonEx.Objects.Dash;
-    using Point = global::Yasuo.CommonEx.Algorithm.Djikstra.Point;
 
     #endregion
 
@@ -42,7 +40,8 @@
         /// <summary>
         ///     The current points
         /// </summary>
-        public List<Point> CurrentPoints = new List<Point>();
+        public List<CommonEx.Algorithm.Djikstra.Point> CurrentPoints =
+            new List<CommonEx.Algorithm.Djikstra.Point>();
 
         /// <summary>
         ///     The grid generator
@@ -146,7 +145,39 @@
             this.GridGenerator?.Generate();
         }
 
-        #endregion
+        /// <summary>
+        ///     Gets the current dash end position.
+        /// </summary>
+        /// <returns></returns>
+        public Vector3 GetCurrentDashEndPosition()
+        {
+            if (!GlobalVariables.Player.IsDashing())
+            {
+                return Vector3.Zero;
+            }
+
+            var startPosition = GlobalVariables.Player.GetDashInfo().StartPos;
+            var endPosition = GlobalVariables.Player.GetDashInfo().EndPos;
+
+            var dash = new CommonEx.Objects.Dash(startPosition.To3D(), endPosition.To3D());
+
+            return dash.EndPosition;
+        }
+
+        // TODO: HIGH PRIORITY
+        /// <summary>
+        ///     Credits: Brian
+        ///     Returns the correct amount of Damage on unit
+        /// </summary>
+        public double GetDamage(Obj_AI_Base unit)
+        {
+            return GlobalVariables.Player.CalcDamage(
+                unit,
+                Damage.DamageType.Magical,
+                (50 + 20 * GlobalVariables.Spells[SpellSlot.E].Level)
+                * (1 + Math.Max(0, GlobalVariables.Player.GetBuffCount("YasuoDashScalar") * 0.25))
+                + 0.6 * GlobalVariables.Player.FlatMagicDamageMod);
+        }
 
         /// <summary>
         ///     Returns a path object that represents the shortest possible path to a given location
@@ -197,7 +228,8 @@
 
                 #endregion
 
-                #region Converter (Temp-Solution)
+                // Solution: Make Djikstra Algorithm Generic and return T (connection) instead of points
+                #region Converter (Temp-Solution / Brosciene ftw)
 
                 var connections = new List<Connection>();
 
@@ -232,6 +264,64 @@
             }
             return null;
         }
+
+        /// <summary>
+        ///     Returns a list containing all units
+        /// </summary>
+        /// <param name="startPosition">start point (vector)</param>
+        /// <param name="minions">bool</param>
+        /// <param name="champions">bool</param>
+        /// <param name="mobs"></param>
+        /// <returns>List(Obj_Ai_Base)</returns>
+        public List<Obj_AI_Base> GetUnits(
+            Vector3 startPosition,
+            bool minions = true,
+            bool champions = true,
+            bool mobs = true)
+        {
+            try
+            {
+                // Add all units
+                var units = new List<Obj_AI_Base>();
+
+                if (minions)
+                {
+                    units.AddRange(Cache.GetMinions(startPosition, this.CalculationRange, MinionTeam.NotAlly));
+                }
+
+                if (champions)
+                {
+                    units.AddRange(HeroManager.Enemies.Where(x => x.Distance(startPosition) <= this.CalculationRange));
+                }
+
+                foreach (var x in
+                    units.Where(
+                        x =>
+                        !x.IsValid || x.HasBuff("YasuoDashWrapper") || x.IsDead || x.IsMe
+                        || x.Distance(GlobalVariables.Player.ServerPosition) > this.CalculationRange).ToList())
+                {
+                    units.Remove(x);
+                }
+
+                return units;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        ///     Returns Sweeping Blade speed
+        /// </summary>
+        /// <returns></returns>
+        public float Speed() => 1025 + (GlobalVariables.Player.MoveSpeed - 345);
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         ///     Draws the grid.
@@ -279,94 +369,6 @@
         }
 
         /// <summary>
-        ///     Gets the current dash end position.
-        /// </summary>
-        /// <returns></returns>
-        public Vector3 GetCurrentDashEndPosition()
-        {
-            if (!GlobalVariables.Player.IsDashing())
-            {
-                return new Vector3();
-            }
-
-            var startPosition = GlobalVariables.Player.GetDashInfo().StartPos;
-            var endPosition = GlobalVariables.Player.GetDashInfo().EndPos;
-
-            var dash = new Dash(startPosition.To3D(), endPosition.To3D());
-
-            return dash.EndPosition;
-        }
-
-        /// <summary>
-        ///     Returns a list containing all units
-        /// </summary>
-        /// <param name="startPosition">start point (vector)</param>
-        /// <param name="minions">bool</param>
-        /// <param name="champions">bool</param>
-        /// <param name="mobs"></param>
-        /// <returns>List(Obj_Ai_Base)</returns>
-        public List<Obj_AI_Base> GetUnits(
-            Vector3 startPosition,
-            bool minions = true,
-            bool champions = true,
-            bool mobs = true)
-        {
-            try
-            {
-                // Add all units
-                var units = new List<Obj_AI_Base>();
-
-                if (minions)
-                {
-                    units.AddRange(Cache.GetMinions(startPosition, this.CalculationRange, MinionTeam.NotAlly));
-                }
-
-                if (champions)
-                {
-                    units.AddRange(HeroManager.Enemies.Where(x => x.Distance(startPosition) <= this.CalculationRange));
-                }
-
-                foreach (var x in
-                    units.Where(
-                        x =>
-                        !x.IsValid || x.HasBuff("YasuoDashWrapper") || x.IsDead || x.Health == 0 || x.IsMe
-                        || x.Distance(GlobalVariables.Player.ServerPosition) > this.CalculationRange).ToList())
-                {
-                    units.Remove(x);
-                }
-
-                return units;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        ///     Returns Sweeping Blade speed
-        /// </summary>
-        /// <returns></returns>
-        public float Speed() => 1025 + (GlobalVariables.Player.MoveSpeed - 345);
-
-        // TODO: HIGH PRIORITY
-        /// <summary>
-        ///     Credits: Brian
-        ///     Returns the correct amount of Damage on unit
-        /// </summary>
-        public double GetDamage(Obj_AI_Base unit)
-        {
-            return GlobalVariables.Player.CalcDamage(
-                unit,
-                Damage.DamageType.Magical,
-                (50 + 20 * GlobalVariables.Spells[SpellSlot.E].Level)
-                * (1 + Math.Max(0, GlobalVariables.Player.GetBuffCount("YasuoDashScalar") * 0.25))
-                + 0.6 * GlobalVariables.Player.FlatMagicDamageMod);
-        }
-
-        /// <summary>
         ///     Resets this instance.
         /// </summary>
         private void Reset()
@@ -385,5 +387,7 @@
                 Console.WriteLine(ex);
             }
         }
+
+        #endregion
     }
 }

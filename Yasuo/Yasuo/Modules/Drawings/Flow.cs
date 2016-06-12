@@ -3,14 +3,14 @@
     using System;
     using System.Drawing;
 
-    using global::Yasuo.CommonEx.Classes;
+    using CommonEx.Classes;
     using global::Yasuo.Yasuo.LogicProvider;
 
     using LeagueSharp;
     using LeagueSharp.Common;
 
     // TODO: Draw on minimap & menu settings (min units left, line thinkess, only if enemies around, color)
-    internal class Flow : Child<Drawings>
+    internal class Flow : FeatureChild<Drawings>
     {
         #region Fields
 

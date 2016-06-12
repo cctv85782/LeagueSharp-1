@@ -11,6 +11,7 @@ namespace Yasuo.Yasuo.OrbwalkingModes.LaneClear
     using global::Yasuo.CommonEx.Extensions;
     using global::Yasuo.CommonEx.Menu;
     using global::Yasuo.CommonEx.Menu.Presets;
+    using global::Yasuo.CommonEx.Utility;
     using global::Yasuo.Yasuo.LogicProvider;
     using global::Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.LaneClear;
 
@@ -19,7 +20,7 @@ namespace Yasuo.Yasuo.OrbwalkingModes.LaneClear
 
     using Dash = global::Yasuo.CommonEx.Objects.Dash;
 
-    internal class SweepingBlade : Child<LaneClear>
+    internal class SweepingBlade : FeatureChild<LaneClear>
     {
         #region Fields
 

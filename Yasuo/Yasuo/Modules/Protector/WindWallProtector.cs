@@ -7,6 +7,7 @@
     using global::Yasuo.CommonEx.Classes;
     using global::Yasuo.CommonEx.Extensions;
     using global::Yasuo.CommonEx.Objects;
+    using global::Yasuo.CommonEx.Utility;
     using global::Yasuo.Yasuo.LogicProvider;
 
     using LeagueSharp;
@@ -18,7 +19,7 @@
     using Color = System.Drawing.Color;
 
     // TODO
-    internal class WindWallProtector : Child<Protector>
+    internal class WindWallProtector : FeatureChild<Protector>
     {
         public WindWallProtector(Protector parent)
             : base(parent)

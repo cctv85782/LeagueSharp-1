@@ -8,6 +8,7 @@
 
     using global::Yasuo.CommonEx;
     using global::Yasuo.CommonEx.Classes;
+    using global::Yasuo.CommonEx.Utility;
     using global::Yasuo.Yasuo.LogicProvider;
 
     using LeagueSharp;
@@ -17,7 +18,7 @@
 
     #endregion
 
-    internal class Eq : Child<Mixed>
+    internal class Eq : FeatureChild<Mixed>
     {
         #region Fields
 

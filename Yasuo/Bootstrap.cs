@@ -4,7 +4,8 @@
 
     using System;
 
-    using global::Yasuo.CommonEx.Classes;
+    using global::Yasuo.Base;
+    using CommonEx.Classes;
     using global::Yasuo.Yasuo;
 
     using LeagueSharp.Common;
@@ -47,7 +48,7 @@
                                 }
                             }
 
-                            GlobalVariables.Assembly = new Assembly(new DefaultChampion());
+                            GlobalVariables.Assembly = new Assembly(new BaseChampion());
                         }
                     };
             }

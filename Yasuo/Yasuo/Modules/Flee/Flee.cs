@@ -2,7 +2,7 @@
 {
     using CommonEx.Classes;
 
-    internal class Flee : Parent
+    internal class Flee : FeatureParent
     {
         public override string Name => "Dash to Mouse";
     }

@@ -1,10 +1,11 @@
 ﻿namespace Yasuo.Yasuo.OrbwalkingModes.LaneClear
 {
+    #region Using Directives
+
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    using global::Yasuo.CommonEx;
     using global::Yasuo.CommonEx.Classes;
     using global::Yasuo.CommonEx.Extensions;
     using global::Yasuo.CommonEx.Menu;
@@ -17,7 +18,13 @@
 
     using SharpDX;
 
-    internal class SteelTempest : Child<LaneClear>
+    using Cache = SebbyLib.Cache;
+    using HealthPrediction = SebbyLib.HealthPrediction;
+    using Math = global::Yasuo.CommonEx.Utility.Math;
+
+    #endregion
+
+    internal class SteelTempest : FeatureChild<LaneClear>
     {
         #region Fields
 
@@ -25,11 +32,6 @@
         ///     The minions
         /// </summary>
         protected List<Obj_AI_Base> Units = new List<Obj_AI_Base>();
-
-        /// <summary>
-        ///     The E logicprovider
-        /// </summary>
-        private SweepingBladeLogicProvider providerE;
 
         /// <summary>
         ///     The Q logicprovider
@@ -85,6 +87,8 @@
             this.LogicMassClear();
 
             this.LogicSingleClear();
+
+            this.LogicSpecialCaseEpics();
         }
 
         #endregion
@@ -115,7 +119,6 @@
         protected override void OnInitialize()
         {
             this.providerQ = new SteelTempestLogicProvider();
-            this.providerE = new SweepingBladeLogicProvider();
 
             base.OnInitialize();
         }
@@ -127,11 +130,9 @@
         {
             this.Menu = new Menu(this.Name, this.Name);
 
-
             var menuGenerator = new MenuGenerator(new SteelTempestMenu(this.Menu));
 
             menuGenerator.Generate();
-
 
             this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
 
@@ -147,6 +148,17 @@
             if (!position.IsValid()) return;
 
             GlobalVariables.CastManager.Queque.Enqueue(4, () => GlobalVariables.Spells[SpellSlot.Q].Cast(position));
+        }
+
+        /// <summary>
+        ///     Gets the minions.
+        /// </summary>
+        private void GetMinions()
+        {
+            this.Units = Cache.GetMinions(
+                GlobalVariables.Player.ServerPosition,
+                GlobalVariables.Spells[SpellSlot.Q].Range,
+                MinionTeam.NotAlly);
         }
 
         // TODO: Player path based mode
@@ -173,13 +185,12 @@
 
             if (this.Menu.Item(this.Name + "CenterCheck").GetValue<bool>())
             {
-                if (GlobalVariables.Player.Distance(Helper.GetMeanVector2(this.Units)) >= 450
-                || this.Units.Where(x => !x.InAutoAttackRange()).ToList().Count <= farmlocation.MinionsHit
-                || this.providerQ.BuffTime() <= 50)
+                if (GlobalVariables.Player.Distance(Math.GetMeanVector2(this.Units)) >= 450
+                    || this.Units.Where(x => !x.InAutoAttackRange()).ToList().Count <= farmlocation.MinionsHit
+                    || this.providerQ.BuffTime() <= 50)
                 {
                     Execute(farmlocation.Position.To3D());
                 }
-
             }
             else
             {
@@ -190,16 +201,19 @@
         private void LogicSingleClear()
         {
             if (GlobalVariables.Player.IsWindingUp || GlobalVariables.Player.Spellbook.IsCharging
-                || GlobalVariables.Player.Spellbook.IsChanneling || !this.Units.Any()
-                || this.providerQ.HasQ3())
+                || GlobalVariables.Player.Spellbook.IsChanneling || !this.Units.Any() || this.providerQ.HasQ3())
             {
                 return;
             }
 
-            var farmlocation = MinionManager.GetBestLineFarmLocation(
-                this.Units.Where(x => x.Health - this.providerQ.GetDamage(x) > 10).ToList().ToVector3S().To2D(),
-                GlobalVariables.Spells[SpellSlot.Q].Width,
-                GlobalVariables.Spells[SpellSlot.Q].Range);
+            var farmlocation =
+                MinionManager.GetBestLineFarmLocation(
+                    this.Units.Where(
+                        x =>
+                        HealthPrediction.GetHealthPrediction(x, (int)this.providerQ.TravelTime(x))
+                        - this.providerQ.GetDamage(x) > 10).ToList().ToVector3S().To2D(),
+                    GlobalVariables.Spells[SpellSlot.Q].Width,
+                    GlobalVariables.Spells[SpellSlot.Q].Range);
 
             if (farmlocation.MinionsHit > 0)
             {
@@ -207,19 +221,37 @@
             }
         }
 
-        /// <summary>
-        ///     Gets the minions.
-        /// </summary>
-        private void GetMinions()
+        private void LogicSpecialCaseEpics()
         {
-            this.Units = SebbyLib.Cache.GetMinions(
-                GlobalVariables.Player.ServerPosition,
-                GlobalVariables.Spells[SpellSlot.Q].Range,
-                MinionTeam.NotAlly);
+            if (GlobalVariables.Player.IsWindingUp || GlobalVariables.Player.Spellbook.IsCharging
+                || GlobalVariables.Player.Spellbook.IsChanneling || !this.Units.Any())
+            {
+                return;
+            }
+
+            Obj_AI_Minion unit = null;
+
+            foreach (var entry in this.Units)
+            {
+                if (entry.Name.ToLower().Contains("dragon")
+                    || entry.Name.ToLower().Contains("baron"))
+                {
+                    unit = (Obj_AI_Minion)entry;
+                }
+            }
+
+            if (unit == null) return;
+
+            GlobalVariables.CastManager.ForceAction(
+                () =>
+                    {
+                        GlobalVariables.Spells[SpellSlot.Q].Cast(unit.ServerPosition);
+                    });
+            
         }
 
         /// <summary>
-        /// Resets some fields
+        ///     Resets some fields
         /// </summary>
         private void SoftReset()
         {

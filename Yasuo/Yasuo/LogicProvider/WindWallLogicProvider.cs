@@ -2,7 +2,7 @@ namespace Yasuo.Yasuo.LogicProvider
 {
     using System.Collections.Generic;
 
-    using global::Yasuo.CommonEx.Extensions;
+    using CommonEx.Extensions;
 
     using LeagueSharp;
     using LeagueSharp.Common;
