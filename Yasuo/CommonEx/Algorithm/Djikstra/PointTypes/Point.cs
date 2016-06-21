@@ -1,4 +1,4 @@
-﻿namespace Yasuo.CommonEx.Algorithm.Djikstra
+﻿namespace Yasuo.CommonEx.Algorithm.Djikstra.PointTypes
 {
     using LeagueSharp.Common;
 
@@ -6,7 +6,7 @@
 
     using Color = System.Drawing.Color;
 
-    public class Point
+    public class Point : PointBase
     {
         #region Constructors and Destructors
 
@@ -25,8 +25,7 @@
         ///     Empty Constructor
         /// </summary>
         public Point()
-        {
-        }
+        { }
 
         #endregion
 
@@ -35,7 +34,7 @@
         /// <summary>
         ///     Position of the point
         /// </summary>
-        public Vector3 Position { get; set; }
+        public sealed override Vector3 Position { get; set; }
 
         #endregion
 

@@ -59,7 +59,7 @@
                 GlobalVariables.Spells[SpellSlot.Q].SetSkillshot(
                     GlobalVariables.providerQ.GetQDelay,
                     this.Menu.Item(this.Name + "QE.Width").GetValue<Slider>().Value,
-                    this.Menu.Item(this.Name + "QE.Speed").GetValue<Slider>().Value,
+                    this.Menu.Item(this.Name + "QE.Costs").GetValue<Slider>().Value,
                     false,
                     SkillshotType.SkillshotCircle);
                 GlobalVariables.Spells[SpellSlot.Q].Range =
@@ -73,7 +73,7 @@
                     GlobalVariables.Spells[SpellSlot.Q].SetSkillshot(
                         GlobalVariables.providerQ.GetQDelay,
                         this.Menu.Item(this.Name + "Q3.Width").GetValue<Slider>().Value,
-                        this.Menu.Item(this.Name + "Q3.Speed").GetValue<Slider>().Value,
+                        this.Menu.Item(this.Name + "Q3.Costs").GetValue<Slider>().Value,
                         false,
                         SkillshotType.SkillshotLine);
                     GlobalVariables.Spells[SpellSlot.Q].Range =
@@ -85,7 +85,7 @@
                     GlobalVariables.Spells[SpellSlot.Q].SetSkillshot(
                         GlobalVariables.providerQ.GetQDelay,
                         this.Menu.Item(this.Name + "Q.Width").GetValue<Slider>().Value,
-                        this.Menu.Item(this.Name + "Q.Speed").GetValue<Slider>().Value,
+                        this.Menu.Item(this.Name + "Q.Costs").GetValue<Slider>().Value,
                         false,
                         SkillshotType.SkillshotLine);
                     GlobalVariables.Spells[SpellSlot.Q].Range =
@@ -99,13 +99,13 @@
                 this.Menu.Item(this.Name + "W.BaseWidth").GetValue<Slider>().Value
                 + (GlobalVariables.Spells[SpellSlot.W].Level
                    * this.Menu.Item(this.Name + "W.Width").GetValue<Slider>().Value),
-                this.Menu.Item(this.Name + "W.Speed").GetValue<Slider>().Value,
+                this.Menu.Item(this.Name + "W.Costs").GetValue<Slider>().Value,
                 false,
                 SkillshotType.SkillshotCone);
             GlobalVariables.Spells[SpellSlot.W].Range = this.Menu.Item(this.Name + "W.Range").GetValue<Slider>().Value;
 
             GlobalVariables.Spells[SpellSlot.E].SetTargetted(0, 1025);
-            GlobalVariables.Spells[SpellSlot.E].Speed = this.Menu.Item(this.Name + "E.Speed").GetValue<Slider>().Value;
+            GlobalVariables.Spells[SpellSlot.E].Speed = this.Menu.Item(this.Name + "E.Costs").GetValue<Slider>().Value;
             GlobalVariables.Spells[SpellSlot.E].Range = this.Menu.Item(this.Name + "E.Range").GetValue<Slider>().Value;
 
             GlobalVariables.Spells[SpellSlot.R].SetTargetted(0, float.MaxValue);
@@ -150,7 +150,7 @@
                 new MenuItem(this.Name + "Q.Width", "Q (Non-Stacked) Width: ").SetValue(new Slider(20, 0, 2000)));
 
             this.Menu.AddItem(
-                new MenuItem(this.Name + "Q.Speed", "Q (Non-Stacked) Speed: ").SetValue(new Slider(10000, 0, 10000)));
+                new MenuItem(this.Name + "Q.Costs", "Q (Non-Stacked) Costs: ").SetValue(new Slider(10000, 0, 10000)));
 
             this.Menu.AddItem(
                 new MenuItem(this.Name + "Q3.Range", "Q (Stacked) Range: ").SetValue(new Slider(950, 0, 2000)));
@@ -159,14 +159,14 @@
                 new MenuItem(this.Name + "Q3.Width", "Q (Stacked) Width: ").SetValue(new Slider(90, 0, 2000)));
 
             this.Menu.AddItem(
-                new MenuItem(this.Name + "Q3.Speed", "Q (Stacked) Speed: ").SetValue(new Slider(1250, 0, 2000)));
+                new MenuItem(this.Name + "Q3.Costs", "Q (Stacked) Costs: ").SetValue(new Slider(1250, 0, 2000)));
 
             this.Menu.AddItem(new MenuItem(this.Name + "QE.Range", "Q (E) Range: ").SetValue(new Slider(0, 0, 2000)));
 
             this.Menu.AddItem(new MenuItem(this.Name + "QE.Width", "Q (E) Width: ").SetValue(new Slider(350, 0, 2000)));
 
             this.Menu.AddItem(
-                new MenuItem(this.Name + "QE.Speed", "Q (E) Speed: ").SetValue(new Slider(5000, 0, 10000)));
+                new MenuItem(this.Name + "QE.Costs", "Q (E) Costs: ").SetValue(new Slider(5000, 0, 10000)));
 
             this.Menu.AddItem(new MenuItem(this.Name + "W.Range", "W Range: ").SetValue(new Slider(0, 0, 2000)));
 
@@ -176,11 +176,11 @@
             this.Menu.AddItem(
                 new MenuItem(this.Name + "W.Width", "W (Per Level) Width: ").SetValue(new Slider(50, 0, 2000)));
 
-            this.Menu.AddItem(new MenuItem(this.Name + "W.Speed", "W Speed: ").SetValue(new Slider(400, 0, 10000)));
+            this.Menu.AddItem(new MenuItem(this.Name + "W.Costs", "W Costs: ").SetValue(new Slider(400, 0, 10000)));
 
             this.Menu.AddItem(new MenuItem(this.Name + "E.Range", "E Range: ").SetValue(new Slider(475, 0, 2000)));
 
-            this.Menu.AddItem(new MenuItem(this.Name + "E.Speed", "E Speed: ").SetValue(new Slider(1025, 0, 10000)));
+            this.Menu.AddItem(new MenuItem(this.Name + "E.Costs", "E Costs: ").SetValue(new Slider(1025, 0, 10000)));
 
             this.Menu.AddItem(new MenuItem(this.Name + "R.Range", "R Range: ").SetValue(new Slider(900, 0, 2000)));
 

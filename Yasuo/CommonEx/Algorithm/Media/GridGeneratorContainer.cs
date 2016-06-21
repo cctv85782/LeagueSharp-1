@@ -2,23 +2,26 @@
 {
     #region Using Directives
 
-    using global::Yasuo.CommonEx.Algorithm.Djikstra;
+    using Djikstra;
+
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.ConnectionTypes;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.PointTypes;
 
     #endregion
 
-    internal class GridGeneratorContainer
+    internal class GridGeneratorContainer<T, TV> where TV : ConnectionBase<T> where T : PointBase
     {
         #region Fields
 
         /// <summary>
         ///     The grid
         /// </summary>
-        internal Grid Grid;
+        internal Grid<T, ConnectionBase<T>> Grid;
 
         /// <summary>
         ///     The implementation
         /// </summary>
-        internal IGridGenerator Implementation;
+        internal IGridGenerator<T, TV> Implementation;
 
         #endregion
 
@@ -28,7 +31,7 @@
         ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
         /// </summary>
         /// <param name="implementation">The implementation.</param>
-        public GridGeneratorContainer(IGridGenerator implementation)
+        public GridGeneratorContainer(IGridGenerator<T, TV> implementation)
         {
             this.Implementation = implementation;
         }

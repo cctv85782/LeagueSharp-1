@@ -81,7 +81,7 @@
 
             this.DrawingMenu.AddItem(
                 new MenuItem(this.Menu.Name + "Enabled", "Enabled").SetValue(true)
-                    .SetTooltip("The assembly will Draw the expected path to the enemy"));
+                    .SetTooltip("The assembly will Draw the expected PathBase to the enemy"));
 
             this.DrawingMenu.AddItem(
                 new MenuItem(this.Menu.Name + "SmartDrawings", "Smart Drawings").SetValue(true)

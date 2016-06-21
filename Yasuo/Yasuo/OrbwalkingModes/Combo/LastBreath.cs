@@ -206,7 +206,7 @@
         /// <param name="execution">The execution.</param>
         private void Execute(CommonEx.Objects.LastBreath execution)
         {
-            if (this.provider.ShouldCastNow(execution, SweepingBlade.PathCopy))
+            if (this.provider.ShouldCastNow(execution, SweepingBlade.PathBaseCopy))
             {
                 GlobalVariables.CastManager.Queque.Enqueue(1,
                     () => GlobalVariables.Spells[SpellSlot.R].CastOnUnit(execution.Target));

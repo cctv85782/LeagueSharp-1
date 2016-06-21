@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F02DE14B-9A69-4A2B-85BA-640D939B44CE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RethoughtLib</RootNamespace>
+    <AssemblyName>RethoughtLib</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="LeagueSharp">
+      <HintPath>..\..\..\..\Program Files (x86)\LeagueSharp\System\LeagueSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="LeagueSharp.Common">
+      <HintPath>..\..\..\..\Program Files (x86)\LeagueSharp\System\LeagueSharp.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX">
+      <HintPath>..\..\..\..\Program Files (x86)\LeagueSharp\System\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Algorithm\Djikstra\ConnectionTypes\AutoVector2Connection.cs" />
+    <Compile Include="Algorithm\Djikstra\ConnectionTypes\AutoVector3Connection.cs" />
+    <Compile Include="Algorithm\Djikstra\ConnectionTypes\Connection.cs" />
+    <Compile Include="Algorithm\Djikstra\ConnectionTypes\FuncConnection.cs" />
+    <Compile Include="Algorithm\Djikstra\ConnectionTypes\SimpleConnection.cs" />
+    <Compile Include="Algorithm\Djikstra\Djikstra.cs" />
+    <Compile Include="Algorithm\Djikstra\DjikstraTest.cs" />
+    <Compile Include="Algorithm\Djikstra\PathTypes\PathBaseClass.cs" />
+    <Compile Include="CastManager\CastManager.cs" />
+    <Compile Include="GlobalVariables.cs" />
+    <Compile Include="Classes\Feature\FeatureBase.cs" />
+    <Compile Include="Classes\Feature\FeatureChild.cs" />
+    <Compile Include="Classes\Feature\FeatureParent.cs" />
+    <Compile Include="Classes\Feature\IFeatureChild.cs" />
+    <Compile Include="Classes\Feature\Template.cs" />
+    <Compile Include="Exceptions\Exceptions.cs" />
+    <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="LogicProvider\PotionLogicProvider.cs" />
+    <Compile Include="LogicProvider\TurretLogicProvider.cs" />
+    <Compile Include="LogicProvider\WallDashLogicProvider.cs" />
+    <Compile Include="Menu\Interfaces\IMenuPreset.cs" />
+    <Compile Include="Menu\Interfaces\ITranslation.cs" />
+    <Compile Include="Menu\MenuExtensions.cs" />
+    <Compile Include="Menu\MenuGenerator.cs" />
+    <Compile Include="Menu\MenuTranslator.cs" />
+    <Compile Include="Menu\Presets\BlacklistMenu.cs" />
+    <Compile Include="Menu\Presets\ChampionSliderMenu.cs" />
+    <Compile Include="Menu\Presets\DynamicMenu.cs" />
+    <Compile Include="Menu\Presets\WhitelistMenu.cs" />
+    <Compile Include="PriorityQuequeV2\PriorityQueque.cs" />
+    <Compile Include="PriorityQueque\DefaultPriorityQueque.cs" />
+    <Compile Include="PriorityQueque\IPriorityQueque.cs" />
+    <Compile Include="PriorityQueque\PriorityQuequeItem.cs" />
+    <Compile Include="PriorityQueque\PriorityQueue.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Utility\Events.cs" />
+    <Compile Include="Utility\Logger.cs" />
+    <Compile Include="Utility\Math.cs" />
+    <Compile Include="Utility\VersionChecker.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

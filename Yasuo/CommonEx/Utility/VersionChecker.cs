@@ -28,7 +28,7 @@
         public bool UpdateAvailable ;
 
         /// <summary>
-        ///     The git hub path
+        ///     The git hub PathBase
         /// </summary>
         private readonly string gitHubPath;
 
@@ -39,7 +39,7 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="VersionChecker" /> class.
         /// </summary>
-        /// <param name="gitHubPath">The git hub path.</param>
+        /// <param name="gitHubPath">The git hub PathBase.</param>
         public VersionChecker(string gitHubPath)
         {
             this.gitHubPath = gitHubPath;
@@ -52,7 +52,7 @@
         /// <summary>
         ///     Checks the new version.
         /// </summary>
-        /// <param name="path">The path.</param>
+        /// <param name="path">The PathBase.</param>
         public void CheckNewVersion(string path)
         {
             try

@@ -102,7 +102,7 @@
             base.OnInitialize();
         }
 
-        // TODO: Look at Menu (Stacking???)
+        // TODO: Add Settings
         /// <summary>
         ///     Called when [load].
         /// </summary>

@@ -127,7 +127,7 @@ namespace Yasuo.CommonEx.Utility
         }
 
         /// <summary>
-        ///     Returns Missile Speed based on Spell Name
+        ///     Returns Missile Costs based on Spell Name
         /// </summary>
         /// <param name="spellName"></param>
         /// <returns>float</returns>

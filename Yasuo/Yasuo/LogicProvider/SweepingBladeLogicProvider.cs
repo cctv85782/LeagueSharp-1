@@ -5,8 +5,11 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
 
     using global::Yasuo.CommonEx.Algorithm.Djikstra;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.ConnectionTypes;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.PathTypes;
     using global::Yasuo.CommonEx.Algorithm.Media;
     using global::Yasuo.CommonEx.Objects;
 
@@ -18,6 +21,7 @@
     using SharpDX;
 
     using Color = System.Drawing.Color;
+    using Point = global::Yasuo.CommonEx.Algorithm.Djikstra.PointTypes.Point;
 
     #endregion
 
@@ -35,13 +39,13 @@
         /// <summary>
         ///     The current connections
         /// </summary>
-        public List<Connection> CurrentConnections = new List<Connection>();
+        public List<ConnectionBase<Point>> CurrentConnections = new List<ConnectionBase<Point>>();
 
         /// <summary>
         ///     The current points
         /// </summary>
-        public List<CommonEx.Algorithm.Djikstra.Point> CurrentPoints =
-            new List<CommonEx.Algorithm.Djikstra.Point>();
+        public List<Point> CurrentPoints =
+            new List<Point>();
 
         /// <summary>
         ///     The grid generator
@@ -180,14 +184,14 @@
         }
 
         /// <summary>
-        ///     Returns a path object that represents the shortest possible path to a given location
+        ///     Returns a PathBase object that represents the shortest possible Path to a given location
         /// </summary>
         /// <param name="endPosition">The vector to dash to</param>
         /// <param name="minions">dash over minions</param>
         /// <param name="champions">dash over champions</param>
         /// <param name="aroundSkillshots">dash around skillshots</param>
         // ReSharper disable once FunctionComplexityOverflow
-        public Path GetPath(
+        public YasuoPath<Point, ConnectionBase<Point>> GetPath(
             Vector3 endPosition,
             bool minions = true,
             bool champions = true,
@@ -199,7 +203,7 @@
 
                 if (GlobalVariables.Debug)
                 {
-                    Console.WriteLine(@"[SweepingBladeLP] Getpath > Calculating Shortest Path");
+                    Console.WriteLine(@"[SweepingBladeLP] Getpath > Calculating Shortest PathBase");
                 }
 
                 if (this.GridGenerator.Grid == null || this.GridGenerator.Grid.Connections.Count == 0)
@@ -213,11 +217,11 @@
                 }
 
                 // Inputing the grid
-                var calculator = new Dijkstra(this.GridGenerator.Grid);
+                var calculator = new Dijkstra<Point, ConnectionBase<Point>>(this.GridGenerator.Grid.Points, this.GridGenerator.Grid.Connections);
 
                 calculator.SetStart(this.GridGenerator.Grid.BasePoint);
 
-                // Set end point and return result as path
+                // Set end point and return result as PathBase
                 var points = calculator.GetPointsTo(this.GridGenerator.Grid.EndPoint);
                 this.CurrentPoints = points;
 
@@ -231,7 +235,7 @@
                 // Solution: Make Djikstra Algorithm Generic and return T (connection) instead of points
                 #region Converter (Temp-Solution / Brosciene ftw)
 
-                var connections = new List<Connection>();
+                var connections = new List<ConnectionBase<Point>>();
 
                 for (var i = 0; i < points.Count - 1; i++)
                 {
@@ -253,7 +257,7 @@
 
                 if (this.CurrentConnections.Count > 0)
                 {
-                    return new Path(this.CurrentConnections);
+                    return new YasuoPath<Point, ConnectionBase<Point>>(this.CurrentConnections);
                 }
 
                 return null;
@@ -335,17 +339,17 @@
 
                 if (this.CurrentConnections != null)
                 {
-                    foreach (var connection in this.CurrentConnections)
+                    foreach (var connection in this.CurrentConnections.OfType<YasuoDashConnection>())
                     {
-                        if (connection.Unit != null)
-                        {
-                            connection.Draw(true, 3, Color.Red);
-                        }
+                        //if (connection.Unit != null)
+                        //{
+                        //    connection.Draw(true, 3, Color.Red);
+                        //}
 
-                        if (connection.Unit == null)
-                        {
-                            connection.Draw(true, 3, Color.Green);
-                        }
+                        //if (connection.Unit == null)
+                        //{
+                        //    connection.Draw(true, 3, Color.Green);
+                        //}
                     }
                 }
 

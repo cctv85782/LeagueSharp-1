@@ -7,25 +7,21 @@
     using System.Linq;
 
     using global::Yasuo.CommonEx.Algorithm.Djikstra;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.ConnectionTypes;
+    using global::Yasuo.CommonEx.Objects;
 
     using LeagueSharp;
-    using LeagueSharp.Common;
-    using LeagueSharp.Data.Enumerations;
     using LeagueSharp.SDK;
 
     using SharpDX;
 
     using Geometry = LeagueSharp.Common.Geometry;
-    using SpellType = LeagueSharp.SDK.SpellType;
+    using Point = global::Yasuo.CommonEx.Algorithm.Djikstra.PointTypes.Point;
 
     #endregion
 
-    // TODO: PRIORITY LOW > Adding offset, different dash types - to make the logic behind this usable for every other dash in the game too
-    // TODO: PRIORITY LOW > Making GridGenerator universal
-    // TODO: Add HealthPredictions on Minions/Units
-
     /// <summary>
-    ///     Class to generate grids considering DashRange, DashType, UnitType
+    ///     Class to generate grids
     /// </summary>
     public class GridGenerator
     {
@@ -34,13 +30,16 @@
         /// <summary>
         ///     The base point (where everything starts, most likely the Player Position)
         /// </summary>
-        public Djikstra.Point BasePoint =
-            new Djikstra.Point(GlobalVariables.Player.ServerPosition);
+        public Point BasePoint =
+            new Point(GlobalVariables.Player.ServerPosition);
 
         /// <summary>
         ///     The grid
         /// </summary>
-        public Grid Grid;
+        public
+            Grid
+                <Point,
+                    ConnectionBase<Point>> Grid;
 
         /// <summary>
         ///     The maximum connections
@@ -48,20 +47,21 @@
         private int maxConnections = 50000;
 
         /// <summary>
-        ///     The path deepness
+        ///     The PathBase deepness
         /// </summary>
         private int pathDeepness = 5;
 
         /// <summary>
         ///     The shared connections
         /// </summary>
-        private List<Connection> sharedConnections = new List<Connection>();
+        private List<ConnectionBase<Point>> sharedConnections =
+            new List<ConnectionBase<Point>>();
 
         /// <summary>
         ///     The shared points
         /// </summary>
-        private List<Djikstra.Point> sharedPoints =
-            new List<Djikstra.Point>();
+        private List<Point> sharedPoints =
+            new List<Point>();
 
         #endregion
 
@@ -82,7 +82,7 @@
             }
 
             this.EndPosition = endPosition;
-            this.EndPoint = new Djikstra.Point(this.EndPosition);
+            this.EndPoint = new Point(this.EndPosition);
         }
 
         #endregion
@@ -95,7 +95,7 @@
         /// <value>
         ///     The end point.
         /// </value>
-        public Djikstra.Point EndPoint { get; }
+        public Point EndPoint { get; }
 
         /// <summary>
         ///     Gets or sets the end position.
@@ -131,10 +131,10 @@
         }
 
         /// <summary>
-        ///     Gets or sets the path deepness.
+        ///     Gets or sets the PathBase deepness.
         /// </summary>
         /// <value>
-        ///     The path deepness.
+        ///     The PathBase deepness.
         /// </value>
         internal int PathDeepness
         {
@@ -175,29 +175,31 @@
                     Console.WriteLine(@"GridGenerator.Cs > ConnectAllPoints()");
                 }
 
-                foreach (var x in this.Grid.Connections.Where(x => x.IsDash).ToList())
+                // foreach dash
+                foreach (var x in
+                    this.Grid.Connections.Where(x => x is YasuoDashConnection).ToList())
                 {
-                    var path = GlobalVariables.Player.GetPath(x.To.Position, this.EndPosition);
+                    var path = GlobalVariables.Player.GetPath(x.End.Position, this.EndPosition);
 
-                    var firstpoint = x.To;
+                    var firstpoint = x.End;
 
                     for (var i = 0; i < path.Count() - 1; i++)
                     {
-                        var start = new Djikstra.Point(path[i]);
+                        var start = new Point(path[i]);
 
                         if (i == 0)
                         {
                             start = firstpoint;
                         }
 
-                        var end = new Djikstra.Point(path[i + 1]);
+                        var end = new Point(path[i + 1]);
 
                         if (i == path.Count() - 2)
                         {
                             end = this.EndPoint;
                         }
 
-                        var connection = new Connection(start, end);
+                        var connection = new WalkConnection(start, end);
 
                         if (!this.Grid.Connections.Contains(connection))
                         {
@@ -233,9 +235,9 @@
                         x => Geometry.Distance(x, this.BasePoint.Position) <= GlobalVariables.Spells[SpellSlot.E].Range)
                     )
                 {
-                    var pointToAdd = new Djikstra.Point(new Objects.Dash(GlobalVariables.Player.ServerPosition, unit).EndPosition);
+                    var pointToAdd = new Point(new Dash(GlobalVariables.Player.ServerPosition, unit).EndPosition);
                     this.sharedPoints.Add(pointToAdd);
-                    this.sharedConnections.Add(new Connection(this.BasePoint, pointToAdd, unit));
+                    this.sharedConnections.Add(new YasuoDashConnection(this.BasePoint, pointToAdd, unit));
                 }
 
                 // Connecting StartPoint to EndPoint
@@ -245,21 +247,21 @@
                 {
                     for (var i = 0; i < path2.Count() - 1; i++)
                     {
-                        var start = new Djikstra.Point(path2[i]);
+                        var start = new Point(path2[i]);
 
                         if (i == 0)
                         {
                             start = this.BasePoint;
                         }
 
-                        var end = new Djikstra.Point(path2[i + 1]);
+                        var end = new Point(path2[i + 1]);
 
                         if (i == path2.Count() - 2)
                         {
                             end = this.EndPoint;
                         }
 
-                        var connection = new Connection(start, end);
+                        var connection = new WalkConnection(start, end);
 
                         if (!this.sharedConnections.Contains(connection))
                         {
@@ -269,7 +271,11 @@
                 }
                 else
                 {
-                    this.sharedConnections.Add(new Connection(this.BasePoint, this.EndPoint));
+                    this.sharedConnections.Add(
+                        new SimpleConnection<Point>(
+                            this.BasePoint,
+                            this.EndPoint,
+                            this.BasePoint.Position.Distance(this.EndPoint.Position) / GlobalVariables.Player.MoveSpeed));
                 }
 
                 // Starts generating possible pathes
@@ -310,7 +316,10 @@
 
                 this.sharedPoints.Add(this.EndPoint);
 
-                this.Grid = new Grid(this.sharedConnections, this.BasePoint, this.EndPoint);
+                this.Grid = new Grid<Point, ConnectionBase<Point>>(
+                    this.sharedConnections,
+                    this.BasePoint,
+                    this.EndPoint);
             }
             catch (Exception ex)
             {
@@ -330,7 +339,7 @@
                 Console.WriteLine(@"GridGenerator.Cs > RemoveDisconnectedConnections()");
             }
 
-            var toBeRemoved = new List<Connection>();
+            var toBeRemoved = new List<ConnectionBase<Point>>();
 
             var connections = this.Grid?.Connections;
 
@@ -338,14 +347,14 @@
             {
                 foreach (var connection in connections.ToList())
                 {
-                    var backtracedPath = this.Backtrace(connection.From);
+                    var backtracedPath = this.Backtrace(connection.Start);
 
                     if (backtracedPath == null)
                     {
                         return;
                     }
 
-                    var all = backtracedPath.All(x => x.From != this.Grid.BasePoint);
+                    var all = backtracedPath.All(x => x.Start != this.Grid.BasePoint);
 
                     if (all)
                     {
@@ -364,7 +373,7 @@
             //    Console.WriteLine(@"GridGenerator.Cs > RemoveDisconnectedConnections()");
             //}
 
-            //var toBeRemoved = new List<Connection>();
+            //var toBeRemoved = new List<YasuoConnection>();
 
             //var connections = this.Grid?.Connections;
 
@@ -374,7 +383,7 @@
             //    {
             //        connections.Remove(connection);
 
-            //        if (connections.Any(x => x.To == connection.From))
+            //        if (connections.Any(x => x.end == connection.start))
             //        {
             //            continue;
             //        }
@@ -394,7 +403,7 @@
             //{
             //    foreach (var connection in toBeRemoved.ToList())
             //    {
-            //        if (connections != null && connections.All(x => x.From != connection.To))
+            //        if (connections != null && connections.All(x => x.start != connection.end))
             //        {
             //            continue;
             //        }
@@ -417,7 +426,7 @@
             //            connectionsleft = false;
             //        }
 
-            //        if (connections != null && connections.All(x => x.From != t.To))
+            //        if (connections != null && connections.All(x => x.start != t.end))
             //        {
             //            count++;
             //        }
@@ -427,7 +436,7 @@
 
         // TODO PRIORITY: MEDIUM - LOW
         /// <summary>
-        ///     Removes every path that intersects with a skillshot
+        ///     Removes every PathBase that intersects with a skillshot
         /// </summary>
         public void RemovePathesThroughSkillshots(List<Skillshot> skillshots)
         {
@@ -485,17 +494,18 @@
                     //    }   
                     //}
 
-                    foreach (var connection in this.Grid.Connections.Where(x => x.IsDash))
+                    foreach (var connection in
+                        this.Grid.Connections.Where(x => x is YasuoDashConnection))
                     {
                         var clipperpath = skillshot.Value.ToClipperPath();
                         var connectionpolygon = new Geometry.Polygon.Line(
-                            connection.From.Position,
-                            connection.To.Position);
+                            connection.Start.Position,
+                            connection.End.Position);
                         var connectionclipperpath = connectionpolygon.ToClipperPath();
 
                         if (clipperpath.Intersect(connectionclipperpath).Any())
                         {
-                            Console.WriteLine(@"Removing Connection");
+                            Console.WriteLine(@"Removing YasuoConnection");
                             this.Grid?.Connections?.Remove(connection);
                         }
                     }
@@ -516,7 +526,7 @@
         /// <param name="from">the starting point</param>
         /// <param name="limit">limit of backtrace amount</param>
         /// <returns></returns>
-        private List<Obj_AI_Base> Backtrace(Djikstra.Point from, int limit)
+        private List<Obj_AI_Base> Backtrace(Point from, int limit)
         {
             try
             {
@@ -552,29 +562,29 @@
                         break;
                     }
 
-                    foreach (var x in this.sharedConnections.ToList())
+                    var dashConnection = this.sharedConnections.OfType<YasuoDashConnection>();
+
+                    foreach (var x in dashConnection)
                     {
-                        if (previousPoint.Position == x.To.Position)
-                        {
-                            //Console.WriteLine(@"[BT] Adding result");
-                            result.Add(x.Unit);
-                            previousPoint = x.From;
-                        }
+                        if (previousPoint.Position != x.End.Position) continue;
+
+                        //Console.WriteLine(@"[BT] Adding result");
+                        result.Add(x.Unit);
+                        previousPoint = x.Start;
                     }
 
-                    if (limiter == limit)
+                    if (limiter != limit) continue;
+
+                    #region Debug
+
+                    if (GlobalVariables.Debug)
                     {
-                        #region Debug
-
-                        if (GlobalVariables.Debug)
-                        {
-                            Console.WriteLine(@"[BT] FINISHED: Reached Limit");
-                        }
-
-                        #endregion
-
-                        break;
+                        Console.WriteLine(@"[BT] FINISHED: Reached Limit");
                     }
+
+                    #endregion
+
+                    break;
                 }
 
                 return result;
@@ -592,22 +602,22 @@
         /// </summary>
         /// <param name="from">the starting point</param>
         /// <returns></returns>
-        private List<Connection> Backtrace(Djikstra.Point from)
+        private List<ConnectionBase<Point>> Backtrace(Point from)
         {
             try
             {
-                var result = new List<Connection>();
+                var result = new List<ConnectionBase<Point>>();
 
                 // Thresholder
                 var previousPoint = from;
 
                 for (var i = 0; i < this.Grid.Connections.Count; i++)
                 {
-                    if (previousPoint.Position == this.Grid.Connections[i].To.Position)
+                    if (previousPoint.Position == this.Grid.Connections[i].End.Position)
                     {
                         //Console.WriteLine(@"[BT] Adding result");
                         result.Add(this.Grid.Connections[i]);
-                        previousPoint = this.Grid.Connections[i].From;
+                        previousPoint = this.Grid.Connections[i].Start;
                     }
 
                     if (1 == this.Grid.Connections.Count - 1)
@@ -630,7 +640,7 @@
         /// </summary>
         /// <param name="point"></param>
         /// <param name="blacklist"></param>
-        private void ProcessPoint(Djikstra.Point point, List<Obj_AI_Base> blacklist)
+        private void ProcessPoint(Point point, List<Obj_AI_Base> blacklist)
         {
             foreach (var unit in
                 this.Units.Where(
@@ -642,47 +652,42 @@
                     continue;
                 }
 
-                // Checking for wall
-                var dashObj = new Objects.Dash(point.Position, unit);
-
-                var endPoint = new Djikstra.Point(dashObj.EndPosition);
-
-                // Overriding Endpoint. Connection class does not contain any wallcheck. Dash class does.
-                var tempConnection = new Connection(point, endPoint, unit) { To = endPoint };
-
-                if (GlobalVariables.Debug)
-                {
-                    Console.WriteLine(@"Adding new Point to SharedPoints: " + endPoint.Position);
-                }
+                // Overriding Endpoint. YasuoConnection class does not contain any wallcheck. Dash class does.
+                var tempConnection = new YasuoDashConnection(
+                    point,
+                    new Point(point.Position.Extend(unit.ServerPosition, GlobalVariables.Spells[SpellSlot.E].Range)),
+                    unit);
 
                 this.sharedConnections.Add(tempConnection);
             }
         }
 
+        /*
         /// <summary>
         ///     Resets all objects to default.
         /// </summary>
         private void Reset()
         {
-            this.sharedConnections = new List<Connection>();
+            this.sharedConnections = new List<ConnectionBase<Djikstra.Point>>();
             this.sharedPoints = new List<Djikstra.Point>();
 
             this.Units = new List<Obj_AI_Base>();
-            this.Grid = new Grid(new List<Connection>(), null);
+            this.Grid = null;
 
             if (GlobalVariables.Debug)
             {
                 Console.WriteLine(@"[Reset] Reseted");
             }
         }
+*/
 
         /// <summary>
         ///     Resets everything to default but Units and Grids.
         /// </summary>
         private void SoftReset()
         {
-            this.sharedConnections = new List<Connection>();
-            this.sharedPoints = new List<Djikstra.Point>();
+            this.sharedConnections = new List<ConnectionBase<Point>>();
+            this.sharedPoints = new List<Point>();
 
             if (GlobalVariables.Debug)
             {

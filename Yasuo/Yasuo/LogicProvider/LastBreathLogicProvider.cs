@@ -7,6 +7,11 @@
     using CommonEx.Objects;
     using CommonEx.Utility;
 
+    using global::Yasuo.CommonEx.Algorithm.Djikstra;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.ConnectionTypes;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.PathTypes;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.PointTypes;
+
     using LeagueSharp;
     using LeagueSharp.Common;
 
@@ -86,10 +91,10 @@
         ///     Returns a bool that determines if it is a good time to use lastbreath or not
         /// </summary>
         /// <param name="execution">The current target</param>
-        /// <param name="path">The path to the target</param>
+        /// <param name="pathBase">The PathBase to the target</param>
         /// <param name="buffer">a time buffer</param>
         /// <returns></returns>
-        public bool ShouldCastNow(LastBreath execution, Path path = null, int buffer = 10)
+        public bool ShouldCastNow(LastBreath execution, YasuoPath<Point, ConnectionBase<Point>> pathBase = null, int buffer = 10)
         {
             if (execution == null)
             {
@@ -102,8 +107,8 @@
                 return true;
             }
 
-            // if no path is given
-            if (path == null)
+            // if no PathBase is given
+            if (pathBase == null)
             {
                 var playerpath = GlobalVariables.Player.GetPath(execution.Target.ServerPosition);
                 var playerpathtime = Math.GetPathLenght(playerpath) / GlobalVariables.Player.MoveSpeed;
@@ -121,10 +126,10 @@
                 }
             }
 
-            // if a path is given and the path time is shorter than the knockup time
+            // if a PathBase is given and the PathBase time is shorter than the knockup time
             else
             {
-                if (path.PathTime <= execution.MinRemainingAirboneTime + buffer + Game.Ping)
+                if (pathBase.PathCost <= execution.MinRemainingAirboneTime + buffer + Game.Ping)
                 {
                     return false;
                 }

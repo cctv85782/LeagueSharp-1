@@ -6,22 +6,23 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using CommonEx;
-    using CommonEx.Algorithm.Djikstra;
-    using CommonEx.Classes;
-    using CommonEx.Extensions;
-    using CommonEx.Menu;
-    using CommonEx.Menu.Presets;
-    using CommonEx.Objects;
-    using CommonEx.Objects.Pathfinding;
-    using CommonEx.Utility;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.ConnectionTypes;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.PathTypes;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.PointTypes;
+    using global::Yasuo.CommonEx.Classes;
+    using global::Yasuo.CommonEx.Extensions;
+    using global::Yasuo.CommonEx.Menu;
+    using global::Yasuo.CommonEx.Menu.Presets;
+    using global::Yasuo.CommonEx.Objects.Pathfinding;
+    using global::Yasuo.CommonEx.Utility;
     using global::Yasuo.Yasuo.LogicProvider;
     using global::Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.Combo;
 
     using LeagueSharp;
     using LeagueSharp.Common;
 
-    using Dash = CommonEx.Objects.Dash;
+    using Dash = global::Yasuo.CommonEx.Objects.Dash;
     using Math = global::Yasuo.CommonEx.Utility.Math;
 
     #endregion
@@ -31,9 +32,9 @@
         #region Static Fields
 
         /// <summary>
-        ///     The path copy
+        ///     The PathBase copy
         /// </summary>
-        internal static Path PathCopy;
+        internal static YasuoPath<Point, ConnectionBase<Point>> PathBaseCopy;
 
         #endregion
 
@@ -50,11 +51,19 @@
         public BlacklistMenu BlacklistMenu;
 
         /// <summary>
-        ///     The path
+        ///     The PathBase
         /// </summary>
-        internal Path Path;
+        internal YasuoPath<Point, ConnectionBase<Point>> PathBase;
 
-        internal PathfindingContainer Pathfinder;
+        /// <summary>
+        ///     The pathfinder
+        /// </summary>
+        internal PathfindingContainer<Point, ConnectionBase<Point>, YasuoPath<Point, ConnectionBase<Point>>> Pathfinder;
+
+        /// <summary>
+        ///     The targets
+        /// </summary>
+        protected List<Obj_AI_Hero> Targets;
 
         /// <summary>
         ///     The provider e
@@ -65,11 +74,6 @@
         ///     The provider turret
         /// </summary>
         private TurretLogicProvider providerTurret;
-
-        /// <summary>
-        /// The targets
-        /// </summary>
-        protected List<Obj_AI_Hero> Targets; 
 
         #endregion
 
@@ -96,121 +100,6 @@
         ///     The name.
         /// </value>
         public override string Name => "(E) Sweeping Blade";
-
-        #endregion
-
-        #region Public Methods and Operators
-
-        /// <summary>
-        ///     Raises the <see cref="E:Draw" /> event.
-        /// </summary>
-        /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
-        private void OnDraw(EventArgs args)
-        {
-            if (GlobalVariables.Player.IsDead || GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo)
-            {
-                return;
-            }
-
-            //if (this.Path != null && this.Path.Connections.Count > 0)
-            //{
-            //    var drawingMenu = this.Menu.SubMenu(this.Name + "Drawings");
-
-            //    if (drawingMenu.Item(this.Name + "Enabled").GetValue<bool>())
-            //    {
-            //        if (drawingMenu.Item(this.Name + "SmartDrawings").GetValue<bool>())
-            //        {
-            //            if (!this.Path.BuildsUpShield && this.Path.Connections.All(x => !x.IsDash))
-            //            {
-            //                return;
-            //            }
-
-            //            // TODO: Color Path light blue
-            //            if (this.Path.BuildsUpShield)
-            //            {
-            //            }
-            //        }
-            //        if (drawingMenu.Item(this.Name + "PathDashColor").GetValue<Circle>().Active)
-            //        {
-            //            var linewidth = drawingMenu.Item(this.Name + "PathDashWidth").GetValue<Slider>().Value;
-            //            var color = drawingMenu.Item(this.Name + "PathDashColor").GetValue<Circle>().Color;
-
-            //            this.Path.DashLineWidth = linewidth;
-            //            this.Path.DashColor = color;
-            //        }
-
-            //        if (drawingMenu.Item(this.Name + "PathWalkColor").GetValue<Circle>().Active)
-            //        {
-            //            var linewidth = drawingMenu.Item(this.Name + "PathWalkWidth").GetValue<Slider>().Value;
-            //            var color = drawingMenu.Item(this.Name + "PathWalkColor").GetValue<Circle>().Color;
-
-            //            this.Path.WalkLineWidth = linewidth;
-            //            this.Path.WalkColor = color;
-            //        }
-
-            //        if (drawingMenu.Item(this.Name + "CirclesColor").GetValue<Circle>().Active)
-            //        {
-            //            var linewidth = drawingMenu.Item(this.Name + "CirclesLineWidth").GetValue<Slider>().Value;
-            //            var radius = drawingMenu.Item(this.Name + "CirclesRadius").GetValue<Slider>().Value;
-            //            var color = drawingMenu.Item(this.Name + "CirclesColor").GetValue<Circle>().Color;
-
-            //            this.Path.CircleLineWidth = linewidth;
-            //            this.Path.CircleRadius = radius;
-            //            this.Path.CircleColor = color;
-            //        }
-
-            //        this.Path.Draw();
-            //    }
-            //}
-        }
-
-        /// <summary>
-        ///     Raises the <see cref="E:Update" /> event.
-        /// </summary>
-        /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
-        private void OnUpdate(EventArgs args)
-        {
-            this.SoftReset();
-
-            if (GlobalVariables.Player.IsDead || GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo
-                || !GlobalVariables.Spells[SpellSlot.E].IsReady())
-            {
-                return;
-            }
-
-            this.GetTargets();
-
-            this.LogicOnChampion();
-
-            this.Pathfinder.ExecutePath();
-
-            this.Path = this.Pathfinder.GetPath();
-
-            PathCopy = this.Path;
-        }
-
-        /// <summary>
-        /// Gets the targets.
-        /// </summary>
-        private void GetTargets()
-        {
-            this.Targets =
-                HeroManager.Enemies.Where(
-                    x =>
-                    x.Health > 0 && x.IsValid
-                    && x.Distance(GlobalVariables.Player.ServerPosition) <= 1000).ToList();
-        }
-
-        /// <summary>
-        /// Resets the fields/properties
-        /// </summary>
-        private void SoftReset()
-        {
-            this.Targets = new List<Obj_AI_Hero>();
-            this.Path = new Path();
-
-            PathCopy = new Path();
-        }
 
         #endregion
 
@@ -262,7 +151,9 @@
 
             this.BlacklistMenu = new BlacklistMenu(this.Menu, "Blacklist");
 
-            this.Pathfinder = new PathfindingContainer(new AdvancedPathfinder(this.Menu));
+            this.Pathfinder =
+                new PathfindingContainer<Point, ConnectionBase<Point>, YasuoPath<Point, ConnectionBase<Point>>>(
+                    new AdvancedPathfinder(this.Menu));
 
             this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
 
@@ -284,27 +175,39 @@
         }
 
         /// <summary>
+        ///     Gets the targets.
+        /// </summary>
+        private void GetTargets()
+        {
+            this.Targets =
+                HeroManager.Enemies.Where(
+                    x => x.Health > 0 && x.IsValid && x.Distance(GlobalVariables.Player.ServerPosition) <= 1000)
+                    .ToList();
+        }
+
+        /// <summary>
         ///     Executes Logic to dash on champion
         /// </summary>
         private void LogicOnChampion()
         {
             var target = TargetSelector.SelectedTarget
-                            ?? TargetSelector.GetTarget(
-                                GlobalVariables.Spells[SpellSlot.E].Range,
-                                TargetSelector.DamageType.Magical);
+                         ?? TargetSelector.GetTarget(
+                             GlobalVariables.Spells[SpellSlot.E].Range,
+                             TargetSelector.DamageType.Magical);
 
             if (target == null || this.BlacklistChampions.Contains(target)
                 || !target.IsValidTarget(GlobalVariables.Spells[SpellSlot.E].Range))
             {
                 return;
             }
-            
+
             var dash = new Dash(GlobalVariables.Player.ServerPosition, target);
 
             if (target.Health < this.providerE.GetDamage(target) && !GlobalVariables.Spells[SpellSlot.Q].IsReady())
             {
                 var meanvector =
-                    Math.GetMeanVector3(this.Targets.Where(x => x.Distance(dash.EndPosition) <= 1000)
+                    Math.GetMeanVector3(
+                        this.Targets.Where(x => x.Distance(dash.EndPosition) <= 1000)
                             .Select(x => x.ServerPosition)
                             .ToList());
 
@@ -315,20 +218,18 @@
 
                 if (GlobalVariables.Player.Health
                     > this.Menu.SubMenu(this.Name + "EOnChampionMenu")
-                            .Item(this.Name + "MaxHealthDashOut")
-                            .GetValue<Slider>()
-                            .Value)
+                          .Item(this.Name + "MaxHealthDashOut")
+                          .GetValue<Slider>()
+                          .Value)
                 {
-                    if (dash.EndPosition.Distance(meanvector)
-                        <= GlobalVariables.Player.Distance(meanvector))
+                    if (dash.EndPosition.Distance(meanvector) <= GlobalVariables.Player.Distance(meanvector))
                     {
                         Execute(target);
                     }
                 }
                 else
                 {
-                    if (dash.EndPosition.Distance(meanvector)
-                        >= GlobalVariables.Player.Distance(meanvector))
+                    if (dash.EndPosition.Distance(meanvector) >= GlobalVariables.Player.Distance(meanvector))
                     {
                         Execute(target);
                     }
@@ -352,13 +253,112 @@
             {
                 var heroes = this.Targets.Where(x => x.Distance(dash.EndPosition) <= 1000);
 
-                if (dash.HeroesHitCircular.Count >= (heroes.Count() / 2))
+                if (dash.HeroesHitCircular.Count >= heroes.Count() / 2)
                 {
                     Execute(target);
                 }
             }
         }
-        
+
+        /// <summary>
+        ///     Raises the <see cref="E:Draw" /> event.
+        /// </summary>
+        /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void OnDraw(EventArgs args)
+        {
+            if (GlobalVariables.Player.IsDead || GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo)
+            {
+                return;
+            }
+
+            if (this.PathBase != null && this.PathBase.Connections.Count > 0)
+            {
+                var drawingMenu = this.Menu.SubMenu(this.Name + "Drawings");
+
+                if (drawingMenu.Item(this.Name + "Enabled").GetValue<bool>())
+                {
+                    if (drawingMenu.Item(this.Name + "SmartDrawings").GetValue<bool>())
+                    {
+                        //if (!this.PathBase.BuildsUpShield && this.PathBase.Connections.All(x => !x.IsDash))
+                        //{
+                        //    return;
+                        //}
+
+                        //// TODO: Color PathBase light blue
+                        //if (this.PathBase.BuildsUpShield)
+                        //{
+                        //}
+                    }
+                    if (drawingMenu.Item(this.Name + "PathDashColor").GetValue<Circle>().Active)
+                    {
+                        var linewidth = drawingMenu.Item(this.Name + "PathDashWidth").GetValue<Slider>().Value;
+                        var color = drawingMenu.Item(this.Name + "PathDashColor").GetValue<Circle>().Color;
+
+                        //this.PathBase.DashLineWidth = linewidth;
+                        //this.PathBase.DashColor = color;
+                    }
+
+                    if (drawingMenu.Item(this.Name + "PathWalkColor").GetValue<Circle>().Active)
+                    {
+                        var linewidth = drawingMenu.Item(this.Name + "PathWalkWidth").GetValue<Slider>().Value;
+                        var color = drawingMenu.Item(this.Name + "PathWalkColor").GetValue<Circle>().Color;
+
+                        //this.PathBase.WalkLineWidth = linewidth;
+                        //this.PathBase.WalkColor = color;
+                    }
+
+                    if (drawingMenu.Item(this.Name + "CirclesColor").GetValue<Circle>().Active)
+                    {
+                        var linewidth = drawingMenu.Item(this.Name + "CirclesLineWidth").GetValue<Slider>().Value;
+                        var radius = drawingMenu.Item(this.Name + "CirclesRadius").GetValue<Slider>().Value;
+                        var color = drawingMenu.Item(this.Name + "CirclesColor").GetValue<Circle>().Color;
+
+                        //this.PathBase.CircleLineWidth = linewidth;
+                        //this.PathBase.CircleRadius = radius;
+                        //this.PathBase.CircleColor = color;
+                    }
+
+                    this.PathBase.Draw();
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Raises the <see cref="E:Update" /> event.
+        /// </summary>
+        /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void OnUpdate(EventArgs args)
+        {
+            this.SoftReset();
+
+            if (GlobalVariables.Player.IsDead || GlobalVariables.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo
+                || !GlobalVariables.Spells[SpellSlot.E].IsReady())
+            {
+                return;
+            }
+
+            this.GetTargets();
+
+            this.LogicOnChampion();
+
+            this.Pathfinder.ExecutePath();
+
+            this.PathBase = this.Pathfinder.GetPath();
+
+            PathBaseCopy = this.PathBase;
+        }
+
+        /// <summary>
+        ///     Resets the fields/properties
+        /// </summary>
+        private void SoftReset()
+        {
+            this.Targets = new List<Obj_AI_Hero>();
+            this.PathBase = null;
+
+            PathBaseCopy = null;
+        }
+
         #endregion
     }
 }

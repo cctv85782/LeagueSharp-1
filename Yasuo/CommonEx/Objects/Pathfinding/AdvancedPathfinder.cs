@@ -5,6 +5,8 @@
     using System;
     using System.Linq;
 
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.ConnectionTypes;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.PathTypes;
     using global::Yasuo.CommonEx.Menu;
     using global::Yasuo.Yasuo.LogicProvider;
     using global::Yasuo.Yasuo.Menu.MenuSets.Modules;
@@ -14,22 +16,33 @@
 
     using SharpDX;
 
+    using Point = global::Yasuo.CommonEx.Algorithm.Djikstra.PointTypes.Point;
+
     #endregion
 
-    class AdvancedPathfinder : IPathfinder
+    internal class AdvancedPathfinder :
+        IPathfinder
+            <Point,
+            ConnectionBase<Point>, YasuoPath<Point, ConnectionBase<Point>>>
     {
         #region Fields
 
         /// <summary>
-        ///     The path
+        ///     The Path
         /// </summary>
-        public Path Path;
+        public
+            YasuoPath
+                <Point,
+                    ConnectionBase<Point>> PathBase;
 
         /// <summary>
         ///     The targeted vector
         /// </summary>
         public Vector3 TargetedVector;
 
+        /// <summary>
+        ///     The menu
+        /// </summary>
         private readonly Menu menu;
 
         /// <summary>
@@ -60,38 +73,38 @@
         #region Public Methods and Operators
 
         /// <summary>
-        ///     Executes the path.
+        ///     Executes the PathBase.
         /// </summary>
         public void ExecutePath()
         {
             try
             {
-                if (this.Path?.Connections == null || !this.Path.Connections.Any()) return;
+                if (this.PathBase?.Connections == null || !this.PathBase.Connections.Any()) return;
 
                 #region Dashing
 
-                var connection = this.Path.Connections.FirstOrDefault();
+                var connection = this.PathBase.Connections.FirstOrDefault();
 
                 if (connection == null)
                 {
                     return;
                 }
 
-                if (connection.IsDash)
+                var connection2 = connection as YasuoDashConnection;
+
+                if (connection2 != null)
                 {
                     if (this.menu.Item(this.menu.Name + "AutoDashing").GetValue<bool>()
-                        && GlobalVariables.Player.Distance(connection.Unit.ServerPosition)
-                        <= GlobalVariables.Spells[SpellSlot.E].Range
-                        && connection.To.Position.Distance(
-                            GlobalVariables.Player.ServerPosition.Extend(
-                                connection.Unit.ServerPosition,
-                                GlobalVariables.Spells[SpellSlot.E].Range)) <= 50
-                        && connection.To.Position.Distance(this.Path.EndPosition)
-                        >= GlobalVariables.Player.Distance(this.Path.EndPosition))
+                        && GlobalVariables.Player.Distance(connection2.Unit.ServerPosition)
+                        <= GlobalVariables.Spells[SpellSlot.E].Range)
                     {
-                        GlobalVariables.CastManager.Queque.Enqueue(
-                            3,
-                            () => GlobalVariables.Spells[SpellSlot.E].CastOnUnit(connection.Unit));
+                        if (connection2.End.Position.Distance(this.PathBase.EndPosition.Position)
+                            > GlobalVariables.Player.Distance(this.PathBase.EndPosition.Position))
+                        {
+                            GlobalVariables.CastManager.Queque.Enqueue(
+                                3,
+                                () => GlobalVariables.Spells[SpellSlot.E].CastOnUnit(connection2.Unit));
+                        }
                     }
                 }
 
@@ -102,15 +115,9 @@
                 // Auto-Walking
                 if (this.menu.Item(this.menu.Name + "AutoWalking").GetValue<bool>())
                 {
-                    if (GlobalVariables.Player.ServerPosition.Distance(connection.To.Position) <= 50)
+                    if (GlobalVariables.Player.ServerPosition.Distance(connection.End.Position) <= 50)
                     {
-                        this.Path.RemoveConnection(connection);
-                    }
-
-                    if (connection.Lenght > 50)
-                    {
-                        //GlobalVariables.CastManager.Queque.Enqueue(3, () =>
-                        //GlobalVariables.Orbwalker.SetOrbwalkingPoint(connection.To.Position));
+                        this.PathBase.RemoveConnection(connection);
                     }
                 }
 
@@ -123,13 +130,13 @@
             }
         }
 
-        public Path GeneratePath()
+        public YasuoPath<Point, ConnectionBase<Point>> GeneratePath()
         {
             this.FindTargetedVector();
 
-            this.Path = this.CalculatePath(this.TargetedVector);
+            this.PathBase = this.CalculatePath(this.TargetedVector);
 
-            return this.Path;
+            return this.PathBase;
         }
 
         public void Initialize()
@@ -142,7 +149,7 @@
 
         #region Methods
 
-        private Path CalculatePath(Vector3 position)
+        private YasuoPath<Point, ConnectionBase<Point>> CalculatePath(Vector3 position)
         {
             if (position == Vector3.Zero || !position.IsValid())
             {
@@ -170,9 +177,9 @@
             // TODO: PRIORITY MEDIUM > Make some more settings for this, such as minions under turret etc. Ref; TurretLP
             if (this.menu.Item(this.menu.Name + "DontDashUnderTurret").GetValue<bool>())
             {
-                foreach (var connection in this.providerE.GridGenerator.Grid.Connections.Where(x => x.IsDash).ToList())
-                {
-                    if (this.providerTurret.IsSafePosition(connection.To.Position)) continue;
+                foreach (var connection in this.providerE.GridGenerator.Grid.Connections.OfType<YasuoDashConnection>().ToList())
+                    { 
+                    if (this.providerTurret.IsSafePosition(connection.End.Position)) continue;
 
                     this.providerE.GridGenerator.Grid.Connections.Remove(connection);
                     //this.providerE.GridGenerator.RemoveDisconnectedConnections();
@@ -225,7 +232,7 @@
 
                         if (path != null)
                         {
-                            var time = path.PathTime;
+                            var time = path.PathCost;
 
                             result = Prediction.GetPrediction(target, time).CastPosition;
                             break;
@@ -251,7 +258,7 @@
 
         private void Reset()
         {
-            this.Path = null;
+            this.PathBase = null;
         }
 
         #endregion

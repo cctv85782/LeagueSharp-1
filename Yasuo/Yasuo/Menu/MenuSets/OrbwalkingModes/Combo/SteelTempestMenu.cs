@@ -94,7 +94,7 @@ namespace Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.Combo
         {
             var selecter =
                 new MenuItem("Mode", "Mode").SetValue(
-                    new StringList(new[] { "Custom", "Path Based", "Disabled" }));
+                    new StringList(new[] { "Custom", "PathBase Based", "Disabled" }));
 
             var custom = new List<MenuItem>()
                              {
@@ -104,7 +104,7 @@ namespace Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.Combo
                                      new Slider(1500, 0, 4000)),
                                  new MenuItem("MaxCooldownQ", "Don't Stack if Q Cooldown is >= (milliseconds)").SetValue
                                      (new Slider(1700, 1333, 5000)),
-                                 new MenuItem("CarePath", "Don't kill units in SweepingBlade Path").SetValue(true),
+                                 new MenuItem("CarePath", "Don't kill units in SweepingBlade PathBase").SetValue(true),
                              };
 
             var dynamicMenu = new DynamicMenu(this.Menu, "Stack-Settings", selecter, new[] { custom });

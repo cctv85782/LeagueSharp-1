@@ -1,24 +1,29 @@
 namespace Yasuo.Yasuo.Modules.Evade
 {
+    #region Using Directives
+
     using System;
 
-    using CommonEx.Classes;
-    using CommonEx.Objects;
-
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.ConnectionTypes;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.PathTypes;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.PointTypes;
+    using global::Yasuo.CommonEx.Classes;
     using global::Yasuo.Yasuo.LogicProvider;
 
     using LeagueSharp;
     using LeagueSharp.Common;
     using LeagueSharp.SDK;
 
+    #endregion
+
     internal class SweepingBlade : FeatureChild<Modules>
     {
         #region Fields
 
         /// <summary>
-        ///     The path
+        ///     The PathBase
         /// </summary>
-        public Path Path;
+        public PathBase<Point, ConnectionBase<Point>> PathBase;
 
         /// <summary>
         ///     The E logicprovider

@@ -161,7 +161,7 @@
                 MinionTeam.NotAlly);
         }
 
-        // TODO: Player path based mode
+        // TODO: Player PathBase based mode
         /// <summary>
         ///     Executes the mass clear.
         /// </summary>

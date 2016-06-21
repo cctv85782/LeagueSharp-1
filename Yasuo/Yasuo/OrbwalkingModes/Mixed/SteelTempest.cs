@@ -13,6 +13,9 @@
     using CommonEx.Menu.Presets;
     using CommonEx.Objects;
 
+    using global::Yasuo.CommonEx.Algorithm.Djikstra;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.ConnectionTypes;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.PathTypes;
     using global::Yasuo.CommonEx.Utility;
     using global::Yasuo.Yasuo.LogicProvider;
     using global::Yasuo.Yasuo.Menu.MenuSets.OrbwalkingModes.Combo;
@@ -25,6 +28,7 @@
 
 
     using HitChance = LeagueSharp.SDK.HitChance;
+    using Point = global::Yasuo.CommonEx.Algorithm.Djikstra.PointTypes.Point;
     using PredictionOutput = LeagueSharp.SDK.PredictionOutput;
 
     #endregion
@@ -39,9 +43,9 @@
         public BlacklistMenu BlacklistMenu;
 
         /// <summary>
-        ///     The path
+        ///     The PathBase
         /// </summary>
-        protected Path Path;
+        protected YasuoPath<Point, ConnectionBase<Point>> PathBase;
 
         /// <summary>
         ///     The target
@@ -257,19 +261,19 @@
 
                         break;
 
-                        //// Path Based
-                        //// TODO: ADD calculation for arriving to that point on the path
+                        //// PathBase Based
+                        //// TODO: ADD calculation for arriving to that point on the PathBase
                         //case 1:
-                        //    var path = SweepingBlade.PathCopy;
+                        //    var PathBase = SweepingBlade.PathBaseCopy;
 
-                        //    if (path == null)
+                        //    if (PathBase == null)
                         //    {
                         //        return;
                         //    }
 
                         //    // TODO
                         //    var vectors =
-                        //        path.SplitIntoVectors(multiknockupsettings.Item("SegmentAmount").GetValue<Slider>().Value);
+                        //        PathBase.SplitIntoVectors(multiknockupsettings.Item("SegmentAmount").GetValue<Slider>().Value);
 
                         //    var predDic = new Dictionary<Vector3, List<PredictionOutput>>();
 
@@ -382,7 +386,7 @@
 
             this.Units = this.providerE.GetUnits(GlobalVariables.Player.ServerPosition);
 
-            this.Path = OrbwalkingModes.Combo.SweepingBlade.PathCopy;
+            this.PathBase = OrbwalkingModes.Combo.SweepingBlade.PathBaseCopy;
 
             switch (stacksettingsMenu.Item(stacksettingsMenu.Name + "Mode").GetValue<StringList>().SelectedIndex)
             {
@@ -405,17 +409,21 @@
                         return;
                     }
 
-                    var path = this.Path;
+                    var path = this.PathBase;
 
                     if (path?.Connections != null
-                        && stacksettingsMenu.Item(stacksettingsMenu.Name + "CarePath").GetValue<bool>()
-                        && path.Connections.Any(x => x.IsDash && x.Unit != null))
+                        && stacksettingsMenu.Item(stacksettingsMenu.Name + "CarePath").GetValue<bool>())
                     {
-                        foreach (var unit in this.Units.ToList())
+                        var dashConnections = path.Connections.OfType<YasuoDashConnection>().ToList();
+
+                        if (dashConnections.Any(x => x.Unit != null))
                         {
-                            if (this.Path.Connections.Where(x => x.Unit != null).Any(x => x.Unit.Equals(unit)))
+                            foreach (var unit in this.Units.ToList())
                             {
-                                this.Units.Remove(unit);
+                                if (dashConnections.Where(x => x.Unit != null).Any(x => x.Unit.Equals(unit)))
+                                {
+                                    this.Units.Remove(unit);
+                                }
                             }
                         }
                     }
@@ -516,32 +524,34 @@
 
                 #endregion
 
-                #region Mode: Path Based
+                #region Mode: PathBase Based
 
                 case 2:
-                    if (this.Path != null && this.Units.Any())
+                    if (this.PathBase != null && this.Units.Any())
                     {
                         foreach (var unit in this.Units.ToList())
                         {
-                            if (this.Path.Connections.Any(x => x.Unit != null && x.Unit.Equals(unit)))
+                            var dashConnections = this.PathBase.Connections.OfType<YasuoDashConnection>();
+
+                            if (dashConnections.Any(x => x.Unit != null && x.Unit.Equals(unit)))
                             {
                                 this.Units.Remove(unit);
                             }
                         }
 
                         if (GlobalVariables.Player.CountEnemiesInRange(GlobalVariables.Spells[SpellSlot.Q].Range) == 0
-                            && this.Path.PathTime + 500 > GlobalVariables.Spells[SpellSlot.Q].Cooldown)
+                            && this.PathBase.PathCost + 500 > GlobalVariables.Spells[SpellSlot.Q].Cooldown)
                         {
-                            if (
-                                this.Path.Connections.Any(
-                                    x =>
-                                    x.IsDash
-                                    && x.Unit.Health
+                            var dashConnections = this.PathBase.Connections.OfType<YasuoDashConnection>().ToList();
+
+                            if (dashConnections.Any(
+                                    x => 
+                                    x.Unit.Health
                                     > this.providerE.GetDamage(x.Unit) + this.providerQ.GetDamage(x.Unit)))
                             {
                                 if (GlobalVariables.Player.IsDashing())
                                 {
-                                    this.Execute(this.Path.Connections.FirstOrDefault(x => x.Unit != null)?.Unit);
+                                    this.Execute(dashConnections.FirstOrDefault(x => x.Unit != null)?.Unit);
                                 }
                             }
 
@@ -585,7 +595,7 @@
         private void SoftReset()
         {
             this.Units = new List<Obj_AI_Base>();
-            this.Path = null;
+            this.PathBase = null;
         }
 
         #endregion

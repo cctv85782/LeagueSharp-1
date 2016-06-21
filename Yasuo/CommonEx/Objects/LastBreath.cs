@@ -1,4 +1,4 @@
-﻿// TODO: Add Dash End Positions as list. Maybe think about positive things when I change Obj_AI_Base to Connection or Point.
+﻿// TODO: Add Dash End Positions as list. Maybe think about positive things when I change Obj_AI_Base to YasuoConnection or Point.
 // TODO: Rework Calculations based on Dash End Positions.
 
 namespace Yasuo.CommonEx.Objects

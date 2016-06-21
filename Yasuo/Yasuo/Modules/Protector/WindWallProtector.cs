@@ -123,7 +123,7 @@
                     {
                         var gapClosePath = this.Provider.GetPath(ally.ServerPosition);
 
-                        if (gapClosePath != null && gapClosePath.PathTime < time)
+                        if (gapClosePath != null && gapClosePath.PathCost < time)
                         {
                             //Game.PrintChat("Can gapclose in time to protect ally");
                         }

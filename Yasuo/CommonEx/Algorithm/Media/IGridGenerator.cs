@@ -4,7 +4,10 @@
 
     using System.Collections.Generic;
 
-    using global::Yasuo.CommonEx.Algorithm.Djikstra;
+    using Djikstra;
+
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.ConnectionTypes;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.PointTypes;
 
     using LeagueSharp;
 
@@ -12,7 +15,7 @@
 
     #endregion
 
-    internal interface IGridGenerator
+    internal interface IGridGenerator<T, TV> where TV : ConnectionBase<T> where T : PointBase
     {
         #region Public Properties
 
@@ -20,7 +23,7 @@
         /// Gets or sets from.
         /// </summary>
         /// <value>
-        /// From.
+        /// start.
         /// </value>
         Vector3 From { get; set; }
 
@@ -28,7 +31,7 @@
         /// Gets or sets to.
         /// </summary>
         /// <value>
-        /// To.
+        /// end.
         /// </value>
         Vector3 To { get; set; }
 
@@ -40,14 +43,14 @@
         /// Generates this instance.
         /// </summary>
         /// <returns></returns>
-        Grid Generate();
+        Grid<T, ConnectionBase<T>> Generate();
 
         /// <summary>
         ///     Updates the specified settings.
         /// </summary>
         /// <param name="units">The units.</param>
-        /// <param name="from">From.</param>
-        /// <param name="to">To.</param>
+        /// <param name="from">start.</param>
+        /// <param name="to">end.</param>
         void Update(List<Obj_AI_Base> units, Vector3 from, Vector3 to);
 
         #endregion

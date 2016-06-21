@@ -273,7 +273,7 @@
             // Damage
             advancedDyn.AddItem(
                 new MenuItem(advancedDyn.Name + "Information", "[i] information").SetTooltip(
-                    "If this is enabled, the assembly will stack based on the current gapclose path. Currently here are no options, but if I got enough time and motivation I will add some.")
+                    "If this is enabled, the assembly will stack based on the current gapclose PathBase. Currently here are no options, but if I got enough time and motivation I will add some.")
                     .SetTag(3));
 
             // Always available

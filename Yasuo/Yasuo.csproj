@@ -90,10 +90,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrap.cs" />
-    <Compile Include="CommonEx\Algorithm\Djikstra\Connection.cs" />
+    <Compile Include="CommonEx\Algorithm\Djikstra\ConnectionTypes\ConnectionBase.cs" />
+    <Compile Include="CommonEx\Algorithm\Djikstra\ConnectionTypes\SimpleConnection.cs" />
+    <Compile Include="CommonEx\Algorithm\Djikstra\ConnectionTypes\YasuoBlinkConnection.cs" />
+    <Compile Include="CommonEx\Algorithm\Djikstra\ConnectionTypes\YasuoDashConnection.cs" />
+    <Compile Include="CommonEx\Algorithm\Djikstra\ConnectionTypes\YasuoWalkConnection.cs" />
     <Compile Include="CommonEx\Algorithm\Djikstra\Djikstra.cs" />
     <Compile Include="CommonEx\Algorithm\Djikstra\Grid.cs" />
-    <Compile Include="CommonEx\Algorithm\Djikstra\Point.cs" />
+    <Compile Include="CommonEx\Algorithm\Djikstra\PathTypes\YasuoPath.cs" />
+    <Compile Include="CommonEx\Algorithm\Djikstra\PointTypes\Point.cs" />
+    <Compile Include="CommonEx\Algorithm\Djikstra\PointTypes\PointBase.cs" />
     <Compile Include="CommonEx\Algorithm\Media\GridGenerator.cs" />
     <Compile Include="CommonEx\Algorithm\Media\GridGeneratorContainer.cs" />
     <Compile Include="CommonEx\Algorithm\Media\GridGeneratorV2.cs" />
@@ -119,7 +125,7 @@
     <Compile Include="CommonEx\Menu\Presets\WhitelistMenu.cs" />
     <Compile Include="CommonEx\Objects\Dash.cs" />
     <Compile Include="CommonEx\Objects\LastBreath.cs" />
-    <Compile Include="CommonEx\Objects\Path.cs" />
+    <Compile Include="CommonEx\Algorithm\Djikstra\PathTypes\PathBase.cs" />
     <Compile Include="CommonEx\Objects\Pathfinding\AdvancedPathfinder.cs" />
     <Compile Include="CommonEx\Objects\Pathfinding\IPathfinder.cs" />
     <Compile Include="CommonEx\Objects\Pathfinding\PathfindingContainer.cs" />

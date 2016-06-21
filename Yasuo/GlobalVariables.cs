@@ -5,6 +5,8 @@
     using System;
     using System.Collections.Generic;
 
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.ConnectionTypes;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.PointTypes;
     using global::Yasuo.CommonEx.Algorithm.Media;
     using global::Yasuo.CommonEx.CastManager;
     using global::Yasuo.Yasuo.LogicProvider;
@@ -46,7 +48,7 @@
         /// <summary>
         ///     The grid generator
         /// </summary>
-        public static GridGeneratorContainer GridGenerator = null;
+        public static GridGeneratorContainer<Point, ConnectionBase<Point>> GridGenerator = null;
 
         /// <summary>
         ///     The root menu
@@ -81,7 +83,7 @@
         internal static bool Stop = false;
 
         /// <summary>
-        ///     The github path of the assembly
+        ///     The github PathBase of the assembly
         /// </summary>
         public static string GitHubPath = $"{GitHubProfile}/LeagueSharp/tree/master/{Name}";
 
@@ -90,16 +92,33 @@
         /// </summary>
         public static Dictionary<SpellSlot, Spell> Spells = new Dictionary<SpellSlot, Spell>()
                                                                 {
-                                                                    { SpellSlot.Q, new Spell(SpellSlot.Q, 475) },
-                                                                    { SpellSlot.W, new Spell(SpellSlot.W, 400) },
+                                                                    {
+                                                                        SpellSlot.Q,
+                                                                        new Spell(
+                                                                        SpellSlot.Q,
+                                                                        475)
+                                                                    },
+                                                                    {
+                                                                        SpellSlot.W,
+                                                                        new Spell(
+                                                                        SpellSlot.W,
+                                                                        400)
+                                                                    },
                                                                     {
                                                                         SpellSlot.E,
                                                                         new Spell(
                                                                         SpellSlot.E,
                                                                         475,
-                                                                        TargetSelector.DamageType.Magical)
+                                                                        TargetSelector
+                                                                        .DamageType
+                                                                        .Magical)
                                                                     },
-                                                                    { SpellSlot.R, new Spell(SpellSlot.R, 1200) },
+                                                                    {
+                                                                        SpellSlot.R,
+                                                                        new Spell(
+                                                                        SpellSlot.R,
+                                                                        1200)
+                                                                    },
                                                                 };
 
         #endregion

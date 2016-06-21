@@ -86,7 +86,7 @@ namespace Yasuo.Yasuo.Menu.MenuSets.Modules
                             {
                                 new MenuItem("Prediction", "Use Prediction").SetValue(true)
                                     .SetTooltip("The assembly will try to E to the enemy predicted position."),
-                                new MenuItem("PredictionEnhanced", "Prediction -> Two Path System").SetValue(true)
+                                new MenuItem("PredictionEnhanced", "Prediction -> Two PathBase System").SetValue(true)
                                     .SetTooltip("The assembly will try to E to the enemy predicted position."),
                                 new MenuItem("MinCursorDistance", "Min Cursor Distance to target").SetValue(
                                     new Slider(600, 50, 2000)),
@@ -102,18 +102,18 @@ namespace Yasuo.Yasuo.Menu.MenuSets.Modules
                                new MenuItem("AutoWalkToDash", "[Experimental] Auto-Walk to dash").SetValue(true)
                                    .SetTooltip(
                                        "If this is enabled the assembly will auto-walk behind a unit to dash over it."),
-                               new MenuItem("AutoDashing", "[Experimental] Auto-Dash dashable path (Dashing-Path)")
+                               new MenuItem("AutoDashing", "[Experimental] Auto-Dash dashable PathBase (Dashing-PathBase)")
                                    .SetValue(true)
                                    .SetTooltip(
-                                       "If this is enabled the assembly will automatic pathfind and walk to the end of the path. This is a basic feature of pathfinding."),
-                               new MenuItem("AutoWalking", "[Experimental] Auto-Walk non-dashable path (Walking-Path)")
+                                       "If this is enabled the assembly will automatic pathfind and walk to the end of the PathBase. This is a basic feature of pathfinding."),
+                               new MenuItem("AutoWalking", "[Experimental] Auto-Walk non-dashable PathBase (Walking-PathBase)")
                                    .SetValue(false)
                                    .SetTooltip(
-                                       "If this is enabled the assembly will automatic pathfind and walk to the end of the path. If you like to have maximum control or your champion disable this."),
-                               new MenuItem("PathAroundSkillShots", "[Experimental] Try to Path around Skillshots")
+                                       "If this is enabled the assembly will automatic pathfind and walk to the end of the PathBase. If you like to have maximum control or your champion disable this."),
+                               new MenuItem("PathAroundSkillShots", "[Experimental] Try to PathBase around Skillshots")
                                    .SetValue(true)
                                    .SetTooltip(
-                                       "if this is enabled, the assembly will path around a skillshot if a path is given."),
+                                       "if this is enabled, the assembly will PathBase around a skillshot if a PathBase is given."),
                                new MenuItem("Enabled", "Enabled").SetValue(true),
                            };
 

@@ -1,16 +1,19 @@
 ﻿namespace Yasuo.CommonEx.Algorithm.Djikstra
 {
+    #region Using Directives
+
     using System;
     using System.Collections.Generic;
+    using System.Drawing;
     using System.Linq;
 
-    using LeagueSharp;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.ConnectionTypes;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.PointTypes;
 
-    using SharpDX;
+    #endregion
 
-    using Color = System.Drawing.Color;
-
-    public class Grid
+    public class Grid<T, TV>
+        where TV : ConnectionBase<T> where T : PointBase
     {
         #region Fields
 
@@ -22,12 +25,12 @@
         /// <summary>
         ///     All Connections of the grid
         /// </summary>
-        public List<Connection> Connections = new List<Connection>();
+        public List<TV> Connections = new List<TV>();
 
         /// <summary>
         ///     All Points inside the grid
         /// </summary>
-        public List<Point> Points = new List<Point>();
+        public List<T> Points = new List<T>();
 
         #endregion
 
@@ -36,7 +39,7 @@
         /// <summary>
         ///     Constructor
         /// </summary>
-        public Grid(List<Connection> connections, Point startPosition, Point endPosition = null)
+        public Grid(List<TV> connections, T startPoint, T endPoint)
         {
             try
             {
@@ -45,18 +48,18 @@
                     this.Connections = connections;
                 }
 
-                this.BasePoint = startPosition;
-                this.StartPosition = startPosition.Position;
+                this.BasePoint = startPoint;
 
-                this.EndPoint = endPosition;
+                this.EndPoint = endPoint;
 
-                this.SetPoints(connections);
+                this.AddPoints(connections);
 
                 this.Color = Color.White;
 
                 if (GlobalVariables.Debug)
                 {
-                    Console.WriteLine(@"[GridInfo] Setting up new Grid. Total Connection Amount: " + this.Connections.Count);
+                    Console.WriteLine(
+                        @"[GridInfo] Setting up new Grid. Total YasuoConnection Amount: " + this.Connections.Count);
                     Console.WriteLine(@"[GridInfo] Setting up new Grid. Total Point Amount: " + this.Points.Count);
                 }
             }
@@ -73,17 +76,12 @@
         /// <summary>
         ///     Point where grid starts
         /// </summary>
-        public Point BasePoint { get; private set; }
+        public T BasePoint { get; private set; }
 
         /// <summary>
         ///     Point where the grid ends (can be null)
         /// </summary>
-        public Point EndPoint { get; set; }
-
-        /// <summary>
-        ///     Vector where grid starts
-        /// </summary>
-        public Vector3 StartPosition { get; private set; }
+        public T EndPoint { get; set; }
 
         #endregion
 
@@ -105,7 +103,7 @@
                 foreach (var connection in this.Connections)
                 {
                     //Console.WriteLine(@"Drawing Grid");
-                    connection.Draw(true, width, this.Color);
+                    //connection.Draw(true, width, this.Color);
                 }
             }
             catch (Exception ex)
@@ -120,22 +118,22 @@
         /// <param name="point1"></param>
         /// <param name="point2"></param>
         /// <returns></returns>
-        public Connection FindConnection(Point point1, Point point2)
+        public TV FindConnection(T point1, T point2)
         {
             return
                 this.Connections.FirstOrDefault(
-                    connection => connection.From.Equals(point1) && connection.To.Equals(point2));
+                    connection => connection.Start.Equals(point1) && connection.End.Equals(point2));
         }
 
         /// <summary>
-        ///     Searched for all connections that either start or end in the Point around
+        ///     Searches for all connections that are either start or end in the Point around
         /// </summary>
         /// <param name="around"></param>
         /// <returns></returns>
-        public List<Connection> FindConnections(Point around)
+        public List<TV> FindConnections(T around)
         {
             return
-                this.Connections.Where(connection => connection.To.Equals(around) || connection.From.Equals(around))
+                this.Connections.Where(connection => connection.End.Equals(around) || connection.Start.Equals(around))
                     .ToList();
         }
 
@@ -143,12 +141,19 @@
 
         #region Methods
 
-        private void SetPoints(List<Connection> connections)
+        private void AddPoints(IEnumerable<TV> connections)
         {
             foreach (var connection in connections)
             {
-                this.Points.Add(connection.To);
-                this.Points.Add(connection.From);
+                if (!this.Points.Contains(connection.End))
+                {
+                    this.Points.Add(connection.End);
+                }
+
+                if (!this.Points.Contains(connection.Start))
+                {
+                    this.Points.Add(connection.Start);
+                }
             }
         }
 

@@ -1,16 +1,27 @@
 ﻿namespace Yasuo.CommonEx.Objects.Pathfinding
 {
-    public interface IPathfinder
+    #region Using Directives
+
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.ConnectionTypes;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.PathTypes;
+    using global::Yasuo.CommonEx.Algorithm.Djikstra.PointTypes;
+
+    #endregion
+
+    public interface IPathfinder<T, TV, out TP>
+        where TV : ConnectionBase<T>
+        where TP : PathBase<T, TV>
+        where T : PointBase
     {
         #region Public Methods and Operators
 
+        void ExecutePath();
+
         /// <summary>
-        ///     Gets the path.
+        ///     Gets the PathBase.
         /// </summary>
         /// <returns></returns>
-        Path GeneratePath();
-
-        void ExecutePath();
+        TP GeneratePath();
 
         /// <summary>
         ///     Initializes this instance.

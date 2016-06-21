@@ -76,7 +76,7 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="Dash" /> class.
         /// </summary>
-        /// <param name="from">From.</param>
+        /// <param name="from">start.</param>
         /// <param name="unit">The unit.</param>
         public Dash(Vector3 from, Obj_AI_Base unit)
             : this(from, unit.ServerPosition)
@@ -87,7 +87,7 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="Dash" /> class.
         /// </summary>
-        /// <param name="from">From.</param>
+        /// <param name="from">start.</param>
         /// <param name="direction">The direction.</param>
         public Dash(Vector3 from, Vector3 direction)
         {
@@ -274,7 +274,7 @@
             }
         }
 
-        // TODO: Add Path in Skillshot (Based on Skillshot Danger value) , Add Enemies Around (Based on Priority), Add Allies Around, Add Minions Around (?)
+        // TODO: Add PathBase in Skillshot (Based on Skillshot Danger value) , Add Enemies Around (Based on Priority), Add Allies Around, Add Minions Around (?)
         /// <summary>
         ///     Sets the danger value.
         /// </summary>
