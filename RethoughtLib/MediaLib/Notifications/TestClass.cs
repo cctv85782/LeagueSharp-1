@@ -14,18 +14,21 @@
         private void Test()
         {
             var notification =
-                new DefaultNotification(
-                    new TestDesign("I'm a notification", "I'm the content that gets displayed in the notification"));
+                new DefaultNotification(new DefaultDesign("Header", "Body"));
+
+            notification.Design = new DefaultDesign("New", "Design");
 
             // Using the default displayer (without priority)
             Notifications.Instance.Add(notification);
 
             // Using a custom displayer (with priority)
-            var displayer = new DefaultDisplayer() { DistanceLeft = 250, DistanceTop = 250 };
+            var displayerThatAcceptsEveryNotification = new DefaultDisplayer<Notification> { DistanceLeft = 250, DistanceTop = 250 };
+
+            var displayerThatOnlyAcceptsDefaultNotifications = new DefaultDisplayer<DefaultNotification>();
 
             Notifications.Instance.Add(notification, 15);
             // or (without priority)
-            displayer.Display(notification);
+            displayerThatAcceptsEveryNotification.Display(notification);
         }
 
         #endregion

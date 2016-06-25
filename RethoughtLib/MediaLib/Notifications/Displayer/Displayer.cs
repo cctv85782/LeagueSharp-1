@@ -10,16 +10,18 @@
     #endregion
 
     /// <summary>
-    ///     Displayer that gets used to display notifications and declare displayable zones
+    ///     Displayer are declaring zones and behaiviors to display Notifications
     /// </summary>
-    public abstract class Displayer
+    /// <typeparam name="T">Class of type Notification</typeparam>
+    public abstract class Displayer<T>
+        where T : Notification
     {
         #region Fields
 
         /// <summary>
         ///     The active notifications
         /// </summary>
-        protected List<Notification> ActiveNotifications = new List<Notification>();
+        protected List<T> ActiveNotifications = new List<T>();
 
         #endregion
 
@@ -29,7 +31,7 @@
         /// </summary>
         /// <param name="eventArgs">The <see cref="EventArgs" /> instance containing the event data.</param>
         /// <param name="sender">The sender.</param>
-        public delegate void DisplayerEvent(EventArgs eventArgs, Notification sender);
+        public delegate void DisplayerEvent(EventArgs eventArgs, T sender);
 
         #endregion
 
@@ -97,6 +99,12 @@
         /// </value>
         public virtual int MaxWidth { get; set; } = 300;
 
+        /// <summary>
+        ///     Gets or sets the spacing between notifications.
+        /// </summary>
+        /// <value>
+        ///     The spacing between notifications.
+        /// </value>
         public virtual int SpacingBetweenNotifications { get; set; } = 25;
 
         /// <summary>
@@ -123,7 +131,7 @@
         ///     Displays the specified notification.
         /// </summary>
         /// <param name="notification">The notification.</param>
-        public virtual void Display(Notification notification)
+        public virtual void Display(T notification)
         {
             this.OnOnNotificationAdd(notification);
         }
@@ -133,10 +141,42 @@
         #region Methods
 
         /// <summary>
+        ///     Raises the <see cref="E:Add" /> event.
+        /// </summary>
+        /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
+        /// <param name="sender">The sender.</param>
+        /// <exception cref="ArgumentException">ActiveNotifications already contains this notification.</exception>
+        protected virtual void OnAdd(EventArgs args, T sender)
+        {
+            if (this.ActiveNotifications.Contains(sender))
+            {
+                throw new ArgumentException("ActiveNotifications already contains this notification.");
+            }
+
+            this.ActiveNotifications.Add(sender);
+        }
+
+        /// <summary>
+        ///     Raises the <see cref="E:Delete" /> event.
+        /// </summary>
+        /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
+        /// <param name="sender">The sender.</param>
+        /// <exception cref="ArgumentException">ActiveNotifications does not contain this notification.</exception>
+        protected virtual void OnDelete(EventArgs args, T sender)
+        {
+            if (!this.ActiveNotifications.Contains(sender))
+            {
+                throw new ArgumentException("ActiveNotifications does not contain this notification.");
+            }
+
+            this.ActiveNotifications.Remove(sender);
+        }
+
+        /// <summary>
         ///     Called when [on notification add].
         /// </summary>
         /// <param name="sender">The sender.</param>
-        protected virtual void OnOnNotificationAdd(Notification sender)
+        protected virtual void OnOnNotificationAdd(T sender)
         {
             this.OnNotificationAdd?.Invoke(EventArgs.Empty, sender);
         }
@@ -145,7 +185,7 @@
         ///     Called when [on notification delete].
         /// </summary>
         /// <param name="sender">The sender.</param>
-        protected virtual void OnOnNotificationDelete(Notification sender)
+        protected virtual void OnOnNotificationDelete(T sender)
         {
             this.OnNotificationDelete?.Invoke(EventArgs.Empty, sender);
         }

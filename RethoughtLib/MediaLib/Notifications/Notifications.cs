@@ -22,7 +22,11 @@
         /// <summary>
         ///     The displayers
         /// </summary>
-        private static readonly List<Displayer.Displayer> Displayers = new List<Displayer.Displayer>() { new DefaultDisplayer() };
+        private static readonly List<Displayer<Notification>> Displayers = 
+            new List<Displayer<Notification>>
+                {
+                    new DefaultDisplayer<Notification>()
+                };
 
         /// <summary>
         ///     The instance
@@ -57,12 +61,10 @@
         /// <summary>
         ///     Adds the specified notification. If the displayer is null it will use the default displayer.
         /// </summary>
-        /// <typeparam name="T">Displayer</typeparam>
         /// <param name="notification">The notification.</param>
         /// <param name="priority"></param>
         /// <param name="displayer">The displayer.</param>
-        public void Add<T>(Notification notification, int priority = 0, T displayer = default(T))
-            where T : Displayer.Displayer
+        public void Add(Notification notification, int priority = 0, Displayer<Notification> displayer = null)
         {
             if (displayer == null)
             {
@@ -80,16 +82,6 @@
 
             var newDisplayer = Displayers.FirstOrDefault(x => x.Equals(displayer));
             newDisplayer?.Display(notification);
-        }
-
-        /// <summary>
-        ///     Adds the specified notification.
-        /// </summary>
-        /// <param name="notification">The notification.</param>
-        /// <param name="priority">The priority.</param>
-        public void Add(Notification notification, int priority = 0)
-        {
-            this.Add<Displayer.Displayer>(notification, priority);
         }
 
         #endregion

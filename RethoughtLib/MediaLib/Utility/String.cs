@@ -4,7 +4,6 @@
 
     using System;
     using System.Collections.Generic;
-    using System.Text;
     using System.Threading;
 
     using RethoughtLib.Design;
@@ -126,6 +125,122 @@
             //return sb.ToString();
 
             return null;
+        }
+
+        /// <summary>
+        ///     Formats the given text into lines.
+        /// </summary>
+        /// <param name="text">
+        ///     The text.
+        /// </param>
+        /// <param name="font">
+        ///     The font.
+        /// </param>
+        /// <param name="width">
+        ///     The width.
+        /// </param>
+        /// <param name="height">
+        ///     The height.
+        /// </param>
+        /// <param name="sprite">
+        ///     The sprite.
+        /// </param>
+        /// <param name="htmlSupport">
+        ///     Indicates whether to support HTML tags.
+        /// </param>
+        /// <returns>
+        ///     The formatted list.
+        /// </returns>
+        /// <remarks>L33T</remarks>
+        public static List<string> FormatText(string text, Font font, int width, int height, Sprite sprite, bool htmlSupport)
+        {
+            var lineAmount = font.MeasureText(sprite, text, 0).Width / width + 1;
+
+            var lastIndex = 0;
+            var format = false;
+            var linesList = new List<string>();
+
+            if (text.Contains("</br>") && htmlSupport)
+            {
+                lineAmount = 0;
+                var formatLines = new List<string>();
+                var valueCopy = text;
+                while (valueCopy.Contains("</br>"))
+                {
+                    var breakLine = valueCopy.Substring(0, valueCopy.IndexOf("</br>", StringComparison.Ordinal));
+                    ++lineAmount;
+                    formatLines.Add(!string.IsNullOrEmpty(breakLine) ? breakLine : string.Empty);
+
+                    valueCopy = valueCopy.Substring(
+                        valueCopy.IndexOf("</br>", StringComparison.Ordinal) + 5,
+                        valueCopy.Length - valueCopy.IndexOf("</br>", StringComparison.Ordinal) - 5);
+                }
+
+                formatLines.Add(string.IsNullOrEmpty(valueCopy) ? " " : valueCopy);
+                height += font.Description.Height;
+
+                foreach (var line in formatLines)
+                {
+                    if (string.IsNullOrEmpty(line))
+                    {
+                        linesList.Add(" ");
+                        height += font.Description.Height;
+                        continue;
+                    }
+
+                    for (var j = line.Length; j > -1; --j)
+                    {
+                        if (j - 1 > -1 && line.Length - lastIndex - j >= 0
+                            && font.MeasureText(sprite, line.Substring(lastIndex, line.Length - lastIndex - j), 0).Width
+                            < width)
+                        {
+                            continue;
+                        }
+
+                        var original = line.Substring(lastIndex, line.Length - lastIndex - j);
+
+                        if (!string.IsNullOrEmpty(original))
+                        {
+                            linesList.Add(original);
+                        }
+
+                        lastIndex = line.Length - j;
+                    }
+
+                    lastIndex = 0;
+                }
+
+                format = true;
+            }
+
+            if (!format)
+            {
+                for (var j = text.Length; j > -1; --j)
+                {
+                    if (j - 1 > -1 && text.Length - lastIndex - j >= 0
+                        && font.MeasureText(sprite, text.Substring(lastIndex, text.Length - lastIndex - j), 0).Width
+                        < width)
+                    {
+                        continue;
+                    }
+
+                    var original = text.Substring(lastIndex, text.Length - lastIndex - j);
+
+                    if (!string.IsNullOrEmpty(original))
+                    {
+                        linesList.Add(original);
+                    }
+
+                    lastIndex = text.Length - j;
+                }
+            }
+
+            if (lineAmount > 4)
+            {
+                height += font.Description.Height * (lineAmount - 4);
+            }
+
+            return linesList;
         }
 
         #endregion

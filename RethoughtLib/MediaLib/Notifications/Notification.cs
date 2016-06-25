@@ -2,8 +2,12 @@
 {
     #region Using Directives
 
+    using System;
+    using System.Collections.Generic;
+
     using LeagueSharp.Common;
 
+    using RethoughtLib.Classes.Observer;
     using RethoughtLib.Notifications.Designs;
 
     using SharpDX;
@@ -13,19 +17,9 @@
     /// <summary>
     ///     A Notification
     /// </summary>
-    public abstract class Notification
+    public abstract class Notification : Element<NotificationDesign>
     {
         #region Fields
-
-        /// <summary>
-        ///     The notifications design
-        /// </summary>
-        internal readonly NotificationDesign NotificationDesign;
-
-        /// <summary>
-        ///     The margin
-        /// </summary>
-        internal float Margin;
 
         /// <summary>
         ///     Whether moving or not
@@ -52,8 +46,16 @@
         /// <param name="notificationDesign">The notification design.</param>
         protected Notification(NotificationDesign notificationDesign)
         {
-            this.NotificationDesign = notificationDesign;
+            this.Design = notificationDesign;
         }
+
+        /// <summary>
+        /// Gets or sets the design.
+        /// </summary>
+        /// <value>
+        /// The design.
+        /// </value>
+        public sealed override NotificationDesign Design { get; set; }
 
         #endregion
 
@@ -63,20 +65,20 @@
         {
             if (this.Moving)
             {
-                this.NotificationDesign.Transition.Start(
+                this.Design.Transition.Start(
                     this.Position,
-                    this.Position.Extend(this.StartPosition, this.NotificationDesign.Width + this.Margin));
+                    this.Position.Extend(this.StartPosition, this.Design.Width));
             }
 
-            this.Position = this.NotificationDesign.Transition.GetPosition();
+            this.Position = this.Design.Transition.GetPosition();
         }
 
         /// <summary>
         ///     Draws this instance.
         /// </summary>
-        public virtual void Draw()
+        public override void Draw()
         {
-            return;
+            
         }
 
         #endregion

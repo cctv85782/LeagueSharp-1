@@ -1,13 +1,23 @@
 ﻿namespace RethoughtLib.Notifications.Designs
 {
+    #region Using Directives
+
     using RethoughtLib.Transitions;
 
-    public abstract class NotificationDesign
-    {
-        public abstract int Height { get; set; }
+    #endregion
 
-        public abstract int Width { get; set; }
-        
-        public abstract Transition Transition { get; set; }
+    /// <summary>
+    ///     Base NotificationDesign
+    /// </summary>
+    public abstract class NotificationDesign : Design
+    {
+        #region Public Properties
+
+        /// <summary>
+        /// Updates this instance.
+        /// </summary>
+        public abstract void Update<T>(T notification) where T : Notification;
+
+        #endregion
     }
 }

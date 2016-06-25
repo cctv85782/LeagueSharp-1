@@ -11,10 +11,12 @@
     #endregion
 
     /// <summary>
-    ///     The default implementation of a Displayer
+    ///     The default Displayer
     /// </summary>
-    /// <seealso cref="RethoughtLib.Notifications.Displayer.Displayer" />
-    public sealed class DefaultDisplayer : Displayer
+    /// <typeparam name="T">Class of type Notification</typeparam>
+    /// <seealso cref="RethoughtLib.Notifications.Displayer.Displayer{T}" />
+    public sealed class DefaultDisplayer<T> : Displayer<T>
+        where T : Notification
     {
         #region Fields
 
@@ -28,7 +30,7 @@
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DefaultDisplayer" /> class.
+        ///     Initializes a new instance of the <see cref="DefaultDisplayer{T}" /> class.
         /// </summary>
         public DefaultDisplayer()
         {
@@ -46,7 +48,7 @@
         /// </summary>
         /// <param name="notification">The notification.</param>
         /// <exception cref="NotImplementedException"></exception>
-        public override void Display(Notification notification)
+        public override void Display(T notification)
         {
             base.Display(notification);
 
@@ -64,16 +66,11 @@
         /// <param name="eventargs">The <see cref="EventArgs" /> instance containing the event data.</param>
         /// <param name="sender">The sender.</param>
         /// <exception cref="ArgumentException">The notification is already getting displayed</exception>
-        private void OnAdd(EventArgs eventargs, Notification sender)
+        protected override void OnAdd(EventArgs eventargs, T sender)
         {
-            if (this.ActiveNotifications.Contains(sender))
-            {
-                throw new ArgumentException("The notification is already getting displayed.");
-            }
+            base.OnAdd(eventargs, sender);
 
-            this.SetNewOffset();
-
-            this.ActiveNotifications.Add(sender);
+            this.SetOffset();
         }
 
         /// <summary>
@@ -82,28 +79,23 @@
         /// <param name="eventargs">The <see cref="EventArgs" /> instance containing the event data.</param>
         /// <param name="sender">The sender.</param>
         /// <exception cref="ArgumentException">The notification is not getting displayed</exception>
-        private void OnDelete(EventArgs eventargs, Notification sender)
+        protected override void OnDelete(EventArgs eventargs, T sender)
         {
-            if (!this.ActiveNotifications.Contains(sender))
-            {
-                throw new ArgumentException("The notification is not getting displayed.");
-            }
+            base.OnDelete(eventargs, sender);
 
-            this.SetNewOffset();
-
-            this.ActiveNotifications.Remove(sender);
+            this.SetOffset();
         }
 
         /// <summary>
-        ///     Sets the new offset.
+        ///     Sets the offset.
         /// </summary>
-        private void SetNewOffset()
+        private void SetOffset()
         {
             var tempOffset = new IntOffset();
 
             foreach (var notification in this.ActiveNotifications)
             {
-                tempOffset.Top += notification.NotificationDesign.Height;
+                tempOffset.Top += notification.Design.Height;
                 tempOffset.Top += this.SpacingBetweenNotifications;
             }
 
