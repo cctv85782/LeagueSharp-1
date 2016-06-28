@@ -5,6 +5,8 @@
     using System;
     using System.Collections.Generic;
 
+    using RethoughtLib.Design;
+
     using SharpDX;
 
     #endregion
@@ -14,14 +16,18 @@
     /// </summary>
     /// <typeparam name="T">Class of type Notification</typeparam>
     public abstract class Displayer<T>
-        where T : Notification
+        where T : Element
     {
         #region Fields
 
         /// <summary>
-        ///     The active notifications
+        ///     The active elements
         /// </summary>
-        protected List<T> ActiveNotifications = new List<T>();
+        protected Dictionary<T, Vector2> ElementsDictionary = new Dictionary<T, Vector2>();
+
+        #endregion
+
+        #region Constructors and Destructors
 
         #endregion
 
@@ -30,20 +36,20 @@
         /// <summary>
         /// </summary>
         /// <param name="eventArgs">The <see cref="EventArgs" /> instance containing the event data.</param>
-        /// <param name="sender">The sender.</param>
-        public delegate void DisplayerEvent(EventArgs eventArgs, T sender);
+        /// <param name="object">The object.</param>
+        public delegate void DisplayerEvent(EventArgs eventArgs, T @object);
 
         #endregion
 
         #region Public Events
 
         /// <summary>
-        ///     Occurs when [on notification add].
+        ///     Occurs when [on element add].
         /// </summary>
         public event DisplayerEvent OnNotificationAdd;
 
         /// <summary>
-        ///     Occurs when [on notification delete].
+        ///     Occurs when [on element delete].
         /// </summary>
         public event DisplayerEvent OnNotificationDelete;
 
@@ -100,14 +106,6 @@
         public virtual int MaxWidth { get; set; } = 300;
 
         /// <summary>
-        ///     Gets or sets the spacing between notifications.
-        /// </summary>
-        /// <value>
-        ///     The spacing between notifications.
-        /// </value>
-        public virtual int SpacingBetweenNotifications { get; set; } = 25;
-
-        /// <summary>
         ///     Gets the top left point.
         /// </summary>
         /// <value>
@@ -123,17 +121,45 @@
         /// </value>
         public Point TopRightPoint => new Point(this.DistanceLeft + this.MaxWidth, this.DistanceTop);
 
+        /// <summary>
+        ///     Gets or sets the spacing between elements.
+        /// </summary>
+        /// <value>
+        ///     The spacing between elements.
+        /// </value>
+        public virtual int VerticalSpaceBetweenElements { get; set; } = 25;
+
         #endregion
 
         #region Public Methods and Operators
 
         /// <summary>
-        ///     Displays the specified notification.
+        ///     Displays the specified element.
         /// </summary>
-        /// <param name="notification">The notification.</param>
-        public virtual void Display(T notification)
+        /// <param name="element">The element.</param>
+        public virtual void Add(T element)
         {
-            this.OnOnNotificationAdd(notification);
+            this.OnOnNotificationAdd(element);
+        }
+
+        /// <summary>
+        ///     Displays all elements.
+        /// </summary>
+        public virtual void Display()
+        {
+            foreach (var element in this.ElementsDictionary)
+            {
+                element.Key.Draw();
+            }
+        }
+
+        /// <summary>
+        ///     Removes the specified element.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        public virtual void Remove(T element)
+        {
+            this.OnOnNotificationDelete(element);
         }
 
         #endregion
@@ -141,50 +167,74 @@
         #region Methods
 
         /// <summary>
+        ///     Gets the position for an element in the dictionary.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual Vector2 GetPosition(T element)
+        {
+            var offset = new Offset<int>();
+
+            foreach (var entry in this.ElementsDictionary)
+            {
+                offset.Top += entry.Key.Design.Height + this.VerticalSpaceBetweenElements;
+            }
+
+            offset.Top += element.Design.Height / 2;
+            offset.Left += this.MaxWidth / 2;
+
+            return new Vector2(offset.Left, offset.Top);
+        }
+
+        /// <summary>
         ///     Raises the <see cref="E:Add" /> event.
         /// </summary>
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
-        /// <param name="sender">The sender.</param>
-        /// <exception cref="ArgumentException">ActiveNotifications already contains this notification.</exception>
-        protected virtual void OnAdd(EventArgs args, T sender)
+        /// <param name="object">The object.</param>
+        /// <exception cref="ArgumentException">ElementsDictionary already contains this element.</exception>
+        protected virtual void OnAdd(EventArgs args, T @object)
         {
-            if (this.ActiveNotifications.Contains(sender))
+            if (this.ElementsDictionary.ContainsKey(@object))
             {
-                throw new ArgumentException("ActiveNotifications already contains this notification.");
+                throw new InvalidOperationException("Displayer already contains this element.");
             }
 
-            this.ActiveNotifications.Add(sender);
+            this.ElementsDictionary.Add(@object, this.GetPosition(@object));
         }
 
         /// <summary>
         ///     Raises the <see cref="E:Delete" /> event.
         /// </summary>
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
-        /// <param name="sender">The sender.</param>
-        /// <exception cref="ArgumentException">ActiveNotifications does not contain this notification.</exception>
-        protected virtual void OnDelete(EventArgs args, T sender)
+        /// <param name="object">The object.</param>
+        /// <exception cref="ArgumentException">ElementsDictionary does not contain this element.</exception>
+        protected virtual void OnDelete(EventArgs args, T @object)
         {
-            if (!this.ActiveNotifications.Contains(sender))
+            if (!this.ElementsDictionary.ContainsKey(@object))
             {
-                throw new ArgumentException("ActiveNotifications does not contain this notification.");
+                throw new InvalidOperationException("Displayer does not contain this element.");
             }
 
-            this.ActiveNotifications.Remove(sender);
+            this.ElementsDictionary.Remove(@object);
+
+            foreach (var element in this.ElementsDictionary)
+            {
+                this.ElementsDictionary[element.Key] = this.GetPosition(@object);
+            }
         }
 
         /// <summary>
-        ///     Called when [on notification add].
+        ///     Called when [on element add].
         /// </summary>
-        /// <param name="sender">The sender.</param>
+        /// <param name="sender">The object.</param>
         protected virtual void OnOnNotificationAdd(T sender)
         {
             this.OnNotificationAdd?.Invoke(EventArgs.Empty, sender);
         }
 
         /// <summary>
-        ///     Called when [on notification delete].
+        ///     Called when [on element delete].
         /// </summary>
-        /// <param name="sender">The sender.</param>
+        /// <param name="sender">The object.</param>
         protected virtual void OnOnNotificationDelete(T sender)
         {
             this.OnNotificationDelete?.Invoke(EventArgs.Empty, sender);

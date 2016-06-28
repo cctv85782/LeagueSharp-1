@@ -11,14 +11,38 @@
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DefaultNotification" /> class.
+        /// Initializes a new instance of the <see cref="DefaultNotification"/> class.
         /// </summary>
-        /// <param name="notificationDesign">The notification design.</param>
-        public DefaultNotification(NotificationDesign notificationDesign)
-            : base(notificationDesign)
-        { }
+        /// <param name="header">The header.</param>
+        /// <param name="body">The body.</param>
+        /// <param name="notificationDesign"></param>
+        public DefaultNotification(string header, string body, NotificationDesign notificationDesign = null)
+        {
+            if (notificationDesign == null)
+            {
+                base.Design = new DefaultNotificationDesign();
+            }
+
+            this.Header = header;
+            this.Body = body;
+        }
+
+        /// <summary>
+        /// Gets or sets the header.
+        /// </summary>
+        /// <value>
+        /// The header.
+        /// </value>
+        public string Header { get; set; }
+
+        /// <summary>
+        /// Gets or sets the body.
+        /// </summary>
+        /// <value>
+        /// The body.
+        /// </value>
+        public string Body { get; set; }
 
         #endregion
-
     }
 }

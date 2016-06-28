@@ -13,10 +13,8 @@
 
         private void Test()
         {
-            var notification =
-                new DefaultNotification(new DefaultDesign("Header", "Body"));
+            var notification = new DefaultNotification("I'm a title", "I'm the content");
 
-            notification.Design = new DefaultDesign("New", "Design");
 
             // Using the default displayer (without priority)
             Notifications.Instance.Add(notification);
@@ -28,7 +26,7 @@
 
             Notifications.Instance.Add(notification, 15);
             // or (without priority)
-            displayerThatAcceptsEveryNotification.Display(notification);
+            displayerThatAcceptsEveryNotification.Add(notification);
         }
 
         #endregion

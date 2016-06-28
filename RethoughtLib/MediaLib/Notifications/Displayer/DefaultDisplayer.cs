@@ -6,17 +6,13 @@
 
     using RethoughtLib.Design;
 
-    using SharpDX;
-
     #endregion
 
     /// <summary>
     ///     The default Displayer
     /// </summary>
-    /// <typeparam name="T">Class of type Notification</typeparam>
     /// <seealso cref="RethoughtLib.Notifications.Displayer.Displayer{T}" />
-    public sealed class DefaultDisplayer<T> : Displayer<T>
-        where T : Notification
+    public sealed class DefaultDisplayer<T> : Displayer<T> where T : Element
     {
         #region Fields
 
@@ -44,16 +40,13 @@
         #region Public Methods and Operators
 
         /// <summary>
-        ///     Displays the specified notification.
+        ///     Displays the specified element.
         /// </summary>
-        /// <param name="notification">The notification.</param>
+        /// <param name="element">The element.</param>
         /// <exception cref="NotImplementedException"></exception>
-        public override void Display(T notification)
+        public override void Add(T element)
         {
-            base.Display(notification);
-
-            notification.StartPosition = new Vector2(this.offset.Left, this.offset.Top);
-            notification.Draw();
+            base.Add(element);
         }
 
         #endregion
@@ -64,11 +57,11 @@
         ///     Raises the <see cref="E:Add" /> event.
         /// </summary>
         /// <param name="eventargs">The <see cref="EventArgs" /> instance containing the event data.</param>
-        /// <param name="sender">The sender.</param>
-        /// <exception cref="ArgumentException">The notification is already getting displayed</exception>
-        protected override void OnAdd(EventArgs eventargs, T sender)
+        /// <param name="object">The object.</param>
+        /// <exception cref="ArgumentException">The element is already getting displayed</exception>
+        protected override void OnAdd(EventArgs eventargs, T @object)
         {
-            base.OnAdd(eventargs, sender);
+            base.OnAdd(eventargs, @object);
 
             this.SetOffset();
         }
@@ -77,11 +70,11 @@
         ///     Raises the <see cref="E:Delete" /> event.
         /// </summary>
         /// <param name="eventargs">The <see cref="EventArgs" /> instance containing the event data.</param>
-        /// <param name="sender">The sender.</param>
-        /// <exception cref="ArgumentException">The notification is not getting displayed</exception>
-        protected override void OnDelete(EventArgs eventargs, T sender)
+        /// <param name="object">The object.</param>
+        /// <exception cref="ArgumentException">The element is not getting displayed</exception>
+        protected override void OnDelete(EventArgs eventargs, T @object)
         {
-            base.OnDelete(eventargs, sender);
+            base.OnDelete(eventargs, @object);
 
             this.SetOffset();
         }
@@ -93,10 +86,10 @@
         {
             var tempOffset = new IntOffset();
 
-            foreach (var notification in this.ActiveNotifications)
+            foreach (var element in this.ElementsDictionary)
             {
-                tempOffset.Top += notification.Design.Height;
-                tempOffset.Top += this.SpacingBetweenNotifications;
+                tempOffset.Top += element.Key.Design.Height;
+                tempOffset.Top += this.VerticalSpaceBetweenElements;
             }
 
             this.offset = tempOffset;

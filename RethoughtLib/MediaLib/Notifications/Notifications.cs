@@ -69,19 +69,19 @@
             if (displayer == null)
             {
                 var defaultDisplayer = Displayers.FirstOrDefault();
-                defaultDisplayer?.Display(notification);
+                defaultDisplayer?.Add(notification);
                 return;
             }
 
             if (!Displayers.Any(x => x.Equals(displayer)))
             {
                 Displayers.Add(displayer);
-                displayer.Display(notification);
+                displayer.Add(notification);
                 return;
             }
 
             var newDisplayer = Displayers.FirstOrDefault(x => x.Equals(displayer));
-            newDisplayer?.Display(notification);
+            newDisplayer?.Add(notification);
         }
 
         #endregion

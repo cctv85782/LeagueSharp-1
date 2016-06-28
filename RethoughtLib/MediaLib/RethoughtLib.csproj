@@ -91,9 +91,9 @@
     <Compile Include="Menu\Presets\ChampionSliderMenu.cs" />
     <Compile Include="Menu\Presets\DynamicMenu.cs" />
     <Compile Include="Menu\Presets\WhitelistMenu.cs" />
+    <Compile Include="Notifications\Class1.cs" />
     <Compile Include="Notifications\DefaultNotification.cs" />
-    <Compile Include="Notifications\DefaultNotificationObserver.cs" />
-    <Compile Include="Notifications\Designs\DefaultDesign.cs" />
+    <Compile Include="Notifications\Designs\DefaultNotificationDesign.cs" />
     <Compile Include="Notifications\Designs\Design.cs" />
     <Compile Include="Notifications\Displayer\Displayer.cs" />
     <Compile Include="Notifications\Displayer\DefaultDisplayer.cs" />
@@ -114,6 +114,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="root.cs" />
+    <Compile Include="Test\abstractObject.cs" />
+    <Compile Include="Test\concreteObject.cs" />
     <Compile Include="Transitions\CircEaseOutIn.cs" />
     <Compile Include="Transitions\CubicEaseInOut.cs" />
     <Compile Include="Transitions\ElasticEaseInOut.cs" />

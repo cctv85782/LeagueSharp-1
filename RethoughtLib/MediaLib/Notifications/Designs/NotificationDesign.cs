@@ -2,7 +2,7 @@
 {
     #region Using Directives
 
-    using RethoughtLib.Transitions;
+    
 
     #endregion
 
@@ -14,7 +14,19 @@
         #region Public Properties
 
         /// <summary>
-        /// Updates this instance.
+        ///     Gets or sets the header.
+        /// </summary>
+        /// <value>
+        ///     The header.
+        /// </value>
+        public string Header { get; set; }
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        ///     Updates this instance.
         /// </summary>
         public abstract void Update<T>(T notification) where T : Notification;
 

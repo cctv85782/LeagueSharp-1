@@ -4,27 +4,38 @@
 
     using RethoughtLib.Notifications.Designs;
 
+    using SharpDX;
+
     #endregion
 
-    public abstract class Element<T> where T : Design
+    public abstract class Element
     {
         #region Public Properties
 
         /// <summary>
-        /// Gets or sets the design.
+        ///     Gets or sets the design.
         /// </summary>
         /// <value>
-        /// The design.
+        ///     The design.
         /// </value>
-        public abstract T Design { get; set; }
+        public Design Design { get; set; }
 
         /// <summary>
-        /// Draws this instance.
+        ///     Gets or sets the position.
         /// </summary>
-        public virtual void Draw()
-        {
-                
-        }
+        /// <value>
+        ///     The position.
+        /// </value>
+        public Vector2 Position { get; set; }
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        ///     Draws this instance.
+        /// </summary>
+        public abstract void Draw();
 
         #endregion
     }

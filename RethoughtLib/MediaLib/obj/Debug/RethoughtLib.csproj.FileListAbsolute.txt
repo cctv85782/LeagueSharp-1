@@ -28,3 +28,4 @@ E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\MediaLib\bin\Debug\LeagueS
 E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\MediaLib\bin\Debug\Newtonsoft.Json.dll
 E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\MediaLib\bin\Debug\LeagueSharp.Common.pdb
 E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\MediaLib\bin\Debug\LeagueSharp.Data.pdb
+E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\MediaLib\obj\Debug\RethoughtLib.csprojResolveAssemblyReference.cache

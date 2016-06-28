@@ -14,7 +14,7 @@
 
     #endregion
 
-    internal class DefaultDesign : NotificationDesign
+    internal class DefaultNotificationDesign : NotificationDesign
     {
         #region Static Fields
 
@@ -116,21 +116,10 @@
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DefaultDesign" /> class.
+        /// Initializes a new instance of the <see cref="DefaultNotificationDesign"/> class.
         /// </summary>
-        /// <param name="header">The header.</param>
-        /// <param name="body">The body.</param>
-        public DefaultDesign(string header, string body)
-        {
-            this.Header = header;
-            this.Body = body;
-        }
-
-        public DefaultDesign()
-        {
-            this.Header = "No Title.";
-            this.Body = "No Content to be displayed.";
-        }
+        public DefaultNotificationDesign()
+        { }
 
         #endregion
 
