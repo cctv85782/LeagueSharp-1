@@ -89,7 +89,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bootstrap.cs" />
+    <Compile Include="BootstrapContainer.cs" />
     <Compile Include="CommonEx\Algorithm\Djikstra\ConnectionTypes\ConnectionBase.cs" />
     <Compile Include="CommonEx\Algorithm\Djikstra\ConnectionTypes\SimpleConnection.cs" />
     <Compile Include="CommonEx\Algorithm\Djikstra\ConnectionTypes\YasuoBlinkConnection.cs" />
