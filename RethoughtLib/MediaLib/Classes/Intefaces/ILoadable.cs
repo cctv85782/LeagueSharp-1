@@ -1,4 +1,4 @@
-﻿namespace RethoughtLib.Classes.Bootstraps.Interfaces
+﻿namespace RethoughtLib.Classes.Intefaces
 {
     public interface ILoadable : INamable
     {

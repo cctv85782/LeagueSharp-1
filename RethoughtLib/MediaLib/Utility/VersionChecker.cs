@@ -1,19 +1,20 @@
 ﻿namespace RethoughtLib.Utility
 {
+    #region Using Directives
+
     using System;
     using System.Net;
     using System.Reflection;
-    using System.Runtime.CompilerServices;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
+
+    #endregion
 
     /// <summary>
     ///     Class that offers different kinds of version checking
     /// </summary>
     public class VersionChecker
     {
-        public string AssemblyName { get; set; }
-
         #region Fields
 
         /// <summary>
@@ -29,7 +30,7 @@
         /// <summary>
         ///     update available
         /// </summary>
-        public bool UpdateAvailable ;
+        public bool UpdateAvailable;
 
         /// <summary>
         ///     The git hub path
@@ -53,6 +54,12 @@
 
         #endregion
 
+        #region Public Properties
+
+        public string AssemblyName { get; set; }
+
+        #endregion
+
         #region Public Methods and Operators
 
         public void Check(string path)
@@ -63,11 +70,11 @@
         /// <summary>
         ///     Checks the new version.
         /// </summary>
-        private void CheckNewVersion()
+        public void CheckNewVersion()
         {
             try
             {
-                var gitVersion = GetNewVersion();
+                var gitVersion = this.GetNewVersion();
 
                 var version = this.LocalVersion;
 
@@ -122,15 +129,13 @@
                             $@"https://raw.githubusercontent.com/{this.gitHubPath}/Properties/AssemblyInfo.cs");
 
                     var match =
-                        new Regex(
-                            @"\[assembly\: AssemblyVersion\(""(\d{1,})\.(\d{1,})\.(\d{1,})\.(\d{1,})""\)\]")
-                            .Match(data);
+                        new Regex(@"\[assembly\: AssemblyVersion\(""(\d{1,})\.(\d{1,})\.(\d{1,})\.(\d{1,})""\)\]").Match
+                            (data);
 
                     if (!match.Success) return new Version(0, 0, 0, 0);
 
                     var version =
-                        new Version(
-                            $"{match.Groups[1]}, {match.Groups[2]}, {match.Groups[3]}, {match.Groups[4]}");
+                        new Version($"{match.Groups[1]}, {match.Groups[2]}, {match.Groups[3]}, {match.Groups[4]}");
 
                     return version;
                 }

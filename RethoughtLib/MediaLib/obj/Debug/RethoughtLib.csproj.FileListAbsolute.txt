@@ -13,8 +13,6 @@ E:\Visual Studio Projects\MediaLib\MediaLib\MediaLib\bin\Debug\LeagueSharp.Commo
 E:\Visual Studio Projects\MediaLib\MediaLib\MediaLib\bin\Debug\LeagueSharp.Data.pdb
 E:\Visual Studio Projects\MediaLib\MediaLib\MediaLib\obj\Debug\RethoughtLib.dll
 E:\Visual Studio Projects\MediaLib\MediaLib\MediaLib\obj\Debug\RethoughtLib.pdb
-E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\MediaLib\obj\Debug\RethoughtLib.dll
-E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\MediaLib\obj\Debug\RethoughtLib.pdb
 E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\MediaLib\bin\Debug\RethoughtLib.dll.config
 E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\MediaLib\bin\Debug\RethoughtLib.dll
 E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\MediaLib\bin\Debug\RethoughtLib.pdb
@@ -28,4 +26,5 @@ E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\MediaLib\bin\Debug\LeagueS
 E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\MediaLib\bin\Debug\Newtonsoft.Json.dll
 E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\MediaLib\bin\Debug\LeagueSharp.Common.pdb
 E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\MediaLib\bin\Debug\LeagueSharp.Data.pdb
-E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\MediaLib\obj\Debug\RethoughtLib.csprojResolveAssemblyReference.cache
+E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\MediaLib\obj\Debug\RethoughtLib.dll
+E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\MediaLib\obj\Debug\RethoughtLib.pdb

@@ -19,8 +19,6 @@
     /// </summary>
     internal class BootstrapContainer
     {
-        internal PlaySharpBootstrapBase BootstrapBase = new PlaySharpBootstrap();
-
         #region Methods
 
         /// <summary>
@@ -32,8 +30,6 @@
             {
                 CustomEvents.Game.OnGameLoad += delegate
                     {
-
-
                         if (GlobalVariables.Assembly != null)
                         {
                             return;
@@ -67,81 +63,5 @@
         }
 
         #endregion
-    }
-
-    internal interface IBootstrap
-    {
-        /// <summary>
-        /// Initializes this instance.
-        /// </summary>
-        void Initialize();
-    }
-
-    internal abstract class PlaySharpBootstrapBase : IBootstrap
-    {
-        /// <summary>
-        /// The modules
-        /// </summary>
-        public List<ILoadable> Modules = new List<ILoadable>();
-
-        /// <summary>
-        /// Initializes this instance.
-        /// </summary>
-        public abstract void Initialize();
-    }
-
-    internal interface INamable
-    {
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        string Name { get; set; }
-    }
-
-    internal interface ILoadable : INamable
-    {
-        /// <summary>
-        /// Loads this instance.
-        /// </summary>
-        void Load();
-    }
-
-    internal class PlaySharpBootstrap : PlaySharpBootstrapBase
-    {
-        /// <summary>
-        /// Initializes this instance.
-        /// </summary>
-        public override void Initialize()
-        {
-            foreach (var module in this.Modules)
-            {
-                if (module.Name == ObjectManager.Player.ChampionName)
-                {
-                    module.Load();
-                }
-            }
-        }
-    }
-
-    internal class ChampionYasuo : ILoadable
-    {
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Loads this instance.
-        /// </summary>
-        public void Load()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

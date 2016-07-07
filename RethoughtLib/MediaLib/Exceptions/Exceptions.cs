@@ -8,7 +8,7 @@
     #endregion
 
     /// <summary>
-    ///     Exceptions that gets thrown when the Bootstrap fails loading because of any unspecified reason
+    ///     Exceptions that gets thrown when the PlaySharpBootstrap fails loading because of any unspecified reason
     /// </summary>
     /// <seealso cref="System.Exception" />
     [Serializable]

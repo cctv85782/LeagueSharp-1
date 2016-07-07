@@ -68,11 +68,20 @@
     <Compile Include="Boostrap.cs" />
     <Compile Include="CastManager\CastManager.cs" />
     <Compile Include="CastManager\CastManagerMenu.cs" />
-    <Compile Include="Classes\Bootstraps\Bootstrap.cs" />
-    <Compile Include="Classes\Bootstraps\PlaySharpBootstrapBase.cs" />
+    <Compile Include="ChatLogger\ChatLogger.cs" />
+    <Compile Include="ChatLogger\Implementations\DefaultFormat.cs" />
+    <Compile Include="ChatLogger\Implementations\DefaultLogger.cs" />
+    <Compile Include="ChatLogger\Interfaces\IChatLogger.cs" />
+    <Compile Include="ChatLogger\Interfaces\ILogFormat.cs" />
+    <Compile Include="ChatLogger\Message.cs" />
+    <Compile Include="Classes\Bootstraps\Abstract Classes\LoadableBase.cs" />
+    <Compile Include="Classes\Bootstraps\FullAutomaticBootstrap.cs" />
+    <Compile Include="Classes\Bootstraps\PlaySharpBootstrap.cs" />
+    <Compile Include="Classes\Bootstraps\Abstract Classes\PlaySharpBootstrapBase.cs" />
     <Compile Include="Classes\Bootstraps\Interfaces\IBootstrap.cs" />
-    <Compile Include="Classes\Bootstraps\Interfaces\ILoadable.cs" />
-    <Compile Include="Classes\Bootstraps\Interfaces\INamable.cs" />
+    <Compile Include="Classes\Feature\Presets\Assembly.cs" />
+    <Compile Include="Classes\Intefaces\ILoadable.cs" />
+    <Compile Include="Classes\Intefaces\INamable.cs" />
     <Compile Include="Classes\Bootstraps\TestClass.cs" />
     <Compile Include="Classes\LeagueSharpAssembly\LeagueSharpAssembly.cs" />
     <Compile Include="Classes\Observer\Observer.cs" />
@@ -137,6 +146,7 @@
     <Compile Include="Utility\Math.cs" />
     <Compile Include="Utility\String.cs" />
     <Compile Include="Utility\VersionChecker.cs" />
+    <Compile Include="VersionChecker\VersionChecker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

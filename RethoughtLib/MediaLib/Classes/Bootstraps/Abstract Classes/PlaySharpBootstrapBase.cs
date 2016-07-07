@@ -4,7 +4,7 @@
 
 #endregion
 
-namespace RethoughtLib.Classes.Bootstraps
+namespace RethoughtLib.Classes.Bootstraps.Abstract_Classes
 {
     #region Using Directives
 
@@ -13,6 +13,7 @@ namespace RethoughtLib.Classes.Bootstraps
     using System.Linq;
 
     using RethoughtLib.Classes.Bootstraps.Interfaces;
+    using RethoughtLib.Classes.Intefaces;
 
     #endregion
 
@@ -41,12 +42,12 @@ namespace RethoughtLib.Classes.Bootstraps
         ///     Adds the module.
         /// </summary>
         /// <param name="module">The module.</param>
-        /// <exception cref="ArgumentException">There can't be multiple similiar modules in the Bootstrap.</exception>
+        /// <exception cref="ArgumentException">There can't be multiple similiar modules in the PlaySharpBootstrap.</exception>
         public virtual void AddModule(ILoadable module)
         {
             if (this.Modules.Contains(module))
             {
-                throw new ArgumentException("There can't be multiple similiar modules in the Bootstrap.");
+                throw new ArgumentException("There can't be multiple similiar modules in the PlaySharpBootstrap.");
             }
 
             this.Modules.Add(module);
@@ -56,7 +57,7 @@ namespace RethoughtLib.Classes.Bootstraps
         ///     Adds the module.
         /// </summary>
         /// <param name="modules">the modules</param>
-        /// <exception cref="ArgumentException">There can't be multiple similiar modules in the Bootstrap.</exception>
+        /// <exception cref="ArgumentException">There can't be multiple similiar modules in the PlaySharpBootstrap.</exception>
         public virtual void AddModules(IEnumerable<ILoadable> modules)
         {
             var loadables = modules as IList<ILoadable> ?? modules.ToList();
@@ -66,7 +67,7 @@ namespace RethoughtLib.Classes.Bootstraps
                  where moduleToAdd.Equals(existingModule)
                  select moduleToAdd).Any())
             {
-                throw new ArgumentException("There can't be multiple similiar modules in the Bootstrap.");
+                throw new ArgumentException("There can't be multiple similiar modules in the PlaySharpBootstrap.");
             }
 
             this.Modules.AddRange(loadables);
@@ -109,24 +110,40 @@ namespace RethoughtLib.Classes.Bootstraps
             if (!this.Modules.Any())
             {
                 throw new InvalidOperationException(
-                    "There are no modules in the Bootstrap to load.");
+                    "There are no modules in the PlaySharpBootstrap to load.");
             }
 
             if (!this.Strings.Any())
             {
                 throw new InvalidOperationException(
-                    "There are no strings in the Bootstrap to make a check with modules.");
+                    "There are no strings in the PlaySharpBootstrap to make a check with modules.");
             }
+
+            var loadedModulesCount = 0;
+            var unknownModulesCount = 0;
 
             foreach (var module in this.Modules)
             {
+                if (string.IsNullOrWhiteSpace(module.Name))
+                {
+                    unknownModulesCount++;
+                }
+
                 foreach (var @string in this.Strings)
                 {
                     if (module.Name.Equals(@string))
                     {
                         module.Load();
+                        loadedModulesCount++;
                     }
                 }
+            }
+
+            Console.WriteLine($"[{GlobalVariables.DisplayName}] PlaySharpBootstrapBase: {unknownModulesCount} unknown Modules, {loadedModulesCount} loaded Modules");
+
+            if (unknownModulesCount > 0)
+            {
+                Console.WriteLine($"[{GlobalVariables.DisplayName}] PlaySharpBootstrapBase: Please consider naming your unkown modules. The name should not be null or whitespace.");
             }
         }
 

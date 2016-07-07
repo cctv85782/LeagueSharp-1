@@ -21,7 +21,7 @@ namespace RethoughtLib.UI.Notifications.Designs
         /// <value>
         ///     The header.
         /// </value>
-        public string Header { get; set; }
+        public virtual string Header { get; set; }
 
         #endregion
 

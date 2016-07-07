@@ -3,10 +3,12 @@
     #region Using Directives
 
     using System;
+    using System.Collections.Generic;
 
     using LeagueSharp.Common;
 
-    using Interfaces;
+    using RethoughtLib.Classes.Bootstraps.Interfaces;
+    using RethoughtLib.Classes.Intefaces;
 
     #endregion
 
@@ -18,6 +20,8 @@
         public void TestVoid()
         {
             CustomEvents.Game.OnGameLoad += OnLoad;
+
+            var automaticBootstrap = new LeagueSharpAutoChampionBootstrap(new List<ILoadable>() { new NunuModule() });
         }
 
         #endregion
@@ -26,7 +30,7 @@
 
         private static void OnLoad(EventArgs args)
         {
-            var bootstrap = new Bootstrap();
+            var bootstrap = new PlaySharpBootstrap();
 
             bootstrap.AddModule(new NunuModule());
             bootstrap.AddString("Nunu");

@@ -160,7 +160,7 @@
         /// <value>
         ///     The Header.
         /// </value>
-        public string Header
+        public override string Header
         {
             get
             {

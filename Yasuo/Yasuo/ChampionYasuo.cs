@@ -23,7 +23,7 @@
 
     #endregion
 
-    class ChampionYasuo : IChampion
+    internal class ChampionYasuo : IChampion
     {
         #region Public Properties
 
