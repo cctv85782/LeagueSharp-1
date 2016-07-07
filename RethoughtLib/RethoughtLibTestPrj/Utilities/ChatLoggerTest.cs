@@ -6,10 +6,11 @@
 
     using RethoughtLib.ChatLogger;
     using RethoughtLib.ChatLogger.Implementations;
+    using RethoughtLib.Classes.Intefaces;
 
     #endregion
 
-    public class ChatLoggerTest
+    public class ChatLoggerTest : ILoadable
     {
         #region Fields
 
@@ -55,5 +56,22 @@
         }
 
         #endregion
+
+        /// <summary>
+        ///     Gets or sets the name.
+        /// </summary>
+        /// <value>
+        ///     The name.
+        /// </value>
+        public string Name { get; set; }
+
+        /// <summary>
+        ///     Loads this instance.
+        /// </summary>
+        public void Load()
+        {
+            this.Test();
+            Console.WriteLine("Loaded ChatLogger and tested.");
+        }
     }
 }

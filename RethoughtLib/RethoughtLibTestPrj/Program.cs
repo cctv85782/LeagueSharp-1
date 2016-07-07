@@ -8,6 +8,7 @@
     using RethoughtLib.Classes.Intefaces;
 
     using RethoughtLibTestPrj.Champions;
+    using RethoughtLibTestPrj.Utilities;
 
     #endregion
 
@@ -18,7 +19,7 @@
         private static void Main(string[] args)
         {
             var bootstrap =
-                new LeagueSharpAutoChampionBootstrap(new List<ILoadable>() { new NunuLoader(), new YorickLoader() });
+                new LeagueSharpAutoChampionBootstrap(new List<ILoadable>() { new NunuLoader(), new YorickLoader(), new ChatLoggerTest()});
         }
 
         #endregion
