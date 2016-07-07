@@ -63,7 +63,7 @@
         /// <value>
         ///     The name.
         /// </value>
-        public string Name { get; set; }
+        public string Name { get; set; } = "Utility";
 
         /// <summary>
         ///     Loads this instance.

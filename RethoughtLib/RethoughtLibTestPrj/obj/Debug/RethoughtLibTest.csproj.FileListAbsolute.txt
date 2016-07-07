@@ -16,3 +16,5 @@ E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\RethoughtLibTestPrj\bin\De
 E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\RethoughtLibTestPrj\obj\Debug\RethoughtLibTest.csprojResolveAssemblyReference.cache
 E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\RethoughtLibTestPrj\obj\Debug\RethoughtLibTestPrj.exe
 E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\RethoughtLibTestPrj\obj\Debug\RethoughtLibTestPrj.pdb
+E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\RethoughtLibTestPrj\bin\Debug\LeagueSharp.Sandbox.pdb
+E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\RethoughtLibTestPrj\obj\Debug\RethoughtLibTest.csproj.RethoughtLibTestPrj.exe.config

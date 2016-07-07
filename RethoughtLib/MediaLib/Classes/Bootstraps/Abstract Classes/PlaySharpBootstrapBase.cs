@@ -79,7 +79,9 @@ namespace RethoughtLib.Classes.Bootstraps.Abstract_Classes
         /// <param name="value">The value.</param>
         public virtual void AddString(string value)
         {
-            if (this.Strings.Contains(value))
+            Console.WriteLine("Adding string");
+
+            if (string.IsNullOrEmpty(value) || this.Strings == null || this.Strings.Contains(value))
             {
                 return;
             }
@@ -110,13 +112,13 @@ namespace RethoughtLib.Classes.Bootstraps.Abstract_Classes
             if (!this.Modules.Any())
             {
                 throw new InvalidOperationException(
-                    "There are no modules in the PlaySharpBootstrap to load.");
+                    "There are no modules in the Bootstrap to load.");
             }
 
             if (!this.Strings.Any())
             {
                 throw new InvalidOperationException(
-                    "There are no strings in the PlaySharpBootstrap to make a check with modules.");
+                    "There are no strings in the Bootstrap to make a check with modules.");
             }
 
             var loadedModulesCount = 0;
@@ -127,15 +129,18 @@ namespace RethoughtLib.Classes.Bootstraps.Abstract_Classes
                 if (string.IsNullOrWhiteSpace(module.Name))
                 {
                     unknownModulesCount++;
+                    continue;
                 }
+
+                Console.WriteLine(module.Name);
 
                 foreach (var @string in this.Strings)
                 {
-                    if (module.Name.Equals(@string))
-                    {
-                        module.Load();
-                        loadedModulesCount++;
-                    }
+                    Console.WriteLine(@string);
+                    if (!module.Name.Equals(@string)) continue;
+
+                    module.Load();
+                    loadedModulesCount++;
                 }
             }
 
@@ -143,7 +148,7 @@ namespace RethoughtLib.Classes.Bootstraps.Abstract_Classes
 
             if (unknownModulesCount > 0)
             {
-                Console.WriteLine($"[{GlobalVariables.DisplayName}] PlaySharpBootstrapBase: Please consider naming your unkown modules. The name should not be null or whitespace.");
+                Console.WriteLine($"[{GlobalVariables.DisplayName}] PlaySharpBootstrapBase: Please consider naming your unkown modules. The name must not be null or whitespace.");
             }
         }
 

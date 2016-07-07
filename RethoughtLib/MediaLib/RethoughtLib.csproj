@@ -33,17 +33,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LeagueSharp">
-      <HintPath>..\..\..\..\Program Files (x86)\LeagueSharp\System\LeagueSharp.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpNew\System\LeagueSharp.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.Common">
-      <HintPath>..\..\..\..\Program Files (x86)\LeagueSharp\System\LeagueSharp.Common.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpNew\System\LeagueSharp.Common.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\..\Program Files (x86)\LeagueSharp\System\SharpDX.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpNew\System\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D9, Version=2.6.3.0, Culture=neutral, PublicKeyToken=345b829e6e492981, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Program Files (x86)\LeagueSharp\System\SharpDX.Direct3D9.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpNew\System\SharpDX.Direct3D9.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -75,7 +75,7 @@
     <Compile Include="ChatLogger\Interfaces\ILogFormat.cs" />
     <Compile Include="ChatLogger\Message.cs" />
     <Compile Include="Classes\Bootstraps\Abstract Classes\LoadableBase.cs" />
-    <Compile Include="Classes\Bootstraps\FullAutomaticBootstrap.cs" />
+    <Compile Include="Classes\Bootstraps\LeagueSharpAutoChampionBootstrap.cs" />
     <Compile Include="Classes\Bootstraps\PlaySharpBootstrap.cs" />
     <Compile Include="Classes\Bootstraps\Abstract Classes\PlaySharpBootstrapBase.cs" />
     <Compile Include="Classes\Bootstraps\Interfaces\IBootstrap.cs" />

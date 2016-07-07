@@ -2,6 +2,8 @@
 {
     #region Using Directives
 
+    using System;
+
     using LeagueSharp.Common;
 
     #endregion
@@ -50,8 +52,10 @@
         /// </summary>
         public void OnLoad()
         {
-            if (!string.IsNullOrWhiteSpace(this.Name) || !this.Hidden)
+            if (!string.IsNullOrWhiteSpace(this.Name) && !this.Hidden)
             {
+                Console.WriteLine("Loading Menu");
+
                 this.Menu = new Menu(this.Name, this.Name);
 
                 this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
