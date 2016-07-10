@@ -1,21 +1,21 @@
-﻿namespace RethoughtLib.Transitions
+﻿namespace RethoughtLib.Transitions.Implementations
 {
-    using System;
+    using global::RethoughtLib.Transitions.Abstract_Base;
 
     /// <summary>
-    ///     The elastic ease in out.
+    ///     The expo ease in out.
     /// </summary>
-    public class ElasticEaseInOut : Transition
+    public class QuartEaseInOut : Transition
     {
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="ElasticEaseInOut" /> class.
+        ///     Initializes a new instance of the <see cref="QuartEaseInOut" /> class.
         /// </summary>
         /// <param name="duration">
         ///     The duration.
         /// </param>
-        public ElasticEaseInOut(double duration)
+        public QuartEaseInOut(double duration)
             : base(duration)
         {
         }
@@ -44,20 +44,12 @@
         /// </returns>
         public override double Equation(double t, double b, double c, double d)
         {
-            if ((t /= d / 2) == 2)
+            if ((t /= d / 2) < 1)
             {
-                return b + c;
+                return c / 2 * t * t * t * t + b;
             }
 
-            var p = d * (.3 * 1.5);
-            var s = p / 4;
-
-            if (t < 1)
-            {
-                return -.5 * (c * Math.Pow(2, 10 * (t -= 1)) * Math.Sin((t * d - s) * (2 * Math.PI) / p)) + b;
-            }
-
-            return c * Math.Pow(2, -10 * (t -= 1)) * Math.Sin((t * d - s) * (2 * Math.PI) / p) * .5 + c + b;
+            return -c / 2 * ((t -= 2) * t * t * t - 2) + b;
         }
 
         #endregion

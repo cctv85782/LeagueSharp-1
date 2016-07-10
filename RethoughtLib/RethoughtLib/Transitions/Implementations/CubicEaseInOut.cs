@@ -1,19 +1,21 @@
-﻿namespace RethoughtLib.Transitions
+﻿namespace RethoughtLib.Transitions.Implementations
 {
+    using global::RethoughtLib.Transitions.Abstract_Base;
+
     /// <summary>
-    ///     The quad ease in out.
+    ///     The cubic ease in out.
     /// </summary>
-    public class QuadEaseOut : Transition
+    public class CubicEaseInOut : Transition
     {
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="QuadEaseOut" /> class.
+        ///     Initializes a new instance of the <see cref="CubicEaseInOut" /> class.
         /// </summary>
         /// <param name="duration">
         ///     The duration.
         /// </param>
-        public QuadEaseOut(double duration)
+        public CubicEaseInOut(double duration)
             : base(duration)
         {
         }
@@ -42,7 +44,12 @@
         /// </returns>
         public override double Equation(double t, double b, double c, double d)
         {
-            return -c * (t /= d) * (t - 2) + b;
+            if ((t /= d / 2) < 1)
+            {
+                return c / 2 * t * t * t + b;
+            }
+
+            return c / 2 * ((t -= 2) * t * t + 2) + b;
         }
 
         #endregion

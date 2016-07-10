@@ -8,6 +8,8 @@
 
     using global::RethoughtLib.Classes.Observer;
     using global::RethoughtLib.Transitions;
+    using global::RethoughtLib.Transitions.Abstract_Base;
+    using global::RethoughtLib.Transitions.Implementations;
     using global::RethoughtLib.Utility;
 
     using SharpDX.Direct3D9;

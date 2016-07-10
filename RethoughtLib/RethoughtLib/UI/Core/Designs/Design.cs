@@ -3,6 +3,7 @@
     #region Using Directives
 
     using global::RethoughtLib.Transitions;
+    using global::RethoughtLib.Transitions.Abstract_Base;
 
     #endregion
 

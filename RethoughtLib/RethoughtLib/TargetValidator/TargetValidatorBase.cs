@@ -2,6 +2,7 @@
 {
     #region Using Directives
 
+    using System;
     using System.Collections.Generic;
 
     using global::RethoughtLib.TargetValidator.Interfaces;
@@ -60,7 +61,7 @@
         /// <param name="object">The object.</param>
         public virtual bool Check(Obj_AI_Base @object)
         {
-            this.Reset();
+            this.SoftReset();
 
             this.Target = @object;
 
@@ -120,17 +121,20 @@
         {
             if (this.Target == null)
             {
+                this.Valid = false;
                 return;
             }
 
-            foreach (var state in this.ChecksList)
+            foreach (var check in this.ChecksList)
             {
                 if (this.Valid == false)
                 {
                     break;
                 }
 
-                this.Valid = state.Check(this.Target);
+                this.Valid = check.Check(this.Target);
+
+                Console.WriteLine($"The target {this.Target} got checked with {check}, result was {this.Valid}");
             }
 
 #if DEBUG

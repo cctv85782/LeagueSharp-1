@@ -3,6 +3,7 @@
     using System;
 
     using global::RethoughtLib.Transitions;
+    using global::RethoughtLib.Transitions.Abstract_Base;
 
     internal class CompactNotificationDesign : NotificationDesign
     {

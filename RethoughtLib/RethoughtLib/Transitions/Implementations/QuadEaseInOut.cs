@@ -1,5 +1,7 @@
-﻿namespace RethoughtLib.Transitions
+﻿namespace RethoughtLib.Transitions.Implementations
 {
+    using global::RethoughtLib.Transitions.Abstract_Base;
+
     /// <summary>
     ///     The quad ease in out.
     /// </summary>

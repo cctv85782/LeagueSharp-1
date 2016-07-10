@@ -1,6 +1,8 @@
-﻿namespace RethoughtLib.Transitions
+﻿namespace RethoughtLib.Transitions.Implementations
 {
     using System;
+
+    using global::RethoughtLib.Transitions.Abstract_Base;
 
     /// <summary>
     ///     The expo ease in out.

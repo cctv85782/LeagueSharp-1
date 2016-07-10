@@ -1,4 +1,4 @@
-﻿namespace RethoughtLib.Transitions
+﻿namespace RethoughtLib.Transitions.Abstract_Base
 {
     #region Using Directives
 

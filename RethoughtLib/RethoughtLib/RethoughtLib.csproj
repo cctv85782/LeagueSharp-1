@@ -137,16 +137,14 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="root.cs" />
-    <Compile Include="Test\abstractObject.cs" />
-    <Compile Include="Test\concreteObject.cs" />
-    <Compile Include="Transitions\CircEaseOutIn.cs" />
-    <Compile Include="Transitions\CubicEaseInOut.cs" />
-    <Compile Include="Transitions\ElasticEaseInOut.cs" />
-    <Compile Include="Transitions\ExpoEaseInOut.cs" />
-    <Compile Include="Transitions\QuadEaseInOut.cs" />
-    <Compile Include="Transitions\QuadEaseOut.cs" />
-    <Compile Include="Transitions\QuartEaseInOut.cs" />
-    <Compile Include="Transitions\Transition.cs" />
+    <Compile Include="Transitions\Implementations\CircEaseOutIn.cs" />
+    <Compile Include="Transitions\Implementations\CubicEaseInOut.cs" />
+    <Compile Include="Transitions\Implementations\ElasticEaseInOut.cs" />
+    <Compile Include="Transitions\Implementations\ExpoEaseInOut.cs" />
+    <Compile Include="Transitions\Implementations\QuadEaseInOut.cs" />
+    <Compile Include="Transitions\Implementations\QuadEaseOut.cs" />
+    <Compile Include="Transitions\Implementations\QuartEaseInOut.cs" />
+    <Compile Include="Transitions\Abstract Base\Transition.cs" />
     <Compile Include="Events\Events.cs" />
     <Compile Include="Utility\Logger.cs" />
     <Compile Include="Utility\Math.cs" />

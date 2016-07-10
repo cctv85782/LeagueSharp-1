@@ -5,6 +5,8 @@ namespace RethoughtLib.UI.Notifications
     using LeagueSharp.Common;
 
     using global::RethoughtLib.Transitions;
+    using global::RethoughtLib.Transitions.Abstract_Base;
+    using global::RethoughtLib.Transitions.Implementations;
     using global::RethoughtLib.UI.Core;
     using global::RethoughtLib.UI.Notifications.Designs;
 

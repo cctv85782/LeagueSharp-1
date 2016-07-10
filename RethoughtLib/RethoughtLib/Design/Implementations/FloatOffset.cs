@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RethoughtLib.Test
+namespace RethoughtLib.Design.Implementations
 {
-    internal abstract class AbstractObject
+    public class FloatOffset : Offset<float>
     {
-        protected abstract string SomeString { get; set; }
     }
 }

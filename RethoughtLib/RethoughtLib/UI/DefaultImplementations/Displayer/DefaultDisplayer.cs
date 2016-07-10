@@ -5,6 +5,7 @@ namespace RethoughtLib.UI.DefaultImplementations.Displayer
     using System;
 
     using global::RethoughtLib.Design;
+    using global::RethoughtLib.Design.Implementations;
     using global::RethoughtLib.UI.Core;
     using global::RethoughtLib.UI.Core.Displayer;
 
