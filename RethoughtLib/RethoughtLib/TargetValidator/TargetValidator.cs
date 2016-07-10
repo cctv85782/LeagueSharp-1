@@ -35,12 +35,24 @@
         #region Public Methods and Operators
 
         /// <summary>
-        ///     Adds the state.
+        ///     Adds the check.
         /// </summary>
-        /// <param name="state">The state.</param>
-        public void AddCheck(ICheckable state)
+        /// <param name="check">The check.</param>
+        public void AddCheck(ICheckable check)
         {
-            this.invalidStates.Add(state);
+            this.invalidStates.Add(check);
+        }
+
+        /// <summary>
+        ///     Adds the checks.
+        /// </summary>
+        /// <param name="checks">The checks.</param>
+        public void AddChecks(IEnumerable<ICheckable> checks)
+        {
+            foreach (var check in checks)
+            {
+                this.AddCheck(check);
+            }
         }
 
         /// <summary>
@@ -59,12 +71,24 @@
         }
 
         /// <summary>
-        ///     Removes the state.
+        ///     Removes the check.
         /// </summary>
-        /// <param name="state">The state.</param>
-        public void RemoveCheck(ICheckable state)
+        /// <param name="check">The check.</param>
+        public void RemoveCheck(ICheckable check)
         {
-            this.invalidStates.Remove(state);
+            this.invalidStates.Remove(check);
+        }
+
+        /// <summary>
+        ///     Removes the checks.
+        /// </summary>
+        /// <param name="checks">The checks.</param>
+        public void RemoveChecks(IEnumerable<ICheckable> checks)
+        {
+            foreach (var check in checks)
+            {
+                this.RemoveCheck(check);
+            }
         }
 
         #endregion
@@ -100,7 +124,9 @@
                 this.valid = state.Check(this.target);
             }
 
-            Console.WriteLine($"Target {this.target.Name} is an valid target: {this.valid}");
+#if DEBUG
+            Console.WriteLine($"[TargetValidator] Target {this.target.Name} is an valid target: {this.valid}");
+#endif
         }
 
         #endregion

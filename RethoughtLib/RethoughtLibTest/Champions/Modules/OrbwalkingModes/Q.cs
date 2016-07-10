@@ -43,7 +43,14 @@
 
             var targetValidator = new TargetValidator();
 
-            targetValidator.AddCheck(new IsValidTarget());
+            targetValidator.AddCheck(new IsValidTargetCheck());
+
+            targetValidator.AddChecks(new []
+                                          {
+                                              new IsValidTargetCheck(), new IsValidTargetCheck(), new IsValidTargetCheck(), 
+                                          });
+
+            // now it checks for IsValidTarget and a SheenBuff
 
             var valid = targetValidator.Check(target);
         }
