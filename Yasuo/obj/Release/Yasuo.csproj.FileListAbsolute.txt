@@ -19,7 +19,6 @@ E:\Visual Studio Projects\LeagueSharpDev\Yasuo\bin\Release\LeagueSharp.SDK.pdb
 E:\Visual Studio Projects\LeagueSharpDev\Yasuo\bin\Release\SebbyLib.pdb
 E:\Visual Studio Projects\LeagueSharpDev\Yasuo\obj\Release\Yasuo.exe
 E:\Visual Studio Projects\LeagueSharpDev\Yasuo\obj\Release\Yasuo.pdb
-E:\Visual Studio Projects\LeagueSharpDev\Yasuo\bin\Release\Yasuo.exe.CodeAnalysisLog.xml
-E:\Visual Studio Projects\LeagueSharpDev\Yasuo\bin\Release\Yasuo.exe.lastcodeanalysissucceeded
 E:\Visual Studio Projects\LeagueSharpDev\Yasuo\bin\Release\LeagueSharp.Sandbox.pdb
 E:\Visual Studio Projects\LeagueSharpDev\Yasuo\obj\Release\Yasuo.csprojResolveAssemblyReference.cache
+E:\Visual Studio Projects\LeagueSharpDev\Yasuo\obj\Release\Yasuo.csproj.Yasuo.exe.config
