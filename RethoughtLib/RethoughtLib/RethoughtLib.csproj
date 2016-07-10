@@ -109,6 +109,8 @@
     <Compile Include="Menu\Presets\ChampionSliderMenu.cs" />
     <Compile Include="Menu\Presets\DynamicMenu.cs" />
     <Compile Include="Menu\Presets\WhitelistMenu.cs" />
+    <Compile Include="TargetValidator\Implementations\IsValidTarget.cs" />
+    <Compile Include="TargetValidator\Interfaces\ICheckable.cs" />
     <Compile Include="TargetValidator\TargetValidator.cs" />
     <Compile Include="UI\Core\Designs\Design.cs" />
     <Compile Include="UI\Core\Displayer\Displayer.cs" />
@@ -153,7 +155,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

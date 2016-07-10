@@ -54,29 +54,29 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="clipper_library">
-      <HintPath>E:\Program Files (x86)\PlaySharpNew\System\clipper_library.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpDev\System\clipper_library.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp">
-      <HintPath>E:\Program Files (x86)\PlaySharpNew\System\LeagueSharp.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpDev\System\LeagueSharp.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.Common">
-      <HintPath>E:\Program Files (x86)\PlaySharpNew\System\LeagueSharp.Common.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpDev\System\LeagueSharp.Common.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.Data">
-      <HintPath>E:\Program Files (x86)\PlaySharpNew\System\LeagueSharp.Data.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpDev\System\LeagueSharp.Data.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.SDK">
-      <HintPath>E:\Program Files (x86)\PlaySharpNew\System\LeagueSharp.SDK.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpDev\System\LeagueSharp.SDK.dll</HintPath>
     </Reference>
     <Reference Include="SebbyLib">
-      <HintPath>E:\Program Files (x86)\PlaySharpNew\System\SebbyLib.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpDev\System\SebbyLib.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX">
-      <HintPath>E:\Program Files (x86)\PlaySharpNew\System\SharpDX.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpDev\System\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D9, Version=2.6.3.0, Culture=neutral, PublicKeyToken=345b829e6e492981, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Program Files (x86)\PlaySharpNew\System\SharpDX.Direct3D9.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpDev\System\SharpDX.Direct3D9.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

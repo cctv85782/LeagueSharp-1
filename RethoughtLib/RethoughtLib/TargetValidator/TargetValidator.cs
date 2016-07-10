@@ -1,37 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RethoughtLib.TargetValidator
+﻿namespace RethoughtLib.TargetValidator
 {
-    using global::RethoughtLib.Classes.Injectables;
-    using global::RethoughtLib.Classes.Injectables.Abstrahations;
-    using global::RethoughtLib.TargetValidator.Implementations;
+    #region Using Directives
+
+    using System;
+    using System.Collections.Generic;
+
     using global::RethoughtLib.TargetValidator.Interfaces;
 
     using LeagueSharp;
 
+    #endregion
+
     public class TargetValidator
     {
+        #region Fields
+
         /// <summary>
-        /// The invalid states
+        ///     The invalid states
         /// </summary>
         private readonly List<ICheckable> invalidStates = new List<ICheckable>();
 
         /// <summary>
-        /// The object
+        ///     The object
         /// </summary>
         private Obj_AI_Base target;
 
         /// <summary>
-        /// Whether target is valid
+        ///     Whether target is valid
         /// </summary>
         private bool valid = true;
 
+        #endregion
+
+        #region Public Methods and Operators
+
         /// <summary>
-        /// Checks the specified object.
+        ///     Adds the state.
+        /// </summary>
+        /// <param name="state">The state.</param>
+        public void AddCheck(ICheckable state)
+        {
+            this.invalidStates.Add(state);
+        }
+
+        /// <summary>
+        ///     Checks the specified object.
         /// </summary>
         /// <param name="object">The object.</param>
         public bool Check(Obj_AI_Base @object)
@@ -46,7 +59,20 @@ namespace RethoughtLib.TargetValidator
         }
 
         /// <summary>
-        /// Resets this instance.
+        ///     Removes the state.
+        /// </summary>
+        /// <param name="state">The state.</param>
+        public void RemoveCheck(ICheckable state)
+        {
+            this.invalidStates.Remove(state);
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        ///     Resets this instance.
         /// </summary>
         private void Reset()
         {
@@ -55,25 +81,7 @@ namespace RethoughtLib.TargetValidator
         }
 
         /// <summary>
-        /// Adds the state.
-        /// </summary>
-        /// <param name="state">The state.</param>
-        public void AddCheck(ICheckable state)
-        {
-            this.invalidStates.Add(state);
-        }
-
-        /// <summary>
-        /// Removes the state.
-        /// </summary>
-        /// <param name="state">The state.</param>
-        public void RemoveCheck(ICheckable state)
-        {
-            this.invalidStates.Remove(state);   
-        }
-
-        /// <summary>
-        /// Starts this instance.
+        ///     Starts this instance.
         /// </summary>
         private void Start()
         {
@@ -94,5 +102,7 @@ namespace RethoughtLib.TargetValidator
 
             Console.WriteLine($"Target {this.target.Name} is an valid target: {this.valid}");
         }
+
+        #endregion
     }
 }
