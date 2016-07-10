@@ -1,7 +1,6 @@
 ﻿namespace RethoughtLib.Design.Implementations
 {
-    internal class IntOffset : Offset<int>
+    public class IntOffset : Offset<int>
     {
-
     }
 }

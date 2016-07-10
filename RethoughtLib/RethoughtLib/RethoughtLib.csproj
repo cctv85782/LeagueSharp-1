@@ -67,6 +67,18 @@
     <Compile Include="Algorithm\ShortestPathAlgorithm\PathTypes\Path.cs" />
     <Compile Include="Classes\Injectables\DependencyInjectionBase.cs" />
     <Compile Include="Classes\Injectables\Abstrahations\DIContainerBase.cs" />
+    <Compile Include="Design\Implementations\ByteOffset.cs" />
+    <Compile Include="Design\Implementations\DecimalOffset.cs" />
+    <Compile Include="Design\Implementations\DoubleOffset.cs" />
+    <Compile Include="Design\Implementations\FloatOffset.cs" />
+    <Compile Include="Design\Implementations\SByteOffset.cs" />
+    <Compile Include="Design\Implementations\ShortOffset.cs" />
+    <Compile Include="Design\Implementations\UIntOffset.cs" />
+    <Compile Include="Design\Implementations\ULongOffset.cs" />
+    <Compile Include="Design\Implementations\UShortOffset.cs" />
+    <Compile Include="Design\Implementations\Vector2Offset.cs" />
+    <Compile Include="Design\Implementations\Vector3Offset.cs" />
+    <Compile Include="Design\Implementations\Vector4Offset.cs" />
     <Compile Include="RethoughtLib.cs" />
     <Compile Include="CastManager\CastManager.cs" />
     <Compile Include="CastManager\CastManagerMenu.cs" />
@@ -87,7 +99,7 @@
     <Compile Include="Classes\Bootstraps\TestClass.cs" />
     <Compile Include="Classes\LeagueSharpAssembly\LeagueSharpAssembly.cs" />
     <Compile Include="Classes\Observer\Observer.cs" />
-    <Compile Include="Design\IntOffset.cs" />
+    <Compile Include="Design\Implementations\IntOffset.cs" />
     <Compile Include="Design\Offset.cs" />
     <Compile Include="GlobalVariables.cs" />
     <Compile Include="Classes\Feature\Feature.cs" />

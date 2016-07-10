@@ -48,8 +48,6 @@
             targetValidator.AddCheck(check);
             targetValidator.RemoveCheck(check);
 
-            // now it checks for IsValidTarget and a SheenBuff
-
             var valid = targetValidator.Check(target);
         }
 
