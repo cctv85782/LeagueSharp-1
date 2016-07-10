@@ -11,6 +11,9 @@
     using RethoughtLib.Classes.Feature;
     using RethoughtLib.Menu;
     using RethoughtLib.Menu.Presets;
+    using RethoughtLib.TargetValidator;
+
+    using RethoughtLib.TargetValidator.Implementations;
 
     #endregion
 
@@ -34,8 +37,15 @@
 
         #region Public Methods and Operators
 
-        public void OnDraw(EventArgs args)
+        public void OnUpdate(EventArgs args)
         {
+            var target = TargetSelector.GetTarget(500, TargetSelector.DamageType.Magical);
+
+            var targetValidator = new TargetValidator();
+
+            targetValidator.AddCheck(new IsValidTarget());
+
+            var valid = targetValidator.Check(target);
         }
 
         #endregion
@@ -44,13 +54,13 @@
 
         protected override void OnDisable()
         {
-            Drawing.OnDraw -= this.OnDraw;
+            Game.OnUpdate -= this.OnUpdate;
             base.OnDisable();
         }
 
         protected override void OnEnable()
         {
-            Drawing.OnDraw += this.OnDraw;
+            Game.OnUpdate += this.OnUpdate;
             base.OnEnable();
         }
 

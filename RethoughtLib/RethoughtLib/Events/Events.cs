@@ -15,7 +15,7 @@
     /// <summary>
     ///     Class that offers additional events
     /// </summary>
-    internal class Events : ILoadable
+    public class Events : ILoadable
     {
         #region Public Events
 

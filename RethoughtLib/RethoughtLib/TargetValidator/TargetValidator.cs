@@ -8,11 +8,12 @@ namespace RethoughtLib.TargetValidator
 {
     using global::RethoughtLib.Classes.Injectables;
     using global::RethoughtLib.Classes.Injectables.Abstrahations;
+    using global::RethoughtLib.TargetValidator.Implementations;
+    using global::RethoughtLib.TargetValidator.Interfaces;
 
     using LeagueSharp;
-    using LeagueSharp.Common;
 
-    public class TargetValidator : DiContainerBase<ICheckable>
+    public class TargetValidator
     {
         /// <summary>
         /// The invalid states
@@ -24,6 +25,9 @@ namespace RethoughtLib.TargetValidator
         /// </summary>
         private Obj_AI_Base target;
 
+        /// <summary>
+        /// Whether target is valid
+        /// </summary>
         private bool valid = true;
 
         /// <summary>
@@ -32,11 +36,22 @@ namespace RethoughtLib.TargetValidator
         /// <param name="object">The object.</param>
         public bool Check(Obj_AI_Base @object)
         {
+            this.Reset();
+
             this.target = @object;
 
             this.Start();
 
             return this.valid;
+        }
+
+        /// <summary>
+        /// Resets this instance.
+        /// </summary>
+        private void Reset()
+        {
+            this.target = null;
+            this.valid = true;
         }
 
         /// <summary>
@@ -58,19 +73,15 @@ namespace RethoughtLib.TargetValidator
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DependencyInjectionBase{T}"/> class.
-        /// </summary>
-        /// <param name="element">The element.</param>
-        public TargetValidator(ICheckable element)
-            : base(element)
-        {
-        }
-
-        /// <summary>
         /// Starts this instance.
         /// </summary>
-        public override void Start()
+        private void Start()
         {
+            if (this.target == null)
+            {
+                return;
+            }
+
             foreach (var state in this.invalidStates)
             {
                 if (this.valid == false)
@@ -82,19 +93,6 @@ namespace RethoughtLib.TargetValidator
             }
 
             Console.WriteLine($"Target {this.target.Name} is an valid target: {this.valid}");
-        }
-    }
-
-    public interface ICheckable
-    {
-        bool Check(Obj_AI_Base target);
-    }
-
-    internal class ExampleState : ICheckable
-    {
-        public bool Check(Obj_AI_Base target)
-        {
-            return target.IsValidTarget();
         }
     }
 }
