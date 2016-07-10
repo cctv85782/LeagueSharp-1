@@ -73,9 +73,9 @@
         /// <summary>
         ///     Resets this instance.
         /// </summary>
-        protected sealed override void Reset()
+        protected sealed override void SoftReset()
         {
-            base.Reset();
+            base.SoftReset();
         }
 
         /// <summary>

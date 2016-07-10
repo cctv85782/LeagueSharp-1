@@ -2,7 +2,6 @@
 {
     #region Using Directives
 
-    using System;
     using System.Collections.Generic;
 
     using global::RethoughtLib.TargetValidator.Interfaces;
@@ -18,7 +17,7 @@
         /// <summary>
         ///     The invalid states
         /// </summary>
-        protected readonly List<ICheckable> ChecksList = new List<ICheckable>();
+        protected List<ICheckable> ChecksList = new List<ICheckable>();
 
         /// <summary>
         ///     The object
@@ -91,6 +90,16 @@
             }
         }
 
+        /// <summary>
+        ///     Resets this instance.
+        /// </summary>
+        public virtual void Reset()
+        {
+            this.SoftReset();
+
+            this.ChecksList = new List<ICheckable>();
+        }
+
         #endregion
 
         #region Methods
@@ -98,7 +107,7 @@
         /// <summary>
         ///     Resets this instance.
         /// </summary>
-        protected virtual void Reset()
+        protected virtual void SoftReset()
         {
             this.Target = null;
             this.Valid = true;
