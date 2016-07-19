@@ -9,7 +9,7 @@
     #endregion
 
     /// <summary>
-    ///     Feature Parent class deriving from Feature
+    ///     Feature ParentBase class deriving from Feature
     /// </summary>
     /// <seealso cref="Feature" />
     public abstract class FeatureParent : Feature

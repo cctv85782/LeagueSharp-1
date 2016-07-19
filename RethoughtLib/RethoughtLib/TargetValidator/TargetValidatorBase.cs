@@ -80,11 +80,28 @@
         }
 
         /// <summary>
-        ///     Removes the checks.
+        ///     Removes the checks. If no checks are given every check gets removed.
+        /// </summary>
+        public virtual void RemoveChecks()
+        {
+            foreach (var check in this.ChecksList)
+            {
+                this.RemoveCheck(check);
+            }
+        }
+
+        /// <summary>
+        ///     Removes the checks. If no checks are given every check gets removed.
         /// </summary>
         /// <param name="checks">The checks.</param>
         public virtual void RemoveChecks(IEnumerable<ICheckable> checks)
         {
+            if (checks == null)
+            {
+                this.RemoveChecks();
+                return;
+            }
+
             foreach (var check in checks)
             {
                 this.RemoveCheck(check);
@@ -92,7 +109,7 @@
         }
 
         /// <summary>
-        ///     Resets this instance.
+        ///     Resets this instance. Usually not needed and you should use RemoveChecks with null parameters given.
         /// </summary>
         public virtual void Reset()
         {

@@ -38,7 +38,7 @@
         ///     The name.
         /// </value>
         public string Name { get; set; }
-        
+
         /// <summary>
         ///     The features
         /// </summary>
@@ -57,7 +57,7 @@
 
             this.features.AddRange(new List<IFeatureChild>()
                                        {
-                                           new VersionChecker.Version(assembly, this.GithubPath, this.AssemblyName)
+                                           //new global::RethoughtLib.VersionChecker.VersionChecker(assembly, this.GithubPath, this.AssemblyName)
                                        });
 
             foreach (var feature in this.features)

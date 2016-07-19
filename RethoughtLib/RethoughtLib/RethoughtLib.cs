@@ -19,7 +19,7 @@
 
         private readonly List<IFeatureChild> features = new List<IFeatureChild>()
                                                                    {
-                                                                       new global::RethoughtLib.VersionChecker.Version(
+                                                                       new global::RethoughtLib.VersionChecker.VersionChecker(
                                                                            Root,
                                                                            GlobalVariables
                                                                            .GitHubPath,
@@ -74,7 +74,7 @@
             this.initialized = true;
 
             CustomEvents.Game.OnGameLoad += this.Game_OnGameLoad;
-            
+
         }
 
         private void Game_OnGameLoad(System.EventArgs args)

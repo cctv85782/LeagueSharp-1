@@ -79,8 +79,6 @@ namespace RethoughtLib.Classes.Bootstraps.Abstract_Classes
         /// <param name="value">The value.</param>
         public virtual void AddString(string value)
         {
-            Console.WriteLine("Adding string");
-
             if (string.IsNullOrEmpty(value) || this.Strings == null || this.Strings.Contains(value))
             {
                 return;
@@ -145,7 +143,7 @@ namespace RethoughtLib.Classes.Bootstraps.Abstract_Classes
 
             if (unknownModulesCount > 0)
             {
-                Console.WriteLine($"[{GlobalVariables.DisplayName}] PlaySharpBootstrapBase: Please consider naming your unkown modules. The name must not be null or whitespace.");
+                Console.WriteLine($"[{GlobalVariables.DisplayName}] PlaySharpBootstrapBase: Please consider naming your unknown modules. The name must not be null or whitespace.");
             }
         }
 

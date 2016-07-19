@@ -15,7 +15,7 @@
 
     // TODO: PRIORITY LOW > Notify with a sound and a notification banner
 
-    internal class Version : FeatureChild<FeatureParent>
+    internal class VersionChecker : FeatureChild<FeatureParent>
     {
         public string AssemblyName { get; set; }
 
@@ -34,7 +34,7 @@
         /// <summary>
         ///     The version checker
         /// </summary>
-        private readonly VersionChecker versionChecker;
+        private readonly global::RethoughtLib.Utility.VersionChecker versionChecker;
 
         #endregion
 
@@ -46,11 +46,11 @@
         /// <param name="parent">The parent.</param>
         /// <param name="githubPath"></param>
         /// <param name="assemblyName"></param>
-        public Version(FeatureParent parent, string githubPath, string assemblyName)
+        public VersionChecker(FeatureParent parent, string githubPath, string assemblyName)
             : base(parent)
         {
             this.AssemblyName = assemblyName;
-            this.versionChecker = new VersionChecker(githubPath, this.AssemblyName);
+            this.versionChecker = new global::RethoughtLib.Utility.VersionChecker(githubPath, this.AssemblyName);
             this.OnLoad();
         }
 
@@ -64,7 +64,7 @@
         /// <value>
         ///     The name.
         /// </value>
-        public override string Name => "Version";
+        public override string Name => "VersionChecker";
 
         #endregion
 
@@ -110,7 +110,7 @@
                         }
                     }
                 }
-                this.Menu.Item(this.Name + "Version").DisplayName = "Version is outdated";
+                this.Menu.Item(this.Name + "VersionChecker").DisplayName = "VersionChecker is outdated";
             }
             this.lastChecked = Game.Time;
         }
@@ -149,16 +149,16 @@
 
             this.Menu.AddItem(
                 this.versionChecker.UpdateAvailable
-                    ? new MenuItem(this.Name + "Version", "Version: " + 1337)
-                    : new MenuItem(this.Name + "Version", "Version is outdated"));
+                    ? new MenuItem(this.Name + "VersionChecker", "VersionChecker: " + 1337)
+                    : new MenuItem(this.Name + "VersionChecker", "VersionChecker is outdated"));
 
             this.Menu.AddItem(
-                new MenuItem(this.Name + "LiveCheck", "Check For new Version").SetValue(true)
+                new MenuItem(this.Name + "LiveCheck", "Check For new VersionChecker").SetValue(true)
                     .SetTooltip(
                         "If this is enabled, the assembly will look every few minutes if a newer version is available"));
 
             this.Menu.AddItem(
-                new MenuItem(this.Name + "NotifyNewVersion", "Notify if new Version available").SetValue(true)
+                new MenuItem(this.Name + "NotifyNewVersion", "Notify if new VersionChecker available").SetValue(true)
                     .SetTooltip(
                         "If this is enabled, the assembly will notify you when a new version is available. It will always inform you about important updates."));
 

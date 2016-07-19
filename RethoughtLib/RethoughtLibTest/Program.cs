@@ -7,8 +7,10 @@
     using RethoughtLib;
     using RethoughtLib.Classes.Bootstraps;
     using RethoughtLib.Classes.Intefaces;
+    using RethoughtLib.Utility;
 
     using RethoughtLibTest.Champions;
+    using RethoughtLibTest.Champions.Nunu;
     using RethoughtLibTest.Utilities;
 
     #endregion
@@ -30,6 +32,7 @@
                             new ChatLoggerTest()
                         },
                     new List<string>() { "Utility" });
+
         }
 
         #endregion

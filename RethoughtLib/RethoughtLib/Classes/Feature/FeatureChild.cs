@@ -1,14 +1,18 @@
 ﻿namespace RethoughtLib.Classes.Feature
 {
+    #region Using Directives
+
     using LeagueSharp.Common;
 
+    #endregion
+
     public abstract class FeatureChild<T> : Feature, IFeatureChild
-            where T : FeatureParent
+        where T : FeatureParent
     {
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FeatureChild{T}"/> class.
+        ///     Initializes a new instance of the <see cref="FeatureChild{T}" /> class.
         /// </summary>
         /// <param name="parent">The parent.</param>
         protected FeatureChild(T parent)
@@ -21,28 +25,30 @@
         #region Public Properties
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Feature" /> is enabled.
+        ///     Gets a value indicating whether this <see cref="Feature" /> is enabled.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if enabled; otherwise, <c>false</c>.
+        ///     <c>true</c> if enabled; otherwise, <c>false</c>.
         /// </value>
-        public override bool Enabled => !this.Unloaded && this.Parent != null && this.Parent.Enabled
-                                        && this.Menu?.Item(this.Menu.Name + "Enabled") != null
-                                        && this.Menu.Item(this.Menu.Name + "Enabled").GetValue<bool>();
+        public override bool Enabled
+            =>
+                !this.Unloaded && this.Parent != null && this.Parent.Enabled
+                && this.Menu?.Item(this.Menu.Name + "Enabled") != null
+                && this.Menu.Item(this.Menu.Name + "Enabled").GetValue<bool>();
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="IFeatureChild" /> is handled.
+        ///     Gets a value indicating whether this <see cref="IFeatureChild" /> is handled.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if handled; otherwise, <c>false</c>.
+        ///     <c>true</c> if handled; otherwise, <c>false</c>.
         /// </value>
         public bool Handled { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the parent.
+        ///     Gets or sets the parent.
         /// </summary>
         /// <value>
-        /// The parent.
+        ///     The parent.
         /// </value>
         public T Parent { get; set; }
 
@@ -51,7 +57,7 @@
         #region Public Methods and Operators
 
         /// <summary>
-        /// Handles the events.
+        ///     Handles the events.
         /// </summary>
         public void HandleEvents()
         {
@@ -62,7 +68,7 @@
             }
 
             this.Parent.Menu.Item(this.Parent.Name + "Enabled").ValueChanged +=
-                delegate (object sender, OnValueChangeEventArgs args)
+                delegate(object sender, OnValueChangeEventArgs args)
                     {
                         if (!this.Unloaded && args.GetNewValue<bool>())
                         {
@@ -78,7 +84,7 @@
                     };
 
             this.Menu.Item(this.Menu.Name + "Enabled").ValueChanged +=
-                delegate (object sender, OnValueChangeEventArgs args)
+                delegate(object sender, OnValueChangeEventArgs args)
                     {
                         if (!this.Unloaded && args.GetNewValue<bool>())
                         {
@@ -106,7 +112,7 @@
         #region Methods
 
         /// <summary>
-        /// Called when [load].
+        ///     Called when [load].
         /// </summary>
         protected abstract void OnLoad();
 

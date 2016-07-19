@@ -30,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LeagueSharp">
@@ -65,8 +66,18 @@
     <Compile Include="Algorithm\ShortestPathAlgorithm\ShortestPathAlgorithm.cs" />
     <Compile Include="Algorithm\ShortestPathAlgorithm\DjikstraTest.cs" />
     <Compile Include="Algorithm\ShortestPathAlgorithm\PathTypes\Path.cs" />
+    <Compile Include="Classes\FeatureV2\Abstract Classes\Base.cs" />
+    <Compile Include="Classes\FeatureV2\Child.cs" />
+    <Compile Include="Classes\FeatureV2\Example.cs" />
+    <Compile Include="Classes\FeatureV2\Abstract Classes\ParentBase.cs" />
+    <Compile Include="Classes\FeatureV2\Implementations\RootParent.cs" />
+    <Compile Include="Classes\FeatureV2\Parent.cs" />
     <Compile Include="Classes\Injectables\DependencyInjectionBase.cs" />
     <Compile Include="Classes\Injectables\Abstrahations\DIContainerBase.cs" />
+    <Compile Include="DamageCalculator\DamageTypes\DamageType.cs" />
+    <Compile Include="DamageCalculator\DamageTypes\IDamageType.cs" />
+    <Compile Include="DamageCalculator\DamageTypes\Implementations\Magical.cs" />
+    <Compile Include="DamageCalculator\DamageTypes\Implementations\Physical.cs" />
     <Compile Include="Design\Implementations\ByteOffset.cs" />
     <Compile Include="Design\Implementations\DecimalOffset.cs" />
     <Compile Include="Design\Implementations\DoubleOffset.cs" />
@@ -121,6 +132,10 @@
     <Compile Include="Menu\Presets\ChampionSliderMenu.cs" />
     <Compile Include="Menu\Presets\DynamicMenu.cs" />
     <Compile Include="Menu\Presets\WhitelistMenu.cs" />
+    <Compile Include="root.cs" />
+    <Compile Include="TargetSelector\Interfaces\ITSModule.cs" />
+    <Compile Include="TargetSelector\Abstract Classes\TargetSelectorBase.cs" />
+    <Compile Include="TargetSelector\TargetSelector.cs" />
     <Compile Include="TargetValidator\Implementations\IsValidTargetCheck.cs" />
     <Compile Include="TargetValidator\Interfaces\ICheckable.cs" />
     <Compile Include="TargetValidator\TargetValidator.cs" />
@@ -148,7 +163,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="root.cs" />
     <Compile Include="Transitions\Implementations\CircEaseOutIn.cs" />
     <Compile Include="Transitions\Implementations\CubicEaseInOut.cs" />
     <Compile Include="Transitions\Implementations\ElasticEaseInOut.cs" />
@@ -172,7 +186,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Classes\Generics\" />
+    <Folder Include="Data\" />
     <Folder Include="UI\DefaultImplementations\Designs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

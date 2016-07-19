@@ -1,4 +1,4 @@
-﻿namespace RethoughtLibTest.Champions.Modules.OrbwalkingModes
+﻿namespace RethoughtLibTest.Champions.Nunu.Modules.OrbwalkingModes
 {
     #region Using Directives
 
@@ -8,30 +8,18 @@
     using LeagueSharp;
     using LeagueSharp.Common;
 
-    using RethoughtLib.Classes.Feature;
+    using RethoughtLib.Classes.FeatureV2;
     using RethoughtLib.Menu;
     using RethoughtLib.Menu.Presets;
     using RethoughtLib.TargetValidator;
-
     using RethoughtLib.TargetValidator.Implementations;
 
     #endregion
 
-    internal class Q : FeatureChild<Combo>
+    internal class Q : Child
     {
         #region Constructors and Destructors
 
-        public Q(Combo parent)
-            : base(parent)
-        {
-            this.OnLoad();
-        }
-
-        #endregion
-
-        #region Public Properties
-
-        public override string Name => "Q";
 
         #endregion
 
@@ -50,6 +38,14 @@
 
             var valid = targetValidator.Check(target);
         }
+
+        /// <summary>
+        ///     Gets or sets the name.
+        /// </summary>
+        /// <value>
+        ///     The name.
+        /// </value>
+        public override string Name { get; set; } = "Q";
 
         #endregion
 
@@ -71,6 +67,8 @@
         {
             base.OnInitialize();
         }
+
+
 
         protected sealed override void OnLoad()
         {
@@ -107,8 +105,6 @@
             var menuGenerator = new MenuGenerator(this.Menu, new DynamicMenu("This is my dynamic Menu", selecter, listListMenuItems));
 
             menuGenerator.Generate();
-
-            this.Parent.Menu.AddSubMenu(this.Menu);
         }
 
         #endregion

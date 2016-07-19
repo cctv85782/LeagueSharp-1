@@ -1,4 +1,4 @@
-﻿namespace RethoughtLibTest.Champions
+﻿namespace RethoughtLibTest.Champions.Nunu
 {
     #region Using Directives
 
@@ -8,9 +8,10 @@
     using LeagueSharp.Common;
 
     using RethoughtLib.Classes.Feature;
+    using RethoughtLib.Classes.FeatureV2;
     using RethoughtLib.Classes.Intefaces;
 
-    using RethoughtLibTest.Champions.Modules.OrbwalkingModes;
+    using RethoughtLibTest.Champions.Nunu.Modules.OrbwalkingModes;
 
     #endregion
 
@@ -22,10 +23,6 @@
         ///     The features
         /// </summary>
         private readonly List<IFeatureChild> features = new List<IFeatureChild>();
-
-        #endregion
-
-        #region Constructors and Destructors
 
         #endregion
 
@@ -46,22 +43,17 @@
         {
             var rootMenu = new Menu("Nunu", "Nunu", true);
             rootMenu.AddToMainMenu();
+
             GlobalVariables.RootMenu = rootMenu;
-            
-            var combo = new Combo(rootMenu);
 
-            this.features.AddRange(new List<IFeatureChild>() { new Q(combo) });
+            var comboParent = new Parent("Combo");
 
-            foreach (var feature in this.features)
-            {
-                Console.WriteLine("Handling " + feature.Name + " feature");
-                feature.HandleEvents();
-            }
+
+
+            comboParent.AddChildren(new Q());
+
+            comboParent.Initialize();
         }
-
-        #endregion
-
-        #region Public Methods and Operators
 
         #endregion
     }

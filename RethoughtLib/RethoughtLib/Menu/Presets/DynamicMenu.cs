@@ -88,9 +88,8 @@
 
             this.Menu.AddSubMenu(this.attachedMenu);
 
-            if (GlobalVariables.Debug)
-            {
-                Console.WriteLine(string.Empty);
+#if DEBUG
+            Console.WriteLine(string.Empty);
                 Console.WriteLine(@"==== Setting up new DynamicMenu ====");
                 Console.WriteLine(@"DisplayName: " + this.displayName);
                 Console.WriteLine(@"Internal Menu Name: " + this.Menu.Name + this.displayName);
@@ -98,7 +97,7 @@
                 Console.WriteLine(@"Internal Selecter Name: " + this.selecter.Name);
                 Console.WriteLine(@"Displaying Selecter Name: " + this.selecter.DisplayName);
                 Console.WriteLine(@"Example Naming: " + this.displayName + @"SomeItemName");
-            }
+#endif
 
             var value = this.selecter.GetValue<StringList>();
 
@@ -132,13 +131,14 @@
                 tag++;
             }
 
-            if (GlobalVariables.Debug)
+#if DEBUG
             {
                 foreach (var item in this.attachedMenu.Items)
                 {
                     Console.WriteLine(@"DisplayName: {0}, Internal Name: {1}", item.DisplayName, item.Name);
                 }
             }
+#endif
 
             MenuExtensions.RefreshTagBased(
                 this.attachedMenu,
@@ -146,6 +146,6 @@
                 + 1);
         }
 
-        #endregion
+#endregion
     }
 }
