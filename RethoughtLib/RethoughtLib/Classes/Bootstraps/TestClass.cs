@@ -21,7 +21,7 @@
         {
             CustomEvents.Game.OnGameLoad += OnLoad;
 
-            var automaticBootstrap = new LeagueSharpAutoChampionBootstrap(new List<ILoadable>() { new NunuModule() });
+            var automaticBootstrap = new LeagueSharpAutoBootstrap(new List<ILoadable>() { new NunuModule() });
         }
 
         #endregion

@@ -27,3 +27,4 @@ E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\RethoughtLib\bin\Release\L
 E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\RethoughtLib\bin\Release\LeagueSharp.Data.pdb
 E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\RethoughtLib\obj\Release\RethoughtLib.dll
 E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\RethoughtLib\obj\Release\RethoughtLib.pdb
+E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\RethoughtLib\obj\Release\RethoughtLib.csprojResolveAssemblyReference.cache

@@ -24,7 +24,7 @@
             RethoughtLib.Instance.Load();
 
             var bootstrap =
-                new LeagueSharpAutoChampionBootstrap(
+                new LeagueSharpAutoBootstrap(
                     new List<ILoadable>()
                         {
                             new NunuLoader(),

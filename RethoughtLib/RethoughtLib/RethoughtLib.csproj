@@ -100,7 +100,7 @@
     <Compile Include="ChatLogger\Interfaces\ILogFormat.cs" />
     <Compile Include="ChatLogger\Message.cs" />
     <Compile Include="Classes\Bootstraps\Abstract Classes\LoadableBase.cs" />
-    <Compile Include="Classes\Bootstraps\LeagueSharpAutoChampionBootstrap.cs" />
+    <Compile Include="Classes\Bootstraps\LeagueSharpAutoBootstrap.cs" />
     <Compile Include="Classes\Bootstraps\PlaySharpBootstrap.cs" />
     <Compile Include="Classes\Bootstraps\Abstract Classes\PlaySharpBootstrapBase.cs" />
     <Compile Include="Classes\Bootstraps\Interfaces\IBootstrap.cs" />
