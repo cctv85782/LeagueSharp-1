@@ -6,7 +6,7 @@
 
     using RethoughtLib.ChatLogger;
     using RethoughtLib.ChatLogger.Implementations;
-    using RethoughtLib.Classes.Intefaces;
+    using RethoughtLib.Classes.General_Intefaces;
 
     #endregion
 

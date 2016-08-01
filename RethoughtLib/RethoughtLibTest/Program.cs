@@ -5,13 +5,9 @@
     using System.Collections.Generic;
 
     using RethoughtLib;
-    using RethoughtLib.Classes.Bootstraps;
-    using RethoughtLib.Classes.Intefaces;
-    using RethoughtLib.Utility;
+    using RethoughtLib.Bootstraps.Abstract_Classes;
 
-    using RethoughtLibTest.Champions;
-    using RethoughtLibTest.Champions.Nunu;
-    using RethoughtLibTest.Utilities;
+    using RethoughtLibTest.Champions.Yorick;
 
     #endregion
 
@@ -23,16 +19,15 @@
         {
             RethoughtLib.Instance.Load();
 
-            var bootstrap =
-                new LeagueSharpAutoBootstrap(
-                    new List<ILoadable>()
-                        {
-                            new NunuLoader(),
-                            new YorickLoader(),
-                            new ChatLoggerTest()
-                        },
-                    new List<string>() { "Utility" });
+            var bootstrap = new CustomAioBootstrap(
+                // Adds all loadable modules
+                new List<LoadableBase>() { new YorickLoader() },
 
+                // Adds keywords that will get loaded, for example everything that has the name Utility
+                // this bootstrap will automatically load the module with the champion name of the player!
+                new List<string>() { "Yorick" });
+
+            bootstrap.Run();
         }
 
         #endregion

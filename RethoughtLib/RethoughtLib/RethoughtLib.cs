@@ -4,8 +4,7 @@
 
     using System.Collections.Generic;
 
-    using global::RethoughtLib.Classes.Feature;
-    using global::RethoughtLib.Classes.Intefaces;
+    using global::RethoughtLib.Classes.General_Intefaces;
 
     using LeagueSharp.Common;
 
@@ -14,18 +13,6 @@
     public class RethoughtLib : ILoadable
     {
         #region Static Fields
-
-        private static readonly FeatureParent Root = new Root(GlobalVariables.LibraryMenu);
-
-        private readonly List<IFeatureChild> features = new List<IFeatureChild>()
-                                                                   {
-                                                                       new global::RethoughtLib.VersionChecker.VersionChecker(
-                                                                           Root,
-                                                                           GlobalVariables
-                                                                           .GitHubPath,
-                                                                           GlobalVariables
-                                                                           .DisplayName)
-                                                                   };
 
         private readonly List<ILoadable> loadables = new List<ILoadable>() { new Events.Events() };
 
@@ -82,11 +69,6 @@
             foreach (var loadable in this.loadables)
             {
                 loadable.Load();
-            }
-
-            foreach (var feature in this.features)
-            {
-                feature.HandleEvents();
             }
         }
 

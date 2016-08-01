@@ -4,7 +4,7 @@
 
     using System;
 
-    using Classes.Intefaces;
+    using global::RethoughtLib.Classes.General_Intefaces;
 
     using LeagueSharp;
 
