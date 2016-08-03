@@ -2,10 +2,17 @@
 {
     #region Using Directives
 
+    using System.Collections.Generic;
+
     using RethoughtLib.Bootstraps.Abstract_Classes;
+    using RethoughtLib.FeatureSystem.Abstract_Classes;
     using RethoughtLib.FeatureSystem.Implementations;
 
     using Rethought_Fiora.Champions.Fiora.Modules.Core;
+    using Rethought_Fiora.Champions.Fiora.Modules.Core.SpellsModule;
+    using Rethought_Fiora.Champions.Fiora.Modules.Core.TargetSelectorModule;
+    using Rethought_Fiora.Champions.Fiora.Modules.LogicProvider;
+    using Rethought_Fiora.Champions.Fiora.Modules.LogicProvider.PassiveLogicProvider;
 
     #endregion
 
@@ -19,7 +26,7 @@
         /// <value>
         ///     The name of the displaying.
         /// </value>
-        public override string DisplayingName { get; set; } = "Rethought Fiora";
+        public override string DisplayingName { get; set; } = RethoughtLib.Utility.String.ToTitleCase("Fiora the explorer");
 
         /// <summary>
         ///     Gets or sets the internal name.
@@ -27,7 +34,7 @@
         /// <value>
         ///     The name.
         /// </value>
-        public override string InternalName { get; set; } = "Fiora";
+        public override string InternalName { get; set; } = "Fuck you laura, I hate that god damn name.";
 
         #endregion
 
@@ -42,13 +49,36 @@
 
             var coreParent = new Parent("Core");
 
-            var orbwalker = new OrbwalkerModule(superParent.Menu);
-            superParent.AddChildren(orbwalker);
+            var logicProviderParent = new Parent("Logic Provider");
 
-            var spells = new SpellModule();
-            coreParent.AddChildren(spells);
+            var comboParent = new Parent("Combo");
+            var laneClearParent = new Parent("LaneClear");
+            var mixedParent = new Parent("Mixed");
+            var lasthitParent = new Parent("LastHit");
 
+            var comboQ = new Modules.Combo.Q();
+            comboParent.AddChild(comboQ);
 
+            logicProviderParent.AddChildren(
+                new List<Base>() { new PassiveLogicProviderModule(), new QLogicProviderModule() });
+
+            var spells = new SpellsModule();
+            coreParent.AddChild(spells);
+
+            var targetSelector = new TargetSubmitterModule();
+
+            targetSelector.requesterList.Add(comboQ);
+
+            coreParent.AddChild(targetSelector);
+
+            superParent.AddChildren(new List<Base>()
+                                        {
+                                            new OrbwalkerModule(superParent.Menu),
+                                            coreParent,
+                                            logicProviderParent,
+                                        });
+
+            superParent.OnLoadInvoker();
         }
 
         #endregion

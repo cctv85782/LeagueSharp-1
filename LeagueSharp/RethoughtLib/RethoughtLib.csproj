@@ -66,6 +66,9 @@
     <Compile Include="Algorithm\ShortestPathAlgorithm\ShortestPathAlgorithm.cs" />
     <Compile Include="Algorithm\ShortestPathAlgorithm\DjikstraTest.cs" />
     <Compile Include="Algorithm\ShortestPathAlgorithm\PathTypes\Path.cs" />
+    <Compile Include="AssemblyDisabler\AssemblyDisabler.cs" />
+    <Compile Include="AssemblyDisabler\Implementations\Evade.cs" />
+    <Compile Include="AssemblyDisabler\Interfaces\Assembly.cs" />
     <Compile Include="Classes\Injectables\DependencyInjectionBase.cs" />
     <Compile Include="Classes\Injectables\Abstrahations\DIContainerBase.cs" />
     <Compile Include="Classes\General Intefaces\ITagable.cs" />
@@ -92,6 +95,7 @@
     <Compile Include="FeatureSystem\Example.cs" />
     <Compile Include="FeatureSystem\Implementations\Parent.cs" />
     <Compile Include="FeatureSystem\Implementations\SuperParent.cs" />
+    <Compile Include="FeatureSystem\Interfaces\ITarget.cs" />
     <Compile Include="RethoughtLib.cs" />
     <Compile Include="CastManager\CastManager.cs" />
     <Compile Include="CastManager\CastManagerMenu.cs" />
@@ -122,10 +126,8 @@
     <Compile Include="Menu\MenuExtensions.cs" />
     <Compile Include="Menu\MenuGenerator.cs" />
     <Compile Include="Menu\MenuTranslator.cs" />
-    <Compile Include="Menu\Presets\BlacklistMenu.cs" />
     <Compile Include="Menu\Presets\ChampionSliderMenu.cs" />
     <Compile Include="Menu\Presets\DynamicMenu.cs" />
-    <Compile Include="Menu\Presets\WhitelistMenu.cs" />
     <Compile Include="TargetSelector\Interfaces\ITSModule.cs" />
     <Compile Include="TargetSelector\Abstract Classes\TargetSelectorBase.cs" />
     <Compile Include="TargetSelector\TargetSelector.cs" />

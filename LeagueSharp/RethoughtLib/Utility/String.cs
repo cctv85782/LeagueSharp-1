@@ -16,7 +16,7 @@
     /// <summary>
     ///     Class that offers string utilities
     /// </summary>
-    internal class String
+    public class String
     {
         #region Public Methods and Operators
 

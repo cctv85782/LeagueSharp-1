@@ -2,15 +2,29 @@
 {
     #region Using Directives
 
-    using LeagueSharp.Common;
+    using System;
+    using System.Linq;
 
     using global::RethoughtLib.Menu.Interfaces;
+
+    using LeagueSharp;
+    using LeagueSharp.Common;
 
     #endregion
 
     public class ChampionSliderMenu : IMenuPreset
     {
         #region Fields
+
+        /// <summary>
+        ///     The function to set the slider value
+        /// </summary>
+        public Func<Obj_AI_Hero, int> FuncSliderValue = x => 0;
+
+        /// <summary>
+        ///     The function to validate a hero
+        /// </summary>
+        public Func<Obj_AI_Hero, bool> FuncValidateHero = x => true;
 
         /// <summary>
         ///     The display name
@@ -80,15 +94,19 @@
             }
             else
             {
-                var maxRange = (int)HeroManager.Enemies.MaxOrDefault(x => x.AttackRange).AttackRange;
+                var maxValue =
+                    HeroManager.Enemies.Where(hero => this.FuncValidateHero(hero))
+                        .Select(hero => this.FuncSliderValue(hero))
+                        .Concat(new[] { 0 })
+                        .Max();
 
                 foreach (var hero in HeroManager.Enemies)
                 {
-                    var range = (int)hero.AttackRange;
+                    var value = this.FuncSliderValue(hero);
 
                     this.attachedMenu.AddItem(
                         new MenuItem(this.attachedMenu.Name + hero.ChampionName, hero.ChampionName).SetValue(
-                            new Slider(range + this.Modifier, 0, maxRange)));
+                            new Slider(value + this.Modifier, 0, maxValue)));
                 }
             }
         }

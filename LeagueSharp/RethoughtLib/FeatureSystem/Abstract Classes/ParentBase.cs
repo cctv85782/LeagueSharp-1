@@ -32,9 +32,25 @@
 
         #region Public Methods and Operators
 
-        public void AddChildren(Base child)
+        /// <summary>
+        /// Adds the child.
+        /// </summary>
+        /// <param name="child">The child.</param>
+        public void AddChild(Base child)
         {
             this.OnChildAddInvoker(new ParentBaseEventArgs() { Child = child });
+        }
+
+        /// <summary>
+        /// Adds the children.
+        /// </summary>
+        /// <param name="children">The children.</param>
+        public void AddChildren(IEnumerable<Base> children)
+        {
+            foreach (var child in children)
+            {
+                this.OnChildAddInvoker(new ParentBaseEventArgs() { Child = child });
+            }
         }
 
         /// <summary>

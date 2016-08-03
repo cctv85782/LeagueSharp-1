@@ -15,3 +15,5 @@ E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Fiora\bin\Debug\L
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Fiora\obj\Debug\Rethought Fiora.csprojResolveAssemblyReference.cache
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Fiora\obj\Debug\Rethought Fiora.exe
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Fiora\obj\Debug\Rethought Fiora.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Fiora\bin\Debug\LeagueSharp.SDK.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Fiora\bin\Debug\LeagueSharp.SDK.pdb

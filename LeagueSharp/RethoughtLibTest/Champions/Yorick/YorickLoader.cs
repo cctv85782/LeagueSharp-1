@@ -69,13 +69,13 @@
             var child4 = new ExampleChild("R");
 
             // assigns "Combo" to "My Yorick Assembly"
-            superParent.AddChildren(comboParent);
+            superParent.AddChild(comboParent);
 
             // assigns the feature to "Combo"
-            comboParent.AddChildren(child);
-            comboParent.AddChildren(child2);
-            comboParent.AddChildren(child3);
-            comboParent.AddChildren(child4);
+            comboParent.AddChild(child);
+            comboParent.AddChild(child2);
+            comboParent.AddChild(child3);
+            comboParent.AddChild(child4);
 
             // loads everything
             superParent.OnLoadInvoker();

@@ -72,7 +72,7 @@
         {
             try
             {
-                foreach (var queque in this.Queque.Dictionary.ToList())
+                for (var i = 0; i < this.Queque.Dictionary.ToList().Count; i++)
                 {
                     var action = this.Queque.Dequeue();
 

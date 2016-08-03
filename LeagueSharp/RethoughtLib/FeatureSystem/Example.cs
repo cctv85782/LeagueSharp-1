@@ -24,14 +24,14 @@
 
             /* "Connects" each composition element
              *
-             * compositionElement.AddChildren(compositionElement)
+             * compositionElement.AddChild(compositionElement)
              *
             */
 
-            root.AddChildren(comboParent);
+            root.AddChild(comboParent);
 
-            comboParent.AddChildren(child);
-            comboParent.AddChildren(child2);
+            comboParent.AddChild(child);
+            comboParent.AddChild(child2);
 
             /* Output:
              * Root > Parent           > Child            > Enabled [On/Off]

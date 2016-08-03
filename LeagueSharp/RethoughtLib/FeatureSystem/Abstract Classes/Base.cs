@@ -21,6 +21,7 @@
         /// </summary>
         protected Base()
         {
+            this.OnInitializeEvent += this.OnCoreInitialize;
             this.OnInitializeEvent += this.OnInitialize;
         }
 
@@ -311,17 +312,6 @@
         /// </summary>
         protected virtual void OnInitialize(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            this.CreateMenu();
-
-            this.SetEnabled();
-
-            this.OnDisableEvent += this.OnDisable;
-            this.OnEnableEvent += this.OnEnable;
-            this.OnLoadEvent += this.OnLoad;
-            this.OnUnLoadEvent += this.OnUnload;
-            this.OnRefreshEvent += this.OnRefresh;
-            this.OnTerminateEvent += this.OnTerminate;
-
             Console.WriteLine($"{this.Name} OnInitialize triggered");
         }
 
@@ -359,6 +349,25 @@
         protected virtual void SetEnabled()
         {
             this.Enabled = this.Menu.Item(this.Name + "Enabled").GetValue<bool>();
+        }
+
+        /// <summary>
+        ///     Called when [core initialize].
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="FeatureBaseEventArgs" /> instance containing the event data.</param>
+        private void OnCoreInitialize(object sender, FeatureBaseEventArgs e)
+        {
+            this.CreateMenu();
+
+            this.SetEnabled();
+
+            this.OnDisableEvent += this.OnDisable;
+            this.OnEnableEvent += this.OnEnable;
+            this.OnLoadEvent += this.OnLoad;
+            this.OnUnLoadEvent += this.OnUnload;
+            this.OnRefreshEvent += this.OnRefresh;
+            this.OnTerminateEvent += this.OnTerminate;
         }
 
         #endregion

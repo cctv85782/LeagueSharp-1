@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rethought_Fiora.Champions.Fiora
 {
-    class Spells
+    internal class Spells
     {
     }
 }
