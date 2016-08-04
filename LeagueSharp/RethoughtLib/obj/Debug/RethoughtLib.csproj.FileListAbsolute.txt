@@ -57,4 +57,6 @@ E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\Leag
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\LeagueSharp.Data.pdb
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\obj\Debug\RethoughtLib.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\obj\Debug\RethoughtLib.pdb
-E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\obj\Debug\RethoughtLib.csprojResolveAssemblyReference.cache
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\LeagueSharp.SDKEx.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\LeagueSharp.Sandbox.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\LeagueSharp.SDKEx.pdb

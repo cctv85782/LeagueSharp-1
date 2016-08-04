@@ -68,10 +68,6 @@
     <Compile Include="Champions\Fiora\Modules\Combo\Q.cs" />
     <Compile Include="Champions\Fiora\Modules\Combo\R.cs" />
     <Compile Include="Champions\Fiora\Modules\Combo\W.cs" />
-    <Compile Include="Champions\Fiora\Modules\Core\SpellsModule\ISpellsRequester.cs" />
-    <Compile Include="Champions\Fiora\Modules\Core\TargetSelectorModule\ITargetRequester.cs" />
-    <Compile Include="Champions\Fiora\Modules\Core\TargetSelectorModule\ITargetRetrieveMethod.cs" />
-    <Compile Include="Champions\Fiora\Modules\Core\TargetSelectorModule\TargetSubmitterModule.cs" />
     <Compile Include="Champions\Fiora\Modules\Evade\RiposteModule.cs" />
     <Compile Include="Champions\Fiora\Modules\Core\OrbwalkerModule.cs" />
     <Compile Include="Champions\Fiora\Modules\Core\SpellsModule\SpellsModule.cs" />
@@ -91,6 +87,7 @@
     <Compile Include="Champions\Fiora\Modules\Mixed\Q.cs" />
     <Compile Include="Champions\Fiora\Modules\Mixed\R.cs" />
     <Compile Include="Champions\Fiora\Modules\Mixed\W.cs" />
+    <Compile Include="Champions\Fiora\Spells.cs" />
     <Compile Include="Champions\Fiora\Variables.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
