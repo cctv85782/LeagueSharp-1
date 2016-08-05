@@ -8,6 +8,7 @@
     using LeagueSharp.Common;
 
     using RethoughtLib.FeatureSystem.Abstract_Classes;
+    using RethoughtLib.LogicProvider;
     using RethoughtLib.Utility;
 
     using Rethought_Fiora.Champions.Fiora.Modules.Core.SpellsModule;
@@ -33,6 +34,11 @@
 
         #region Public Methods and Operators
 
+        /// <summary>
+        ///     Gets the cast position respecting the fiora passive.
+        /// </summary>
+        /// <param name="passiveInstance">The passive instance.</param>
+        /// <returns></returns>
         public static Vector3 GetCastPosition(PassiveInstance passiveInstance)
         {
             if (passiveInstance.Polygon == null)
@@ -57,13 +63,22 @@
 
             var vectors = Math.CircleToVector2Segments(ObjectManager.Player.Distance(pred.UnitPosition), 60);
 
-            foreach (var vector in vectors.ToList())
+            vectors.MoveTo(ObjectManager.Player.ServerPosition.To2D());
+
+            foreach (var directionVector in vectors.ToList())
             {
-                if (predictedPolygon.IsOutside(vector)
-                    || vector.Distance(passiveInstance.Owner.ServerPosition) < 50
-                    || vector.Distance(passiveInstance.Owner.ServerPosition) > 100)
+                var rawEndVector = ObjectManager.Player.ServerPosition.Extend(directionVector.To3D(), 400);
+
+                var wallLogicProvider = new WallDashLogicProvider();
+
+                var realVector =
+                    wallLogicProvider.GetFirstWallPoint(ObjectManager.Player.ServerPosition, rawEndVector, 5).To2D();
+
+                if (predictedPolygon.IsOutside(realVector)
+                    || rawEndVector.Distance(passiveInstance.Owner.ServerPosition) < 50
+                    || rawEndVector.Distance(passiveInstance.Owner.ServerPosition) > 100)
                 {
-                    vectors.Remove(vector);
+                    vectors.Remove(realVector);
                 }
             }
 

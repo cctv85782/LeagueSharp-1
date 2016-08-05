@@ -82,7 +82,8 @@
             if (!SpellsModule.Spells[SpellSlot.Q].IsReady()
                 || OrbwalkerModule.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo
                 || ObjectManager.Player.IsWindingUp
-                || this.Target == null)
+                || this.Target == null
+                || ObjectManager.Player.HasBuffOfType(BuffType.Blind))
             {
                 return;
             }
@@ -93,6 +94,10 @@
             {
                 Cast(QLogicProviderModule.GetCastPosition(passiveInstance));
             }
+
+            var targetPred = SpellsModule.Spells[SpellSlot.Q].GetPrediction(this.Target);
+
+            Cast(targetPred.UnitPosition);
         }
 
         #endregion

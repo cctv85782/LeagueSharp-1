@@ -165,6 +165,11 @@
             return result;
         }
 
+        public static IEnumerable<Vector2> MoveTo(this IEnumerable<Vector2> vectors, Vector2 direction)
+        {
+            return vectors.Select(vec => vec.Extend(direction, direction.Length()));
+        }
+
         /// <summary>
         ///     Converts a list of vector2's to vector3's
         /// </summary>
