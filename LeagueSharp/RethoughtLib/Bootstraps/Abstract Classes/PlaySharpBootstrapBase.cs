@@ -10,7 +10,7 @@
 
     #endregion
 
-    public abstract class PlaySharpBootstrapBase : IBootstrap
+    public abstract class   PlaySharpBootstrapBase : IBootstrap
     {
         #region Fields
 

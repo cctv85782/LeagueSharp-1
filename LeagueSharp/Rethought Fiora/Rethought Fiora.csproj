@@ -87,7 +87,6 @@
     <Compile Include="Champions\Fiora\Modules\Mixed\Q.cs" />
     <Compile Include="Champions\Fiora\Modules\Mixed\R.cs" />
     <Compile Include="Champions\Fiora\Modules\Mixed\W.cs" />
-    <Compile Include="Champions\Fiora\Spells.cs" />
     <Compile Include="Champions\Fiora\Variables.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

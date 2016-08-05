@@ -34,7 +34,7 @@
         /// <value>
         ///     The tags.
         /// </value>
-        public virtual IEnumerable<string> Tags { get; set; }
+        public abstract IEnumerable<string> Tags { get; set; }
 
         #endregion
 
