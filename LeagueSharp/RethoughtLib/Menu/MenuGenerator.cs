@@ -4,7 +4,6 @@
 
     using System;
 
-    using global::RethoughtLib.Exceptions;
     using global::RethoughtLib.Menu.Interfaces;
 
     using LeagueSharp.Common;

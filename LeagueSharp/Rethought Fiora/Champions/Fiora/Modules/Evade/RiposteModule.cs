@@ -110,7 +110,7 @@
 
             if (args.SData.TargettingType == SpellDataTargetType.Unit)
             {
-                
+
             }
 
             if (this.Menu.Item("AutoDisableEvade").GetValue<bool>())

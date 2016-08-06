@@ -5,6 +5,7 @@
     using System;
 
     using global::RethoughtLib.FeatureSystem.Implementations;
+    using global::RethoughtLib.FeatureSystem.Switches;
 
     using LeagueSharp.Common;
 

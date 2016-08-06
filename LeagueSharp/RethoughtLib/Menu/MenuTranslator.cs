@@ -6,7 +6,6 @@
 
     using LeagueSharp.Common;
 
-    using global::RethoughtLib.Exceptions;
     using global::RethoughtLib.Menu.Interfaces;
 
     #endregion
@@ -72,11 +71,10 @@
         #region Methods
 
         /// <summary>
-        ///     Searches the menuitem and translates it.
+        ///     Searches the menu-item and translates it.
         /// </summary>
         /// <param name="internalName">Name of the internal.</param>
         /// <param name="newDisplayName">New name of the display.</param>
-        /// <exception cref="TranslationException"></exception>
         private void SearchAndTranslate(string internalName, string newDisplayName)
         {
             try
@@ -90,7 +88,7 @@
             }
             catch (Exception ex)
             {
-                throw new TranslationException(
+                throw new InvalidOperationException(
                     $"Failed translating > {internalName} into {newDisplayName}. Exception: {ex}");
             }
         }

@@ -52,5 +52,3 @@ E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\LeagueSharp.Common.pdb
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\LeagueSharp.Data.pdb
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\obj\Debug\RethoughtLibTest.csprojResolveAssemblyReference.cache
-E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\LeagueSharp.SDKEx.dll
-E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\LeagueSharp.SDKEx.pdb

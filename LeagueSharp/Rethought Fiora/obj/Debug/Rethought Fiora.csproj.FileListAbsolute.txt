@@ -17,5 +17,3 @@ E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Fiora\obj\Debug\R
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Fiora\obj\Debug\Rethought Fiora.pdb
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Fiora\bin\Debug\LeagueSharp.SDK.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Fiora\bin\Debug\LeagueSharp.SDK.pdb
-E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Fiora\bin\Debug\LeagueSharp.SDKEx.dll
-E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Fiora\bin\Debug\LeagueSharp.SDKEx.pdb
