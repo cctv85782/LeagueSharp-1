@@ -145,7 +145,10 @@
             Console.WriteLine($"{this.Name} OnLoadEvent invoked");
 
             this.Loaded = true;
+
             this.OnLoadEvent?.Invoke(null, new FeatureBaseEventArgs(this));
+
+            this.OnEnableEvent?.Invoke(null, new FeatureBaseEventArgs(this));
         }
 
         /// <summary>
