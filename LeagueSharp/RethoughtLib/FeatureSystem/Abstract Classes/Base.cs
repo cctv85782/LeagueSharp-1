@@ -274,17 +274,22 @@
 
             this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
 
-            this.Menu.Item(this.Name + "Enabled").ValueChanged += delegate(object sender, OnValueChangeEventArgs args)
+            this.DelegateEnabledButton();
+        }
+
+        protected virtual void DelegateEnabledButton()
+        {
+            this.Menu.Item(this.Name + "Enabled").ValueChanged += delegate (object sender, OnValueChangeEventArgs args)
+            {
+                if (args.GetNewValue<bool>())
                 {
-                    if (args.GetNewValue<bool>())
-                    {
-                        this.OnEnableInvoker();
-                    }
-                    else
-                    {
-                        this.OnDisableInvoker();
-                    }
-                };
+                    this.OnEnableInvoker();
+                }
+                else
+                {
+                    this.OnDisableInvoker();
+                }
+            };
         }
 
         /// <summary>

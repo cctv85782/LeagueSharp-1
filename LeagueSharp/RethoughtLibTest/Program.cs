@@ -7,7 +7,7 @@
     using RethoughtLib;
     using RethoughtLib.Bootstraps.Abstract_Classes;
 
-    using RethoughtLibTest.Champions.Yorick;
+    using RethoughtLibTest.Champions.Unknown;
 
     #endregion
 
@@ -21,11 +21,11 @@
 
             var bootstrap = new CustomMultiBootstrap(
                 // Adds all loadable modules
-                new List<LoadableBase>() { new YorickLoader() },
+                new List<LoadableBase>() { new UnknownLoader() },
 
                 // Adds keywords that will get loaded, for example everything that has the name Utility
                 // this bootstrap will automatically load the module with the champion name of the player!
-                new List<string>() { "Yorick" });
+                new List<string>() { "Always" });
 
             bootstrap.Run();
         }

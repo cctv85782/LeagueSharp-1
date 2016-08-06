@@ -19,16 +19,16 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="LeagueSharpMultiBootstrap" /> class.
         /// </summary>
-        public LeagueSharpMultiBootstrap(List<LoadableBase> modules = null, List<string> additionalStrings = null)
+        public LeagueSharpMultiBootstrap(IEnumerable<LoadableBase> modules = null, IEnumerable<string> additionalStrings = null)
         {
             if (modules != null)
             {
-                this.Modules = modules;
+                this.Modules = new List<LoadableBase>(modules);
             }
 
             if (additionalStrings != null)
             {
-                this.Strings = additionalStrings;
+                this.Strings = new List<string>(additionalStrings);
             }
 
             CustomEvents.Game.OnGameLoad +=

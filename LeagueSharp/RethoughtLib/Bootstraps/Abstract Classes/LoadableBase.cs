@@ -18,7 +18,7 @@
         /// <value>
         ///     The name of the displaying.
         /// </value>
-        public abstract string DisplayingName { get; set; }
+        public abstract string DisplayName { get; set; }
 
         /// <summary>
         ///     Gets or sets the internal name.

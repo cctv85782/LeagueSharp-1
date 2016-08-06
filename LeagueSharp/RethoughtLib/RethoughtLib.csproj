@@ -40,7 +40,7 @@
       <HintPath>E:\Program Files (x86)\PlaySharpNew\References\LeagueSharp.Common.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.SDKEx">
-      <HintPath>..\..\..\..\Program Files (x86)\LeagueSharp\System\LeagueSharp.SDKEx.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\PlaySharpNew\References\LeagueSharp.SDKEx.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX">
       <HintPath>E:\Program Files (x86)\PlaySharpNew\References\SharpDX.dll</HintPath>
@@ -101,6 +101,7 @@
     <Compile Include="FeatureSystemSDK\Presets\VersionChecker.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\Base.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\ChildBase.cs" />
+    <Compile Include="FeatureSystem\Abstract Classes\ChildBaseOrbModes.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\ParentBase.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\SuperParentBase.cs" />
     <Compile Include="FeatureSystem\Example.cs" />

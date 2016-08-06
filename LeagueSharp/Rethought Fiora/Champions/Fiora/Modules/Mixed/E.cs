@@ -5,8 +5,12 @@
     using System;
 
     using LeagueSharp;
+    using LeagueSharp.Common;
 
     using RethoughtLib.FeatureSystem.Abstract_Classes;
+
+    using Rethought_Fiora.Champions.Fiora.Modules.Core;
+    using Rethought_Fiora.Champions.Fiora.Modules.Core.SpellsModule;
 
     #endregion
 
@@ -31,28 +35,39 @@
         /// </summary>
         protected override void OnDisable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            Game.OnUpdate -= this.GameOnOnUpdate;
+            Orbwalking.AfterAttack -= OrbwalkingOnAfterAttack;
         }
 
         /// <summary>
         ///     Called when [enable]
         /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="featureBaseEventArgs"></param>
         protected override void OnEnable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            Game.OnUpdate += this.GameOnOnUpdate;
+            Orbwalking.AfterAttack += OrbwalkingOnAfterAttack;
         }
 
         /// <summary>
-        ///     Called when [load].
+        ///     Triggers on AfterAttack
         /// </summary>
-        protected override void OnLoad(object sender, FeatureBaseEventArgs featureBaseEventArgs)
+        /// <param name="unit">The unit.</param>
+        /// <param name="target">The target.</param>
+        private static void OrbwalkingOnAfterAttack(AttackableUnit unit, AttackableUnit target)
         {
-            throw new NotImplementedException();
-        }
+            if (!unit.IsMe || target == null
+                || OrbwalkerModule.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Mixed
+                || !SpellsModule.Spells[SpellSlot.E].IsReady())
+            {
+                return;
+            }
 
-        private void GameOnOnUpdate(EventArgs args)
-        {
-            throw new NotImplementedException();
+            if (!(target is Obj_AI_Hero))
+            {
+                return;
+            }
+
+            SpellsModule.Spells[SpellSlot.E].Cast();
         }
 
         #endregion

@@ -33,7 +33,7 @@
         #region Public Methods and Operators
 
         /// <summary>
-        /// Adds the child.
+        ///     Adds the child.
         /// </summary>
         /// <param name="child">The child.</param>
         public void AddChild(Base child)
@@ -42,7 +42,7 @@
         }
 
         /// <summary>
-        /// Adds the children.
+        ///     Adds the children.
         /// </summary>
         /// <param name="children">The children.</param>
         public void AddChildren(IEnumerable<Base> children)
@@ -111,7 +111,33 @@
 
             this.Children.Add(child, child.Enabled);
 
-            this.Menu.AddSubMenu(child.Menu);
+            if (this.Menu.SubMenu(child.Menu.Name) != null)
+            {
+                this.MergeChild(child);
+            }
+            else
+            {
+                this.Menu.AddSubMenu(child.Menu);
+            }
+        }
+
+        /// <summary>
+        /// Merges the child with another children with the same Name
+        /// </summary>
+        /// <param name="child">The child.</param>
+        protected virtual void MergeChild(Base child)
+        {
+            foreach (var menuEntry in child.Menu.Items)
+            {
+                if (this.Menu.SubMenu(child.Menu.Name).Items.Contains(menuEntry))
+                {
+                    continue;
+                }
+
+                this.Menu.SubMenu(child.Menu.Name).AddItem(menuEntry);
+            }
+
+            child.Menu = this.Menu.SubMenu(child.Menu.Name);
         }
 
         /// <summary>

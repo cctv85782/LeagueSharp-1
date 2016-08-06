@@ -8,9 +8,11 @@
 
     using global::RethoughtLib.Bootstraps.Interfaces;
 
+    using LeagueSharp.Common;
+
     #endregion
 
-    public abstract class   PlaySharpBootstrapBase : IBootstrap
+    public abstract class PlaySharpBootstrapBase : IBootstrap
     {
         #region Fields
 
@@ -35,12 +37,12 @@
         ///     Adds the module.
         /// </summary>
         /// <param name="module">The module.</param>
-        /// <exception cref="ArgumentException">There can't be multiple similiar modules in the PlaySharpBootstrap.</exception>
+        /// <exception cref="ArgumentException">There can't be multiple similar modules in the PlaySharpBootstrap.</exception>
         public virtual void AddModule(LoadableBase module)
         {
             if (this.Modules.Contains(module))
             {
-                throw new ArgumentException("There can't be multiple similiar modules in the PlaySharpBootstrap.");
+                throw new ArgumentException("There can't be multiple similar modules in the PlaySharpBootstrap.");
             }
 
             this.Modules.Add(module);
@@ -50,7 +52,7 @@
         ///     Adds the module.
         /// </summary>
         /// <param name="modules">the modules</param>
-        /// <exception cref="ArgumentException">There can't be multiple similiar modules in the PlaySharpBootstrap.</exception>
+        /// <exception cref="ArgumentException">There can't be multiple similar modules in the PlaySharpBootstrap.</exception>
         public virtual void AddModules(IEnumerable<LoadableBase> modules)
         {
             var loadables = modules as IList<LoadableBase> ?? modules.ToList();
@@ -60,7 +62,7 @@
                  where moduleToAdd.Equals(existingModule)
                  select moduleToAdd).Any())
             {
-                throw new ArgumentException("There can't be multiple similiar modules in the PlaySharpBootstrap.");
+                throw new ArgumentException("There can't be multiple similar modules in the PlaySharpBootstrap.");
             }
 
             this.Modules.AddRange(loadables);
@@ -148,59 +150,59 @@
         /// </summary>
         public virtual void Run()
         {
-            if (!this.Modules.Any())
-            {
-                throw new InvalidOperationException("There are no modules in the Bootstrap to load.");
-            }
-
-            if (!this.Strings.Any())
-            {
-                throw new InvalidOperationException(
-                    "There are no strings in the Bootstrap to make a check with modules.");
-            }
-
-            var loadedModulesCount = 0;
-            var unknownModulesCount = 0;
-
-            foreach (var module in this.Modules)
-            {
-#if DEBUG
-                var value = module.Tags.Aggregate<string, string>(null, (current, tag) => current + tag);
-
-                Console.WriteLine("Processing Module: " + module.InternalName + " Tags: " + value);
-#endif
-
-                if (string.IsNullOrWhiteSpace(module.DisplayingName) || !module.Tags.Any())
+            CustomEvents.Game.OnGameLoad += delegate(EventArgs args)
                 {
-                    unknownModulesCount++;
-                    continue;
-                }
-
-                foreach (var @string in this.Strings)
-                {
-                    Console.WriteLine(@string);
-                    foreach (var tag in module.Tags)
+                    if (!this.Modules.Any())
                     {
-                        Console.WriteLine(tag);
-                        if (!tag.Equals(@string))
+                        throw new InvalidOperationException("There are no modules in the Bootstrap to load.");
+                    }
+
+                    if (!this.Strings.Any())
+                    {
+                        throw new InvalidOperationException(
+                            "There are no strings in the Bootstrap to make a check with modules.");
+                    }
+
+                    var loadedModulesCount = 0;
+                    var unknownModulesCount = 0;
+
+                    foreach (var module in this.Modules)
+                    {
+                        var value = module.Tags.Aggregate<string, string>(null, (current, tag) => current + tag);
+
+                        Console.WriteLine("Processing Module: " + module.InternalName + " Tags: " + value);
+
+                        if (string.IsNullOrWhiteSpace(module.DisplayName) || !module.Tags.Any())
                         {
+                            unknownModulesCount++;
                             continue;
                         }
 
-                        module.Load();
-                        loadedModulesCount++;
+                        foreach (var @string in this.Strings)
+                        {
+                            Console.WriteLine(@string);
+                            foreach (var tag in module.Tags)
+                            {
+                                Console.WriteLine(tag);
+                                if (!tag.Equals(@string))
+                                {
+                                    continue;
+                                }
+
+                                module.Load();
+                                loadedModulesCount++;
+                            }
+                        }
                     }
-                }
-            }
 
-            Console.WriteLine(
-                $"[{this}] {unknownModulesCount} unknown Modules, {loadedModulesCount} loaded Modules");
+                    Console.WriteLine($"[{this}] {unknownModulesCount} unknown Modules, {loadedModulesCount} loaded Modules");
 
-            if (unknownModulesCount > 0)
-            {
-                Console.WriteLine(
-                    $"[{this}] Please consider tagging and naming your unknown modules. The name must not be null or whitespace.");
-            }
+                    if (unknownModulesCount > 0)
+                    {
+                        Console.WriteLine(
+                            $"[{this}] Please consider tagging and naming your unknown modules. The name must not be null or whitespace.");
+                    }
+                };
         }
 
         #endregion

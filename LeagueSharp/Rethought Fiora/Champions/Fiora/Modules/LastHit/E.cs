@@ -5,13 +5,32 @@
     using System;
 
     using LeagueSharp;
+    using LeagueSharp.Common;
 
     using RethoughtLib.FeatureSystem.Abstract_Classes;
+
+    using Rethought_Fiora.Champions.Fiora.Modules.Core;
+    using Rethought_Fiora.Champions.Fiora.Modules.Core.SpellsModule;
 
     #endregion
 
     internal class E : ChildBase
     {
+        #region Fields
+
+        private readonly Orbwalking.OrbwalkingMode requiredOrbwalkerMode;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        public E(Orbwalking.OrbwalkingMode requiredOrbwalkerMode)
+        {
+            this.requiredOrbwalkerMode = requiredOrbwalkerMode;
+        }
+
+        #endregion
+
         #region Public Properties
 
         /// <summary>
@@ -31,28 +50,38 @@
         /// </summary>
         protected override void OnDisable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            Game.OnUpdate -= this.GameOnOnUpdate;
+            Orbwalking.AfterAttack -= this.OrbwalkingOnAfterAttack;
         }
 
         /// <summary>
         ///     Called when [enable]
         /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="featureBaseEventArgs"></param>
         protected override void OnEnable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            Game.OnUpdate += this.GameOnOnUpdate;
+            Orbwalking.AfterAttack += this.OrbwalkingOnAfterAttack;
         }
 
         /// <summary>
-        ///     Called when [load].
+        ///     Triggers on AfterAttack
         /// </summary>
-        protected override void OnLoad(object sender, FeatureBaseEventArgs featureBaseEventArgs)
+        /// <param name="unit">The unit.</param>
+        /// <param name="target">The target.</param>
+        private void OrbwalkingOnAfterAttack(AttackableUnit unit, AttackableUnit target)
         {
-            throw new NotImplementedException();
-        }
+            if (!unit.IsMe || target == null || OrbwalkerModule.Orbwalker.ActiveMode != this.requiredOrbwalkerMode
+                || !SpellsModule.Spells[SpellSlot.E].IsReady())
+            {
+                return;
+            }
 
-        private void GameOnOnUpdate(EventArgs args)
-        {
-            throw new NotImplementedException();
+            if (Math.Abs(target.Health - ObjectManager.Player.GetAutoAttackDamage(target as Obj_AI_Base)) < 1)
+            {
+                return;
+            }
+
+            SpellsModule.Spells[SpellSlot.E].Cast();
         }
 
         #endregion

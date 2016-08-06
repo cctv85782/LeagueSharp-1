@@ -17,10 +17,9 @@
         {
             RethoughtLib.Instance.Load();
 
-            var bootstrap = new LeagueSharpMultiBootstrap();
+            var bootstrap = new LeagueSharpMultiBootstrap(new[] { new FioraLoader() });
 
-            bootstrap.AddModule(new FioraLoader());
-            bootstrap.AddString("Fiora");
+            bootstrap.Run();
         }
 
         #endregion

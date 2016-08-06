@@ -73,21 +73,15 @@
     <Compile Include="Champions\Fiora\Modules\Core\SpellsModule\SpellsModule.cs" />
     <Compile Include="Champions\Fiora\Modules\LaneClear\E.cs" />
     <Compile Include="Champions\Fiora\Modules\LaneClear\Q.cs" />
-    <Compile Include="Champions\Fiora\Modules\LaneClear\R.cs" />
-    <Compile Include="Champions\Fiora\Modules\LaneClear\W.cs" />
     <Compile Include="Champions\Fiora\Modules\LastHit\E.cs" />
     <Compile Include="Champions\Fiora\Modules\LastHit\Q.cs" />
-    <Compile Include="Champions\Fiora\Modules\LastHit\R.cs" />
-    <Compile Include="Champions\Fiora\Modules\LastHit\W.cs" />
     <Compile Include="Champions\Fiora\Modules\LogicProvider\PassiveLogicProvider\PassiveInstances\PassiveInstance.cs" />
     <Compile Include="Champions\Fiora\Modules\LogicProvider\PassiveLogicProvider\PassiveLogicProviderModule.cs" />
     <Compile Include="Champions\Fiora\Modules\LogicProvider\PassiveLogicProvider\PassiveInstances\PassiveUlt.cs" />
     <Compile Include="Champions\Fiora\Modules\LogicProvider\QLogicProviderModule.cs" />
+    <Compile Include="Champions\Fiora\Modules\LogicProvider\WallLogicProvider.cs" />
     <Compile Include="Champions\Fiora\Modules\Mixed\E.cs" />
     <Compile Include="Champions\Fiora\Modules\Mixed\Q.cs" />
-    <Compile Include="Champions\Fiora\Modules\Mixed\R.cs" />
-    <Compile Include="Champions\Fiora\Modules\Mixed\W.cs" />
-    <Compile Include="Champions\Fiora\Variables.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

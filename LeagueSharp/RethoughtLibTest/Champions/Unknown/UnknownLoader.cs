@@ -1,21 +1,18 @@
-﻿namespace RethoughtLibTest.Champions.Yorick
+﻿namespace RethoughtLibTest.Champions.Unknown
 {
     #region Using Directives
 
     using System;
     using System.Collections.Generic;
 
-    using LeagueSharp.Common;
-
     using RethoughtLib.Bootstraps.Abstract_Classes;
-    using RethoughtLib.FeatureSystem.Abstract_Classes;
     using RethoughtLib.FeatureSystem.Implementations;
 
-    using RethoughtLibTest.Champions.Yorick.Childs;
+    using RethoughtLibTest.Champions.Unknown.Childs;
 
     #endregion
 
-    internal class YorickLoader : LoadableBase
+    internal class UnknownLoader : LoadableBase
     {
         #region Public Properties
 
@@ -25,7 +22,7 @@
         /// <value>
         ///     The name of the displaying.
         /// </value>
-        public override string DisplayingName { get; set; } = "My Yorick Assembly";
+        public override string DisplayName { get; set; } = "My Unknown Assembly";
 
         /// <summary>
         ///     Gets or sets the internal name.
@@ -33,7 +30,7 @@
         /// <value>
         ///     The name.
         /// </value>
-        public override string InternalName { get; set; } = "Yorick";
+        public override string InternalName { get; set; } = "Unknown";
 
         /// <summary>
         ///     Gets or sets the tags.
@@ -41,7 +38,7 @@
         /// <value>
         ///     The tags.
         /// </value>
-        public override IEnumerable<string> Tags { get; set; } = new List<string>() { "Fun", "Champion", "Yorick" };
+        public override IEnumerable<string> Tags { get; set; } = new List<string>() { "Always" };
 
         #endregion
 

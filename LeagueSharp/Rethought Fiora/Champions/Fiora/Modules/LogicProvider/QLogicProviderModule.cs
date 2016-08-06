@@ -85,6 +85,11 @@
             return vectors.To3D().MinOrDefault(x => x.Distance(passiveInstance.Owner.ServerPosition));
         }
 
+        public static float GetDamage(Obj_AI_Base target)
+        {
+            return (float)ObjectManager.Player.GetSpellDamage(target, SpellSlot.Q);
+        }
+
         #endregion
     }
 }

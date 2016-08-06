@@ -57,6 +57,11 @@
             return PassiveList.FirstOrDefault(x => x.Owner.NetworkId == hero.NetworkId);
         }
 
+        public static bool HasFioraUlt(Obj_AI_Hero unit)
+        {
+            return (PassiveList.Any(x => x.Owner.NetworkId == unit.NetworkId)) ;
+        }
+
         #endregion
 
         #region Methods

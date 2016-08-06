@@ -1,4 +1,4 @@
-﻿namespace RethoughtLibTest.Champions.Yorick.Childs
+﻿namespace RethoughtLibTest.Champions.Unknown.Childs
 {
     #region Using Directives
 

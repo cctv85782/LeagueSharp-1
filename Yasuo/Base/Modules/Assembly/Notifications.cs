@@ -107,11 +107,17 @@
 
             if (Game.Time <= 6000000)
             {
-                var banner = new Render.Sprite(Resources.BannerLoading, new Vector2());
+                var banner = new Render.Sprite(Resources.BannerLoading, new Vector2())
+                                 {
+                                     Scale =
+                                         new Vector2(
+                                         1 / (Drawing.Width / 3),
+                                         1 / (Drawing.Height / 3))
+                                         .Normalized()
+                                 };
 
                 // centered but a little above the screens center
 
-                banner.Scale = new Vector2(1 / (Drawing.Width / 3), 1 / (Drawing.Height / 3)).Normalized();
                 var position = new Vector2(
                     (Drawing.Width / 2) - banner.Width / 2,
                     (Drawing.Height / 2) - banner.Height / 2 - 50);
@@ -121,7 +127,7 @@
 
                 banner.OnDraw();
 
-                Utility.DelayAction.Add(displayTime, () => banner.Remove());
+                //Utility.DelayAction.Add(displayTime, () => banner.Remove());
             }
         }
     }

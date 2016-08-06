@@ -4,12 +4,14 @@
 
     using System.Collections.Generic;
 
+    using LeagueSharp.Common;
+
     using RethoughtLib.Bootstraps.Abstract_Classes;
     using RethoughtLib.FeatureSystem.Abstract_Classes;
     using RethoughtLib.FeatureSystem.Implementations;
     using RethoughtLib.Utility;
 
-    using Rethought_Fiora.Champions.Fiora.Modules.Combo;
+    using Rethought_Fiora.Champions.Fiora.Modules;
     using Rethought_Fiora.Champions.Fiora.Modules.Core;
     using Rethought_Fiora.Champions.Fiora.Modules.Core.SpellsModule;
     using Rethought_Fiora.Champions.Fiora.Modules.LogicProvider;
@@ -27,7 +29,7 @@
         /// <value>
         ///     The name of the displaying.
         /// </value>
-        public override string DisplayingName { get; set; } = String.ToTitleCase("Fiora the explorer");
+        public override string DisplayName { get; set; } = String.ToTitleCase("Fiora the explorer");
 
         /// <summary>
         ///     Gets or sets the internal name.
@@ -35,7 +37,7 @@
         /// <value>
         ///     The name.
         /// </value>
-        public override string InternalName { get; set; } = "Fuck you laura, I hate that god damn name.";
+        public override string InternalName { get; set; } = "Rethought_Fiora";
 
         /// <summary>
         ///     Gets or sets the tags.
@@ -54,7 +56,7 @@
         /// </summary>
         public override void Load()
         {
-            var superParent = new SuperParent(this.DisplayingName);
+            var superParent = new SuperParent(this.DisplayName);
 
             var coreParent = new Parent("Core");
 
@@ -65,17 +67,66 @@
             var mixedParent = new Parent("Mixed");
             var lasthitParent = new Parent("LastHit");
 
-            var comboQ = new Q();
-            comboParent.AddChild(comboQ);
+            var evadeParent = new Parent("Evade");
+
+            var wallLogicProvider = new WallLogicProvider();
+
+            coreParent.AddChildren(
+                new ChildBase[]
+                    {
+                        new SpellsModule(),
+                    });
+
+            comboParent.AddChildren(
+                new ChildBase[]
+                    {
+                        new Modules.Combo.Q(),
+                        new Modules.Combo.W(),
+                        new Modules.Combo.E(),
+                        new Modules.Combo.R(),
+                    });
+
+            laneClearParent.AddChildren(
+                new ChildBase[]
+                    {
+                        new Modules.LaneClear.Q(),
+                        new Modules.LaneClear.E(),
+                        new Modules.LastHit.E(Orbwalking.OrbwalkingMode.LaneClear),
+                    });
+
+            mixedParent.AddChildren(
+                new ChildBase[]
+                    {
+                        new Modules.Mixed.Q(),
+                        new Modules.Mixed.E(),
+                        new Modules.LastHit.E(Orbwalking.OrbwalkingMode.Mixed),
+
+                    });
+
+            lasthitParent.AddChildren(
+                new ChildBase[]
+                    {
+                        new Modules.LastHit.Q(Orbwalking.OrbwalkingMode.LastHit, wallLogicProvider),
+                        new Modules.LastHit.E(Orbwalking.OrbwalkingMode.LastHit),
+                    });
 
             logicProviderParent.AddChildren(
-                new List<Base>() { new PassiveLogicProviderModule(), new QLogicProviderModule() });
-
-            var spells = new SpellsModule();
-            coreParent.AddChild(spells);
+                new ChildBase[]
+                    {
+                        new PassiveLogicProviderModule(), new QLogicProviderModule(), wallLogicProvider
+                    });
 
             superParent.AddChildren(
-                new List<Base>() { new OrbwalkerModule(superParent.Menu), coreParent, logicProviderParent, });
+                new Base[]
+                    {
+                        new OrbwalkerModule(superParent.Menu),
+                        coreParent,
+                        comboParent,
+                        laneClearParent,
+                        mixedParent,
+                        lasthitParent,
+                        logicProviderParent,
+                    });
 
             superParent.OnLoadInvoker();
         }

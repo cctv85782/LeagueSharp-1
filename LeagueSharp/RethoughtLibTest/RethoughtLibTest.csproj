@@ -56,11 +56,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Champions\Yorick\Childs\ExampleChild.cs" />
+    <Compile Include="Champions\Unknown\Childs\ExampleChild.cs" />
     <Compile Include="CustomMultiBootstrap.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Champions\Yorick\YorickLoader.cs" />
+    <Compile Include="Champions\Unknown\UnknownLoader.cs" />
     <Compile Include="Utilities\ChatLoggerTest.cs" />
   </ItemGroup>
   <ItemGroup>
