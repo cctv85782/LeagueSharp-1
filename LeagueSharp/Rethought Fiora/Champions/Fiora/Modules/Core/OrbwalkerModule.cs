@@ -33,7 +33,7 @@ namespace Rethought_Fiora.Champions.Fiora.Modules.Core
         /// <summary>
         ///     Initializes the menu, overwrite this method to change the menu.
         /// </summary>
-        protected override void CreateMenu()
+        protected override void SetMenu()
         {
             return;
         }

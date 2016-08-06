@@ -45,7 +45,7 @@
         /// <value>
         ///     The tags.
         /// </value>
-        public override IEnumerable<string> Tags { get; set; } = new List<string>() { "Fiora " };
+        public override IEnumerable<string> Tags { get; set; } = new List<string>() { "Fiora" };
 
         #endregion
 

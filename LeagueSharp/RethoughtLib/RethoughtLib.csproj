@@ -101,10 +101,11 @@
     <Compile Include="FeatureSystemSDK\Presets\VersionChecker.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\Base.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\ChildBase.cs" />
-    <Compile Include="FeatureSystem\Abstract Classes\ChildBaseOrbModes.cs" />
+    <Compile Include="FeatureSystem\Abstract Classes\SwitchBase.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\ParentBase.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\SuperParentBase.cs" />
     <Compile Include="FeatureSystem\Example.cs" />
+    <Compile Include="FeatureSystem\Implementations\BoolSwitch.cs" />
     <Compile Include="FeatureSystem\Implementations\Parent.cs" />
     <Compile Include="FeatureSystem\Implementations\SuperParent.cs" />
     <Compile Include="RethoughtLib.cs" />

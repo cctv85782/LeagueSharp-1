@@ -26,7 +26,7 @@
         /// Initializes the menu, overwrite this method to change the menu type. Do not overwrite if you only want to change
         /// the menu content.
         /// </summary>
-        protected override void CreateMenu()
+        protected override void SetMenu()
         {
             this.Menu = new Menu(this.Name, this.Name, true);
 

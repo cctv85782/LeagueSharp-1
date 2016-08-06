@@ -28,7 +28,7 @@
         /// <summary>
         ///     Called when [disable].
         /// </summary>
-        protected override void OnDisable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
+        protected override void OnDisable(object sender, FeatureBaseEventArgs eventArgs)
         {
             Events.OnPostUpdate -= OnPostUpdate;
         }

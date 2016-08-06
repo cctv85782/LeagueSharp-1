@@ -106,10 +106,10 @@
 
             child.OnInitializeInvoker();
 
-            child.OnEnableEvent += this.OnChildEnabled;
-            child.OnDisableEvent += this.OnChildDisabled;
+            child.Switch.OnEnableEvent += this.OnChildEnabled;
+            child.Switch.OnDisableEvent += this.OnChildDisabled;
 
-            this.Children.Add(child, child.Enabled);
+            this.Children.Add(child, child.Switch.Enabled);
 
             if (this.Menu.SubMenu(child.Menu.Name) != null)
             {
@@ -158,7 +158,7 @@
         ///     Called when [child disabled].
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="featureBaseEventArgs">The <see cref="Base.FeatureBaseEventArgs" /> instance containing the event data.</param>
+        /// <param name="featureBaseEventArgs"></param>
         protected virtual void OnChildDisabled(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
             var child = featureBaseEventArgs.Sender;
@@ -168,7 +168,7 @@
                 return;
             }
 
-            this.Children[child] = child.Enabled;
+            this.Children[child] = child.Switch.Enabled;
 
             // Disables the Parent if all Children are disabled
             if (this.Children.All(x => !x.Value))
@@ -181,7 +181,7 @@
         ///     Called when [child enabled].
         /// </summary>
         /// <param name="o">The o.</param>
-        /// <param name="featureBaseEventArgs">The <see cref="Base.FeatureBaseEventArgs" /> instance containing the event data.</param>
+        /// <param name="featureBaseEventArgs"></param>
         protected virtual void OnChildEnabled(object o, FeatureBaseEventArgs featureBaseEventArgs)
         {
             var child = featureBaseEventArgs.Sender;
@@ -191,7 +191,7 @@
                 return;
             }
 
-            this.Children[child] = child.Enabled;
+            this.Children[child] = child.Switch.Enabled;
 
             // Enables the Parent if one Children is enabled
             this.OnEnableInvoker();
@@ -227,7 +227,7 @@
         {
             var menuItem = this.Menu.Item(this.Name + "Enabled");
 
-            if (menuItem.GetValue<bool>() == true)
+            if (menuItem.GetValue<bool>())
             {
                 menuItem.SetValue(false);
                 return;

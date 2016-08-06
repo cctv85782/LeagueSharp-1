@@ -4,12 +4,20 @@
 
     using System;
 
+    using global::RethoughtLib.FeatureSystem.Implementations;
+
     using LeagueSharp.Common;
 
     #endregion
 
     public abstract class Base
     {
+        #region Fields
+
+        public SwitchBase Switch;
+
+        #endregion
+
         #region Constructors and Destructors
 
         /// <summary>
@@ -24,16 +32,6 @@
         #endregion
 
         #region Public Events
-
-        /// <summary>
-        ///     Occurs when [on disable event].
-        /// </summary>
-        public event EventHandler<FeatureBaseEventArgs> OnDisableEvent;
-
-        /// <summary>
-        ///     Occurs when [on enable event].
-        /// </summary>
-        public event EventHandler<FeatureBaseEventArgs> OnEnableEvent;
 
         /// <summary>
         ///     Occurs when [on initialize event].
@@ -63,14 +61,6 @@
         #endregion
 
         #region Public Properties
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether this <see cref="Base" /> is enabled.
-        /// </summary>
-        /// <value>
-        ///     <c>true</c> if enabled; otherwise, <c>false</c>.
-        /// </value>
-        public bool Enabled { get; set; } = true;
 
         /// <summary>
         ///     Gets or sets a value indicating whether this <see cref="Base" /> is initialized.
@@ -147,8 +137,6 @@
             this.Loaded = true;
 
             this.OnLoadEvent?.Invoke(null, new FeatureBaseEventArgs(this));
-
-            this.OnEnableEvent?.Invoke(null, new FeatureBaseEventArgs(this));
         }
 
         /// <summary>
@@ -159,7 +147,6 @@
             this.OnUnLoadInvoker();
 
             this.Menu = null;
-            this.Enabled = false;
             this.Loaded = false;
             this.Initialized = false;
         }
@@ -175,11 +162,6 @@
         /// </exception>
         internal virtual void OnDisableInvoker()
         {
-            if (!this.Enabled)
-            {
-                return;
-            }
-
             if (!this.Initialized)
             {
                 throw new InvalidOperationException(
@@ -194,9 +176,7 @@
 
             Console.WriteLine($"{this.Name} OnDisableEvent invoked");
 
-            this.Enabled = false;
-
-            this.OnDisableEvent?.Invoke(null, new FeatureBaseEventArgs(this));
+            this.Switch.OnOnDisableEvent();
         }
 
         /// <summary>
@@ -206,11 +186,6 @@
         /// </exception>
         internal virtual void OnEnableInvoker()
         {
-            if (this.Enabled)
-            {
-                return;
-            }
-
             if (!this.Initialized)
             {
                 throw new InvalidOperationException(
@@ -224,9 +199,7 @@
 
             Console.WriteLine($"{this.Name} OnEnableEvent invoked");
 
-            this.Enabled = true;
-
-            this.OnEnableEvent?.Invoke(null, new FeatureBaseEventArgs(this));
+            this.Switch.OnOnEnableEvent();
         }
 
         /// <summary>
@@ -269,36 +242,9 @@
         }
 
         /// <summary>
-        ///     Initializes the menu, overwrite this method to change the menu.
-        /// </summary>
-        protected virtual void CreateMenu()
-        {
-            this.Menu = new Menu(this.Name, this.Name);
-
-            this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
-
-            this.DelegateEnabledButton();
-        }
-
-        protected virtual void DelegateEnabledButton()
-        {
-            this.Menu.Item(this.Name + "Enabled").ValueChanged += delegate (object sender, OnValueChangeEventArgs args)
-            {
-                if (args.GetNewValue<bool>())
-                {
-                    this.OnEnableInvoker();
-                }
-                else
-                {
-                    this.OnDisableInvoker();
-                }
-            };
-        }
-
-        /// <summary>
         ///     Called when [disable].
         /// </summary>
-        protected virtual void OnDisable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
+        protected virtual void OnDisable(object sender, FeatureBaseEventArgs eventArgs)
         {
             Console.WriteLine($"{this} OnDisable triggered");
         }
@@ -306,7 +252,7 @@
         /// <summary>
         ///     Called when [enable]
         /// </summary>
-        protected virtual void OnEnable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
+        protected virtual void OnEnable(object sender, FeatureBaseEventArgs eventArgs)
         {
             Console.WriteLine($"{this} OnEnable triggered");
         }
@@ -348,11 +294,11 @@
         }
 
         /// <summary>
-        ///     Sets whether enabled.
+        ///     Initializes the menu, overwrite this method to change the menu.
         /// </summary>
-        protected virtual void SetEnabled()
+        protected virtual void SetMenu()
         {
-            this.Enabled = this.Menu.Item(this.Name + "Enabled").GetValue<bool>();
+            this.Menu = new Menu(this.Name, this.Name);
         }
 
         /// <summary>
@@ -362,12 +308,17 @@
         /// <param name="e">The <see cref="FeatureBaseEventArgs" /> instance containing the event data.</param>
         private void OnCoreInitialize(object sender, FeatureBaseEventArgs e)
         {
-            this.CreateMenu();
+            this.SetMenu();
 
-            this.SetEnabled();
+            if (this.Switch == null)
+            {
+                this.Switch = new BoolSwitch(this.Menu, "Enabled", true);
+            }
 
-            this.OnDisableEvent += this.OnDisable;
-            this.OnEnableEvent += this.OnEnable;
+            this.Switch.Setup();
+
+            this.Switch.OnDisableEvent += this.OnDisable;
+            this.Switch.OnEnableEvent += this.OnEnable;
             this.OnLoadEvent += this.OnLoad;
             this.OnUnLoadEvent += this.OnUnload;
             this.OnRefreshEvent += this.OnRefresh;
