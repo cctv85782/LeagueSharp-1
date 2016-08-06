@@ -168,7 +168,7 @@
 
                     foreach (var module in this.Modules)
                     {
-                        var value = module.Tags.Aggregate<string, string>(null, (current, tag) => current + tag);
+                        var value = module.Tags.ToList();
 
                         Console.WriteLine("Processing Module: " + module.InternalName + " Tags: " + value);
 
@@ -195,7 +195,8 @@
                         }
                     }
 
-                    Console.WriteLine($"[{this}] {unknownModulesCount} unknown Modules, {loadedModulesCount} loaded Modules");
+                    Console.WriteLine(
+                        $"[{this}] {unknownModulesCount} unknown Modules, {loadedModulesCount} loaded Modules");
 
                     if (unknownModulesCount > 0)
                     {
