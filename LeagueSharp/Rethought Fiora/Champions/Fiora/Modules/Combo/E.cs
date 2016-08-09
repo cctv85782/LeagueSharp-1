@@ -15,6 +15,45 @@
 
     internal class E : ChildBase
     {
+        #region Fields
+
+        /// <summary>
+        ///     The orbwalking module
+        /// </summary>
+        private readonly OrbwalkerModule orbwalkingModule;
+
+        /// <summary>
+        ///     The passive logic provider
+        /// </summary>
+        private readonly PassiveLogicProviderModule passiveLogicProvider;
+
+        /// <summary>
+        ///     The spells module
+        /// </summary>
+        private readonly SpellsModule spellsModule;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="E" /> class.
+        /// </summary>
+        /// <param name="spellsModule">The spells module.</param>
+        /// <param name="orbwalkingModule">The orbwalking module.</param>
+        /// <param name="passiveLogicProvider">The passive logic provider.</param>
+        public E(
+            SpellsModule spellsModule,
+            OrbwalkerModule orbwalkingModule,
+            PassiveLogicProviderModule passiveLogicProvider)
+        {
+            this.spellsModule = spellsModule;
+            this.orbwalkingModule = orbwalkingModule;
+            this.passiveLogicProvider = passiveLogicProvider;
+        }
+
+        #endregion
+
         #region Public Properties
 
         /// <summary>
@@ -56,13 +95,14 @@
         /// <param name="target">The target.</param>
         private void OrbwalkingOnAfterAttack(AttackableUnit unit, AttackableUnit target)
         {
-            if (!unit.IsMe || target == null || OrbwalkerModule.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo
-                || !SpellsModule.Spells[SpellSlot.E].IsReady())
+            if (!unit.IsMe || target == null
+                || this.orbwalkingModule.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo
+                || !this.spellsModule.Spells[SpellSlot.E].IsReady())
             {
                 return;
             }
 
-            SpellsModule.Spells[SpellSlot.E].Cast();
+            this.spellsModule.Spells[SpellSlot.E].Cast();
         }
 
         /// <summary>
@@ -72,8 +112,8 @@
         private void OrbwalkingOnBeforeAttack(Orbwalking.BeforeAttackEventArgs args)
         {
             if (!args.Unit.IsMe || args.Target == null
-                || OrbwalkerModule.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo
-                || !SpellsModule.Spells[SpellSlot.E].IsReady())
+                || this.orbwalkingModule.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo
+                || !this.spellsModule.Spells[SpellSlot.E].IsReady())
             {
                 return;
             }
@@ -82,9 +122,9 @@
 
             if (unit == null) return;
 
-            if (PassiveLogicProviderModule.HasFioraUlt(unit) && unit.IsFacing(ObjectManager.Player))
+            if (this.passiveLogicProvider.HasFioraUlt(unit) && unit.IsFacing(ObjectManager.Player))
             {
-                SpellsModule.Spells[SpellSlot.E].Cast();
+                this.spellsModule.Spells[SpellSlot.E].Cast();
             }
         }
 

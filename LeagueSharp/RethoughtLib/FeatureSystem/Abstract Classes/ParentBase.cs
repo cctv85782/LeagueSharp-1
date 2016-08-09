@@ -54,21 +54,6 @@
         }
 
         /// <summary>
-        ///     Called when [uninitialize].
-        /// </summary>
-        public override void OnTerminate(object sender, FeatureBaseEventArgs featureBaseEventArgs)
-        {
-            base.OnTerminate(sender, featureBaseEventArgs);
-
-            this.OnChildAddEvent -= this.OnChildAdd;
-
-            foreach (var child in this.Children.Keys.ToList())
-            {
-                child.OnTerminateInvoker();
-            }
-        }
-
-        /// <summary>
         ///     Removes the children.
         /// </summary>
         /// <param name="child">The child.</param>
@@ -88,12 +73,46 @@
         /// <returns>A string that represents the current object.</returns>
         public override string ToString()
         {
-            return "ParentBase " + this.Name;
+            return this.Name;
         }
 
         #endregion
 
         #region Methods
+
+        /// <summary>
+        ///     Called when [uninitialize].
+        /// </summary>
+        protected internal override void OnTerminate(object sender, FeatureBaseEventArgs featureBaseEventArgs)
+        {
+            base.OnTerminate(sender, featureBaseEventArgs);
+
+            this.OnChildAddEvent -= this.OnChildAdd;
+
+            foreach (var child in this.Children.Keys.ToList())
+            {
+                child.OnTerminateInvoker();
+            }
+        }
+
+        /// <summary>
+        ///     Merges the child with another children with the same Name
+        /// </summary>
+        /// <param name="child">The child.</param>
+        protected virtual void MergeChild(Base child)
+        {
+            foreach (var menuEntry in child.Menu.Items)
+            {
+                if (this.Menu.SubMenu(child.Menu.Name).Items.Contains(menuEntry))
+                {
+                    continue;
+                }
+
+                this.Menu.SubMenu(child.Menu.Name).AddItem(menuEntry);
+            }
+
+            child.Menu = this.Menu.SubMenu(child.Menu.Name);
+        }
 
         /// <summary>
         ///     Called when [child add].
@@ -122,25 +141,6 @@
         }
 
         /// <summary>
-        /// Merges the child with another children with the same Name
-        /// </summary>
-        /// <param name="child">The child.</param>
-        protected virtual void MergeChild(Base child)
-        {
-            foreach (var menuEntry in child.Menu.Items)
-            {
-                if (this.Menu.SubMenu(child.Menu.Name).Items.Contains(menuEntry))
-                {
-                    continue;
-                }
-
-                this.Menu.SubMenu(child.Menu.Name).AddItem(menuEntry);
-            }
-
-            child.Menu = this.Menu.SubMenu(child.Menu.Name);
-        }
-
-        /// <summary>
         ///     Raises the <see cref="E:ChildAddInvoker" /> event.
         /// </summary>
         /// <param name="eventArgs">The <see cref="ParentBaseEventArgs" /> instance containing the event data.</param>
@@ -161,20 +161,34 @@
         /// <param name="featureBaseEventArgs"></param>
         protected virtual void OnChildDisabled(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
+            Console.WriteLine($"Child Disabled from: {this} > " + featureBaseEventArgs.Sender);
+
             var child = featureBaseEventArgs.Sender;
 
             if (child == null)
             {
                 return;
             }
+            if (child.Equals(this))
+            {
+                Console.WriteLine("Returned");
+                return;
+            }
 
             this.Children[child] = child.Switch.Enabled;
 
             // Disables the Parent if all Children are disabled
-            if (this.Children.All(x => !x.Value))
+
+            foreach (var child2 in this.Children)
             {
-                this.OnDisableInvoker();
+                Console.WriteLine($"Parent: {this}, Child: {child2.Key.Name} > Value: {child2.Value}");
             }
+
+            if (this.Children.Any(x => x.Value)) return;
+
+            Console.WriteLine($"{this} > All Children Disabled");
+
+            this.Switch.OnOnDisableEvent(new FeatureBaseEventArgs(this));
         }
 
         /// <summary>
@@ -184,6 +198,8 @@
         /// <param name="featureBaseEventArgs"></param>
         protected virtual void OnChildEnabled(object o, FeatureBaseEventArgs featureBaseEventArgs)
         {
+            Console.WriteLine($"Child Enabled from: {this} > " + featureBaseEventArgs.Sender);
+
             var child = featureBaseEventArgs.Sender;
 
             if (child == null)
@@ -191,10 +207,20 @@
                 return;
             }
 
+            if (child.Equals(this))
+            {
+                Console.WriteLine("Returned");
+                return;
+            }
+
             this.Children[child] = child.Switch.Enabled;
 
             // Enables the Parent if one Children is enabled
-            this.OnEnableInvoker();
+            if (this.Switch.Enabled) return;
+
+            Console.WriteLine("Enabling Parent " + this);
+
+            this.Switch.OnOnEnableEvent(new FeatureBaseEventArgs(this));
         }
 
         /// <summary>
@@ -225,24 +251,16 @@
         /// </summary>
         protected override void OnDisable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            var menuItem = this.Menu.Item(this.Name + "Enabled");
-
-            if (menuItem.GetValue<bool>())
-            {
-                menuItem.SetValue(false);
-                return;
-            }
+            Console.WriteLine($"Parent: {this} Disabled, Sender: {sender}, {featureBaseEventArgs.Sender}");
 
             foreach (var child in this.Children.ToList())
             {
-                if (!child.Value)
+                if (!child.Key.Switch.Enabled)
                 {
                     continue;
                 }
 
-                child.Key.OnDisableInvoker();
-
-                this.Children[child.Key] = true;
+                child.Key.Switch.OnOnDisableEvent(new FeatureBaseEventArgs(this));
             }
         }
 
@@ -251,13 +269,7 @@
         /// </summary>
         protected override void OnEnable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            var menuItem = this.Menu.Item(this.Name + "Enabled");
-
-            if (menuItem.GetValue<bool>() == false)
-            {
-                menuItem.SetValue(true);
-                return;
-            }
+            Console.WriteLine($"Parent: {this} Enabled, Sender: {sender}, {featureBaseEventArgs.Sender}");
 
             foreach (var child in this.Children.ToList())
             {
@@ -266,7 +278,7 @@
                     continue;
                 }
 
-                child.Key.OnEnableInvoker();
+                child.Key.Switch.OnOnEnableEvent(new FeatureBaseEventArgs(this));
             }
         }
 

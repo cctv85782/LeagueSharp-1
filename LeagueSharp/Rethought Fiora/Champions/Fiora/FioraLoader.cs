@@ -69,20 +69,27 @@
 
             var evadeParent = new Parent("Evade");
 
+            var spellsModule = new SpellsModule();
+            var orbwalkerModule = new OrbwalkerModule(superParent.Menu);
+
+
             var wallLogicProvider = new WallLogicProvider();
+            var passiveLogicProvider = new PassiveLogicProviderModule();
+
+            var qLogicProvider = new QLogicProviderModule(spellsModule, wallLogicProvider);
 
             coreParent.AddChildren(
                 new ChildBase[]
                     {
-                        new SpellsModule(),
+                        spellsModule
                     });
 
             comboParent.AddChildren(
                 new ChildBase[]
                     {
-                        new Modules.Combo.Q(),
+                        new Modules.Combo.Q(spellsModule, orbwalkerModule, passiveLogicProvider, qLogicProvider),
                         new Modules.Combo.W(),
-                        new Modules.Combo.E(),
+                        new Modules.Combo.E(spellsModule, orbwalkerModule, passiveLogicProvider),
                         new Modules.Combo.R(),
                     });
 
@@ -90,36 +97,36 @@
                 new ChildBase[]
                     {
                         new Modules.LaneClear.Q(),
-                        new Modules.LaneClear.E(),
-                        new Modules.LastHit.E(Orbwalking.OrbwalkingMode.LaneClear),
+                        new Modules.LaneClear.E(orbwalkerModule, spellsModule),
+                        new Modules.LastHit.E(Orbwalking.OrbwalkingMode.LaneClear, spellsModule, orbwalkerModule),
                     });
 
             mixedParent.AddChildren(
                 new ChildBase[]
                     {
                         new Modules.Mixed.Q(),
-                        new Modules.Mixed.E(),
-                        new Modules.LastHit.E(Orbwalking.OrbwalkingMode.Mixed),
+                        new Modules.Mixed.E(spellsModule, orbwalkerModule),
+                        new Modules.LastHit.E(Orbwalking.OrbwalkingMode.Mixed, spellsModule, orbwalkerModule),
 
                     });
 
             lasthitParent.AddChildren(
                 new ChildBase[]
                     {
-                        new Modules.LastHit.Q(Orbwalking.OrbwalkingMode.LastHit, wallLogicProvider),
-                        new Modules.LastHit.E(Orbwalking.OrbwalkingMode.LastHit),
+                        new Modules.LastHit.Q(Orbwalking.OrbwalkingMode.LastHit, spellsModule, orbwalkerModule, wallLogicProvider, qLogicProvider),
+                        new Modules.LastHit.E(Orbwalking.OrbwalkingMode.LastHit, spellsModule, orbwalkerModule),
                     });
 
             logicProviderParent.AddChildren(
                 new ChildBase[]
                     {
-                        new PassiveLogicProviderModule(), new QLogicProviderModule(), wallLogicProvider
+                        passiveLogicProvider, qLogicProvider, wallLogicProvider
                     });
 
             superParent.AddChildren(
                 new Base[]
                     {
-                        new OrbwalkerModule(superParent.Menu),
+                        orbwalkerModule,
                         coreParent,
                         comboParent,
                         laneClearParent,

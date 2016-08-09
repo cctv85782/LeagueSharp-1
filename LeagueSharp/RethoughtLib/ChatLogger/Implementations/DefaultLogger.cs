@@ -13,7 +13,6 @@
     /// <summary>
     ///     Default Loggers that implements IChatLogger and logs everything in the chat.
     /// </summary>
-    /// <seealso cref="RethoughtLib.ChatLogger.Interfaces.IChatLogger" />
     public class DefaultLogger : IChatLogger
     {
         #region Public Properties

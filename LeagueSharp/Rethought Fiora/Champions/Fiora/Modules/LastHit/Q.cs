@@ -24,6 +24,12 @@
 
     internal class Q : ChildBase
     {
+        private readonly SpellsModule spellsModule;
+
+        private readonly OrbwalkerModule orbwalkerModule;
+
+        private readonly QLogicProviderModule qLogicProvider;
+
         #region Fields
 
         internal Orbwalking.OrbwalkingMode RequiredOrbwalkerMode { get; set; }
@@ -34,8 +40,11 @@
 
         #region Constructors and Destructors
 
-        public Q(Orbwalking.OrbwalkingMode requiredOrbwalkerMode, WallLogicProvider wallDashLogicProvider)
+        public Q(Orbwalking.OrbwalkingMode requiredOrbwalkerMode, SpellsModule spellsModule, OrbwalkerModule orbwalkerModule, WallLogicProvider wallDashLogicProvider, QLogicProviderModule qLogicProvider)
         {
+            this.spellsModule = spellsModule;
+            this.orbwalkerModule = orbwalkerModule;
+            this.qLogicProvider = qLogicProvider;
             this.RequiredOrbwalkerMode = requiredOrbwalkerMode;
             this.WallDashLogicProvider = wallDashLogicProvider;
         }
@@ -84,11 +93,11 @@
         ///     Gets the minions.
         /// </summary>
         /// <returns></returns>
-        private static IEnumerable<Obj_AI_Base> GetMinions()
+        private IEnumerable<Obj_AI_Base> GetMinions()
         {
-            var minions = MinionManager.GetMinions(SpellsModule.Spells[SpellSlot.Q].Range);
+            var minions = MinionManager.GetMinions(this.spellsModule.Spells[SpellSlot.Q].Range);
 
-            return minions.Where(x => x.Health <= QLogicProviderModule.GetDamage(x));
+            return minions.Where(x => x.Health <= this.qLogicProvider.GetDamage(x));
         }
 
         /// <summary>
@@ -97,13 +106,13 @@
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void GameOnOnUpdate(EventArgs args)
         {
-            if (OrbwalkerModule.Orbwalker.ActiveMode != this.RequiredOrbwalkerMode
-                || !SpellsModule.Spells[SpellSlot.Q].IsReady())
+            if (this.orbwalkerModule.Orbwalker.ActiveMode != this.RequiredOrbwalkerMode
+                || !this.spellsModule.Spells[SpellSlot.Q].IsReady())
             {
                 return;
             }
 
-            var minions = GetMinions().ToList();
+            var minions = this.GetMinions().ToList();
 
             if (!minions.Any())
             {
@@ -134,7 +143,7 @@
                 realVectors.Add(vector.To2D());
             }
 
-            SpellsModule.Spells[SpellSlot.Q].Cast(
+            this.spellsModule.Spells[SpellSlot.Q].Cast(
                 realVectors.MaxOrDefault(x => x.Distance(HeroManager.Enemies.MaxOrDefault(y => y.Distance(x)))));
         }
 

@@ -18,7 +18,7 @@
 
             // A normal Menu
             var comboParent = new Parent("Parent");
-            comboParent.Switch = new BoolSwitch(comboParent.Menu, "Disabled", false);
+            comboParent.Switch = new BoolSwitch(comboParent.Menu, "Disabled", false, comboParent);
 
             // 2 children containing the same logic
             var child = new ExampleChild("Child");

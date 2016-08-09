@@ -34,24 +34,25 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LeagueSharp">
-      <HintPath>E:\Program Files (x86)\PlaySharpNew\References\LeagueSharp.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\cRRQOkSFgDev\References\LeagueSharp.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.Common">
-      <HintPath>E:\Program Files (x86)\PlaySharpNew\References\LeagueSharp.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="LeagueSharp.SDKEx">
-      <HintPath>E:\Program Files (x86)\PlaySharpNew\References\LeagueSharp.SDKEx.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\cRRQOkSFgDev\References\LeagueSharp.Common.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX">
-      <HintPath>E:\Program Files (x86)\PlaySharpNew\References\SharpDX.dll</HintPath>
+      <HintPath>E:\Program Files (x86)\cRRQOkSFgDev\References\SharpDX.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Direct3D9, Version=2.6.3.0, Culture=neutral, PublicKeyToken=345b829e6e492981, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Program Files (x86)\PlaySharpNew\References\SharpDX.Direct3D9.dll</HintPath>
+    <Reference Include="SharpDX.Direct3D9">
+      <HintPath>E:\Program Files (x86)\cRRQOkSFgDev\References\SharpDX.Direct3D9.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -69,9 +70,12 @@
     <Compile Include="Algorithm\ShortestPathAlgorithm\ShortestPathAlgorithm.cs" />
     <Compile Include="Algorithm\ShortestPathAlgorithm\DjikstraTest.cs" />
     <Compile Include="Algorithm\ShortestPathAlgorithm\PathTypes\Path.cs" />
-    <Compile Include="AssemblyDisabler\AssemblyDisabler.cs" />
-    <Compile Include="AssemblyDisabler\Implementations\Evade.cs" />
-    <Compile Include="AssemblyDisabler\Interfaces\Assembly.cs" />
+    <Compile Include="AssemblyInteractor\AssemblyInteractor.cs" />
+    <Compile Include="AssemblyInteractor\Implementations\EvadeSharp.cs" />
+    <Compile Include="AssemblyInteractor\Abstract Classes\Assembly.cs" />
+    <Compile Include="CastManager\Abstract Classes\CastManagerBase.cs" />
+    <Compile Include="ChatLogger\Abstract Classes\ChatLoggerBase.cs" />
+    <Compile Include="ChatLogger\Implementations\ChatLoggerModule.cs" />
     <Compile Include="Classes\Injectables\DependencyInjectionBase.cs" />
     <Compile Include="Classes\Injectables\Abstrahations\DIContainerBase.cs" />
     <Compile Include="Classes\General Intefaces\ITagable.cs" />
@@ -101,9 +105,9 @@
     <Compile Include="FeatureSystem\Implementations\Parent.cs" />
     <Compile Include="FeatureSystem\Implementations\SuperParent.cs" />
     <Compile Include="RethoughtLib.cs" />
-    <Compile Include="CastManager\CastManager.cs" />
-    <Compile Include="CastManager\CastManagerMenu.cs" />
-    <Compile Include="ChatLogger\ChatLogger.cs" />
+    <Compile Include="CastManager\Implementations\CastManager.cs" />
+    <Compile Include="CastManager\Implementations\CastManagerModule.cs" />
+    <Compile Include="ChatLogger\Implementations\ChatLogger.cs" />
     <Compile Include="ChatLogger\Implementations\DefaultFormat.cs" />
     <Compile Include="ChatLogger\Implementations\DefaultLogger.cs" />
     <Compile Include="ChatLogger\Interfaces\IChatLogger.cs" />
@@ -174,8 +178,8 @@
     <Compile Include="Utility\Logger.cs" />
     <Compile Include="Utility\Math.cs" />
     <Compile Include="Utility\String.cs" />
-    <Compile Include="Utility\VersionChecker.cs" />
-    <Compile Include="FeatureSystem\Presets\VersionChecker.cs" />
+    <Compile Include="VersionChecker\Implementations\VersionChecker.cs" />
+    <Compile Include="VersionChecker\Implementations\VersionCheckerModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -185,8 +189,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Data\" />
     <Folder Include="UI\DefaultImplementations\Designs\" />
+    <Folder Include="VersionChecker\Abstract Classes\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

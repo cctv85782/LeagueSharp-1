@@ -19,7 +19,7 @@
         public readonly string Content;
 
         /// <summary>
-        ///     Wether processing or not
+        ///     Whether processing or not
         /// </summary>
         public readonly bool Process;
 
@@ -29,12 +29,12 @@
         public readonly Obj_AI_Hero Sender;
 
         /// <summary>
-        ///     The time the message gut send
+        ///     The time the message got send
         /// </summary>
         public readonly float Time;
 
         /// <summary>
-        ///     All fiels but formatted
+        ///     The formated message
         /// </summary>
         public string FormatedMessage;
 

@@ -4,6 +4,8 @@
 
     using System;
 
+    using global::RethoughtLib.FeatureSystem.Switches;
+
     using LeagueSharp.Common;
 
     #endregion
@@ -30,19 +32,7 @@
         {
             this.Menu = new Menu(this.Name, this.Name, true);
 
-            this.Menu.AddItem(new MenuItem(this.Name + "Enabled", "Enabled").SetValue(true));
-
-            this.Menu.Item(this.Name + "Enabled").ValueChanged += delegate (object sender, OnValueChangeEventArgs args)
-            {
-                if (args.GetNewValue<bool>())
-                {
-                    this.OnEnableInvoker();
-                }
-                else
-                {
-                    this.OnDisableInvoker();
-                }
-            };
+            this.Switch = new BoolSwitch(this.Menu, "Enabled", true, this);
         }
 
         /// <summary>

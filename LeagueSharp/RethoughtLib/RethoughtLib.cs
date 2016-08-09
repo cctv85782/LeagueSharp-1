@@ -2,6 +2,7 @@
 {
     #region Using Directives
 
+    using System;
     using System.Collections.Generic;
 
     using global::RethoughtLib.Classes.General_Intefaces;
@@ -12,8 +13,11 @@
 
     public class RethoughtLib : ILoadable
     {
-        #region Static Fields
+        #region Fields
 
+        /// <summary>
+        /// The loadables
+        /// </summary>
         private readonly List<ILoadable> loadables = new List<ILoadable>() { new Events.Events() };
 
         /// <summary>
@@ -25,11 +29,11 @@
 
         #region Constructors and Destructors
 
-        private RethoughtLib()
+        static RethoughtLib()
         {
         }
 
-        static RethoughtLib()
+        private RethoughtLib()
         {
         }
 
@@ -60,16 +64,9 @@
 
             this.initialized = true;
 
+            Console.WriteLine("Test");
+
             CustomEvents.Game.OnGameLoad += this.Game_OnGameLoad;
-
-        }
-
-        private void Game_OnGameLoad(System.EventArgs args)
-        {
-            foreach (var loadable in this.loadables)
-            {
-                loadable.Load();
-            }
         }
 
         #endregion
@@ -82,6 +79,18 @@
         void ILoadable.Load()
         {
             this.Load();
+        }
+
+        #endregion
+
+        #region Methods
+
+        private void Game_OnGameLoad(EventArgs args)
+        {
+            foreach (var loadable in this.loadables)
+            {
+                loadable.Load();
+            }
         }
 
         #endregion

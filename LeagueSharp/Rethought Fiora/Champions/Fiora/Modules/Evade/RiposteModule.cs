@@ -10,17 +10,31 @@
     using LeagueSharp.Data.DataTypes;
     using LeagueSharp.SDK;
 
-    using RethoughtLib.AssemblyDisabler;
-    using RethoughtLib.AssemblyDisabler.Implementations;
+    using RethoughtLib.AssemblyInteractor;
+    using RethoughtLib.AssemblyInteractor.Implementations;
     using RethoughtLib.FeatureSystem.Abstract_Classes;
 
-    using Rethought_Fiora.Champions.Fiora.Modules.Core;
     using Rethought_Fiora.Champions.Fiora.Modules.Core.SpellsModule;
 
     #endregion
 
     internal class RiposteModule : ChildBase
     {
+        #region Fields
+
+        private readonly SpellsModule spellsModule;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        public RiposteModule(SpellsModule spellsModule)
+        {
+            this.spellsModule = spellsModule;
+        }
+
+        #endregion
+
         #region Public Properties
 
         /// <summary>
@@ -92,7 +106,7 @@
 
         private void ObjAiBaseOnOnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            if (sender.IsMe || sender.IsAlly || !SpellsModule.Spells[SpellSlot.W].IsReady()
+            if (sender.IsMe || sender.IsAlly || !this.spellsModule.Spells[SpellSlot.W].IsReady()
                 || this.Menu.SubMenu(sender.CharData.BaseSkinName) == null
                 || (bool)!this.Menu.SubMenu(sender.CharData.BaseSkinName).Item(args.SData.Name)?.GetValue<bool>())
             {
@@ -105,17 +119,16 @@
 
             if (this.Menu.Item("AutoDisableEvade").GetValue<bool>())
             {
-                AssemblyDisabler.DisableByMenu(new EvadeSharp());
+                AssemblyInteractor.DisableByMenu(new EvadeSharp());
             }
 
             if (args.SData.TargettingType == SpellDataTargetType.Unit)
             {
-
             }
 
             if (this.Menu.Item("AutoDisableEvade").GetValue<bool>())
             {
-                AssemblyDisabler.EnableByMenu(new EvadeSharp());
+                AssemblyInteractor.EnableByMenu(new EvadeSharp());
             }
         }
 

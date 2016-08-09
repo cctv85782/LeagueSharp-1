@@ -24,8 +24,8 @@ using System.Runtime.InteropServices;
 
 // VersionChecker information for an assembly consists of the following four values:
 //
-//      Major VersionChecker
-//      Minor VersionChecker 
+//      Major Version
+//      Minor Version
 //      Build Number
 //      Revision
 //

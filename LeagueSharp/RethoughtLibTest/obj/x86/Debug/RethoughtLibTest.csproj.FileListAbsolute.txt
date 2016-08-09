@@ -42,14 +42,11 @@ E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\RethoughtLib.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\SharpDX.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\SharpDX.Direct3D9.dll
-E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\LeagueSharp.SDKEx.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\LeagueSharp.Data.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\clipper_library.dll
-E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\LeagueSharp.Sandbox.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\Newtonsoft.Json.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\RethoughtLib.pdb
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\LeagueSharp.Common.pdb
-E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\LeagueSharp.SDKEx.pdb
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\LeagueSharp.Data.pdb
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\obj\x86\Debug\RethoughtLibTest.csprojResolveAssemblyReference.cache
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\obj\x86\Debug\RethoughtLibTest.exe

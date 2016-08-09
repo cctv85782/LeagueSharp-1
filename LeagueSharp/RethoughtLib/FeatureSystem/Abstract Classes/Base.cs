@@ -4,7 +4,6 @@
 
     using System;
 
-    using global::RethoughtLib.FeatureSystem.Implementations;
     using global::RethoughtLib.FeatureSystem.Switches;
 
     using LeagueSharp.Common;
@@ -100,23 +99,6 @@
         #region Public Methods and Operators
 
         /// <summary>
-        ///     Called when [on initialize event].
-        /// </summary>
-        public virtual void OnInitializeInvoker()
-        {
-            if (this.Initialized || this.Loaded)
-            {
-                return;
-            }
-
-            Console.WriteLine($"{this.Name} OnInitializeEvent invoked");
-
-            this.Initialized = true;
-
-            this.OnInitializeEvent?.Invoke(null, new FeatureBaseEventArgs(this));
-        }
-
-        /// <summary>
         ///     Called when [on load event].
         /// </summary>
         public virtual void OnLoadInvoker()
@@ -133,17 +115,48 @@
                     $"{this}, can't invoke OnLoadEvent if {this} it has already been loaded.");
             }
 
-            Console.WriteLine($"{this.Name} OnLoadEvent invoked");
-
             this.Loaded = true;
 
             this.OnLoadEvent?.Invoke(null, new FeatureBaseEventArgs(this));
         }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        ///     Called when [on initialize event].
+        /// </summary>
+        protected internal virtual void OnInitializeInvoker()
+        {
+            if (this.Initialized || this.Loaded)
+            {
+                return;
+            }
+
+            this.Initialized = true;
+
+            this.OnInitializeEvent?.Invoke(null, new FeatureBaseEventArgs(this));
+        }
+
+        /// <summary>
+        ///     Called when [on refresh event].
+        /// </summary>
+        protected internal virtual void OnRefreshInvoker()
+        {
+            if (!this.Initialized)
+            {
+                throw new InvalidOperationException(
+                    $"{this}, can't invoke OnRefreshEvent if {this} it has not been initialized.");
+            }
+
+            this.OnRefreshEvent?.Invoke(null, new FeatureBaseEventArgs(this));
+        }
+
         /// <summary>
         ///     Called when [uninitialize].
         /// </summary>
-        public virtual void OnTerminate(object sender, FeatureBaseEventArgs featureBaseEventArgs)
+        protected internal virtual void OnTerminate(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
             this.OnUnLoadInvoker();
 
@@ -152,77 +165,11 @@
             this.Initialized = false;
         }
 
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        ///     Called when [on disable event].
-        /// </summary>
-        /// <exception cref="System.InvalidOperationException">
-        /// </exception>
-        internal virtual void OnDisableInvoker()
-        {
-            if (!this.Initialized)
-            {
-                throw new InvalidOperationException(
-                    $"{this}, can't invoke OnDisableEvent if {this} was not initialized yet.");
-            }
-
-            if (!this.Loaded)
-            {
-                throw new InvalidOperationException(
-                    $"{this}, can't invoke OnDisableEvent if {this} was not loaded yet.");
-            }
-
-            Console.WriteLine($"{this.Name} OnDisableEvent invoked");
-
-            this.Switch.OnOnDisableEvent();
-        }
-
-        /// <summary>
-        ///     Called when [on enable event].
-        /// </summary>
-        /// <exception cref="System.InvalidOperationException">
-        /// </exception>
-        internal virtual void OnEnableInvoker()
-        {
-            if (!this.Initialized)
-            {
-                throw new InvalidOperationException(
-                    $"{this}, can't invoke OnEnableEvent if {this} was not initialized yet.");
-            }
-
-            if (!this.Loaded)
-            {
-                throw new InvalidOperationException($"{this}, can't invoke OnEnableEvent if {this} was not loaded yet.");
-            }
-
-            Console.WriteLine($"{this.Name} OnEnableEvent invoked");
-
-            this.Switch.OnOnEnableEvent();
-        }
-
-        /// <summary>
-        ///     Called when [on refresh event].
-        /// </summary>
-        internal virtual void OnRefreshInvoker()
-        {
-            if (!this.Initialized)
-            {
-                throw new InvalidOperationException(
-                    $"{this}, can't invoke OnRefreshEvent if {this} it has not been initialized.");
-            }
-
-            Console.WriteLine($"{this.Name} OnRefreshEvent invoked");
-            this.OnRefreshEvent?.Invoke(null, new FeatureBaseEventArgs(this));
-        }
-
         /// <summary>
         ///     Called when [terminate event].
         /// </summary>
         /// <exception cref="System.InvalidOperationException"></exception>
-        internal virtual void OnTerminateInvoker()
+        protected internal virtual void OnTerminateInvoker()
         {
             if (!this.Initialized)
             {
@@ -236,9 +183,8 @@
         /// <summary>
         ///     Called when [on unload event].
         /// </summary>
-        internal virtual void OnUnLoadInvoker()
+        protected internal virtual void OnUnLoadInvoker()
         {
-            Console.WriteLine($"{this.Name} OnUnloadEvent invoked");
             this.OnUnLoadEvent?.Invoke(null, new FeatureBaseEventArgs(this));
         }
 
@@ -247,7 +193,6 @@
         /// </summary>
         protected virtual void OnDisable(object sender, FeatureBaseEventArgs eventArgs)
         {
-            Console.WriteLine($"{this} OnDisable triggered");
         }
 
         /// <summary>
@@ -255,7 +200,6 @@
         /// </summary>
         protected virtual void OnEnable(object sender, FeatureBaseEventArgs eventArgs)
         {
-            Console.WriteLine($"{this} OnEnable triggered");
         }
 
         /// <summary>
@@ -263,7 +207,6 @@
         /// </summary>
         protected virtual void OnInitialize(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            Console.WriteLine($"{this.Name} OnInitialize triggered");
         }
 
         /// <summary>
@@ -271,7 +214,6 @@
         /// </summary>
         protected virtual void OnLoad(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            Console.WriteLine($"{this.Name} OnLoad triggered");
         }
 
         /// <summary>
@@ -281,8 +223,6 @@
         {
             this.OnTerminateInvoker();
             this.OnInitializeInvoker();
-
-            Console.WriteLine($"{this.Name} OnRefresh triggered");
         }
 
         /// <summary>
@@ -290,16 +230,17 @@
         /// </summary>
         protected virtual void OnUnload(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            this.OnDisableInvoker();
-            Console.WriteLine($"{this.Name} OnUnload triggered");
+            this.Switch.OnOnDisableEvent(featureBaseEventArgs);
         }
 
         /// <summary>
-        ///     Initializes the menu, overwrite this method to change the menu.
+        ///     Initializes the menu
         /// </summary>
         protected virtual void SetMenu()
         {
             this.Menu = new Menu(this.Name, this.Name);
+
+            this.Switch = new BoolSwitch(this.Menu, "Enabled", true, this);
         }
 
         /// <summary>
@@ -311,15 +252,14 @@
         {
             this.SetMenu();
 
-            if (this.Switch == null)
+            if (this.Switch != null)
             {
-                this.Switch = new BoolSwitch(this.Menu, "Enabled", true);
+                this.Switch.Setup(this.Menu);
+
+                this.Switch.OnDisableEvent += this.OnDisable;
+                this.Switch.OnEnableEvent += this.OnEnable;
             }
 
-            this.Switch.Setup();
-
-            this.Switch.OnDisableEvent += this.OnDisable;
-            this.Switch.OnEnableEvent += this.OnEnable;
             this.OnLoadEvent += this.OnLoad;
             this.OnUnLoadEvent += this.OnUnload;
             this.OnRefreshEvent += this.OnRefresh;

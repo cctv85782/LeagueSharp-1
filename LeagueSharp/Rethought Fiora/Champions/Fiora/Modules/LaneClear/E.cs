@@ -16,6 +16,24 @@
 
     internal class E : ChildBase
     {
+        #region Fields
+
+        private readonly OrbwalkerModule orbwalkerModule;
+
+        private readonly SpellsModule spellsModule;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        public E(OrbwalkerModule orbwalkerModule, SpellsModule spellsModule)
+        {
+            this.orbwalkerModule = orbwalkerModule;
+            this.spellsModule = spellsModule;
+        }
+
+        #endregion
+
         #region Public Properties
 
         /// <summary>
@@ -35,7 +53,7 @@
         /// </summary>
         protected override void OnDisable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            Orbwalking.AfterAttack -= OrbwalkingOnAfterAttack;
+            Orbwalking.AfterAttack -= this.OrbwalkingOnAfterAttack;
         }
 
         /// <summary>
@@ -45,7 +63,7 @@
         /// <param name="featureBaseEventArgs"></param>
         protected override void OnEnable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            Orbwalking.AfterAttack += OrbwalkingOnAfterAttack;
+            Orbwalking.AfterAttack += this.OrbwalkingOnAfterAttack;
         }
 
         /// <summary>
@@ -53,11 +71,11 @@
         /// </summary>
         /// <param name="unit">The unit.</param>
         /// <param name="target">The target.</param>
-        private static void OrbwalkingOnAfterAttack(AttackableUnit unit, AttackableUnit target)
+        private void OrbwalkingOnAfterAttack(AttackableUnit unit, AttackableUnit target)
         {
             if (!unit.IsMe || target == null
-                || OrbwalkerModule.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.LaneClear
-                || !SpellsModule.Spells[SpellSlot.E].IsReady())
+                || this.orbwalkerModule.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.LaneClear
+                || !this.spellsModule.Spells[SpellSlot.E].IsReady())
             {
                 return;
             }
@@ -69,7 +87,7 @@
                 return;
             }
 
-            SpellsModule.Spells[SpellSlot.E].Cast();
+            this.spellsModule.Spells[SpellSlot.E].Cast();
         }
 
         #endregion

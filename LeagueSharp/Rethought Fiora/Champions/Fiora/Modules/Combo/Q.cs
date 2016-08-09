@@ -20,6 +20,45 @@
 
     internal class Q : ChildBase
     {
+        #region Fields
+
+        /// <summary>
+        /// The q logic provider module
+        /// </summary>
+        private readonly QLogicProviderModule qLogicProviderModule;
+
+        /// <summary>
+        /// The spells module
+        /// </summary>
+        private readonly SpellsModule spellsModule;
+
+        /// <summary>
+        /// The orbwalker module
+        /// </summary>
+        private readonly OrbwalkerModule orbwalkerModule;
+
+        private readonly PassiveLogicProviderModule passiveLogicProvider;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Q"/> class.
+        /// </summary>
+        /// <param name="qLogicProviderModule">The q logic provider module.</param>
+        /// <param name="spellsModule">The spells module.</param>
+        /// <param name="orbwalkerModule">The orbwalker module.</param>
+        public Q(SpellsModule spellsModule, OrbwalkerModule orbwalkerModule, PassiveLogicProviderModule passiveLogicProvider, QLogicProviderModule qLogicProviderModule)
+        {
+            this.qLogicProviderModule = qLogicProviderModule;
+            this.spellsModule = spellsModule;
+            this.orbwalkerModule = orbwalkerModule;
+            this.passiveLogicProvider = passiveLogicProvider;
+        }
+
+        #endregion
+
         #region Public Properties
 
         /// <summary>
@@ -35,17 +74,21 @@
         #region Properties
 
         private Obj_AI_Hero Target
-            => TargetSelector.GetTarget(SpellsModule.Spells[SpellSlot.Q].Range, TargetSelector.DamageType.Physical);
+            => TargetSelector.GetTarget(this.spellsModule.Spells[SpellSlot.Q].Range, TargetSelector.DamageType.Physical);
 
         #endregion
 
         #region Public Methods and Operators
 
-        public static void Cast(Vector3 position)
+        /// <summary>
+        /// Casts the specified position.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        public void Cast(Vector3 position)
         {
             if (position.IsValid())
             {
-                SpellsModule.Spells[SpellSlot.Q].Cast(position);
+                this.spellsModule.Spells[SpellSlot.Q].Cast(position);
             }
         }
 
@@ -79,25 +122,24 @@
 
         private void GameOnOnUpdate(EventArgs args)
         {
-            if (!SpellsModule.Spells[SpellSlot.Q].IsReady()
-                || OrbwalkerModule.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo
-                || ObjectManager.Player.IsWindingUp
-                || this.Target == null
+            if (!this.spellsModule.Spells[SpellSlot.Q].IsReady()
+                || this.orbwalkerModule.Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.Combo
+                || ObjectManager.Player.IsWindingUp || this.Target == null
                 || ObjectManager.Player.HasBuffOfType(BuffType.Blind))
             {
                 return;
             }
 
-            var passiveInstance = PassiveLogicProviderModule.GetPassiveInstance(this.Target);
+            var passiveInstance = this.passiveLogicProvider.GetPassiveInstance(this.Target);
 
             if (passiveInstance != null)
             {
-                Cast(QLogicProviderModule.GetCastPosition(passiveInstance));
+                this.Cast(this.qLogicProviderModule.GetCastPosition(passiveInstance));
             }
 
-            var targetPred = SpellsModule.Spells[SpellSlot.Q].GetPrediction(this.Target);
+            var targetPred = this.spellsModule.Spells[SpellSlot.Q].GetPrediction(this.Target);
 
-            Cast(targetPred.UnitPosition);
+            this.Cast(targetPred.UnitPosition);
         }
 
         #endregion

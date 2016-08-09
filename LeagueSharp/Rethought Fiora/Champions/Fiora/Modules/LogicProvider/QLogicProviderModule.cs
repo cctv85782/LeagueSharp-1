@@ -8,7 +8,6 @@
     using LeagueSharp.Common;
 
     using RethoughtLib.FeatureSystem.Abstract_Classes;
-    using RethoughtLib.LogicProvider;
     using RethoughtLib.Utility;
 
     using Rethought_Fiora.Champions.Fiora.Modules.Core.SpellsModule;
@@ -20,6 +19,24 @@
 
     internal class QLogicProviderModule : ChildBase
     {
+        #region Fields
+
+        private readonly SpellsModule spellsModule;
+
+        private readonly WallLogicProvider wallLogicProvider;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        public QLogicProviderModule(SpellsModule spellsModule, WallLogicProvider wallLogicProvider)
+        {
+            this.spellsModule = spellsModule;
+            this.wallLogicProvider = wallLogicProvider;
+        }
+
+        #endregion
+
         #region Public Properties
 
         /// <summary>
@@ -39,7 +56,7 @@
         /// </summary>
         /// <param name="passiveInstance">The passive instance.</param>
         /// <returns></returns>
-        public static Vector3 GetCastPosition(PassiveInstance passiveInstance)
+        public Vector3 GetCastPosition(PassiveInstance passiveInstance)
         {
             if (passiveInstance.Polygon == null)
             {
@@ -48,7 +65,7 @@
 
             var center = passiveInstance.Polygon.Center.To3D();
 
-            var pred = SpellsModule.Spells[SpellSlot.Q].GetPrediction(
+            var pred = this.spellsModule.Spells[SpellSlot.Q].GetPrediction(
                 passiveInstance.Owner,
                 collisionable: new[] { CollisionableObjects.Walls });
 
@@ -69,10 +86,9 @@
             {
                 var rawEndVector = ObjectManager.Player.ServerPosition.Extend(directionVector.To3D(), 400);
 
-                var wallLogicProvider = new WallDashLogicProvider();
-
                 var realVector =
-                    wallLogicProvider.GetFirstWallPoint(ObjectManager.Player.ServerPosition, rawEndVector, 5).To2D();
+                    this.wallLogicProvider.GetFirstWallPoint(ObjectManager.Player.ServerPosition, rawEndVector, 5)
+                        .To2D();
 
                 if (predictedPolygon.IsOutside(realVector)
                     || rawEndVector.Distance(passiveInstance.Owner.ServerPosition) < 50
@@ -85,7 +101,7 @@
             return vectors.To3D().MinOrDefault(x => x.Distance(passiveInstance.Owner.ServerPosition));
         }
 
-        public static float GetDamage(Obj_AI_Base target)
+        public float GetDamage(Obj_AI_Base target)
         {
             return (float)ObjectManager.Player.GetSpellDamage(target, SpellSlot.Q);
         }

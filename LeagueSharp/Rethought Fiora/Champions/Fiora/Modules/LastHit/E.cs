@@ -20,13 +20,19 @@
 
         private readonly Orbwalking.OrbwalkingMode requiredOrbwalkerMode;
 
+        private readonly SpellsModule spellsModule;
+
+        private readonly OrbwalkerModule orbwalkerModule;
+
         #endregion
 
         #region Constructors and Destructors
 
-        public E(Orbwalking.OrbwalkingMode requiredOrbwalkerMode)
+        public E(Orbwalking.OrbwalkingMode requiredOrbwalkerMode, SpellsModule spellsModule, OrbwalkerModule orbwalkerModule)
         {
             this.requiredOrbwalkerMode = requiredOrbwalkerMode;
+            this.spellsModule = spellsModule;
+            this.orbwalkerModule = orbwalkerModule;
         }
 
         #endregion
@@ -70,8 +76,8 @@
         /// <param name="target">The target.</param>
         private void OrbwalkingOnAfterAttack(AttackableUnit unit, AttackableUnit target)
         {
-            if (!unit.IsMe || target == null || OrbwalkerModule.Orbwalker.ActiveMode != this.requiredOrbwalkerMode
-                || !SpellsModule.Spells[SpellSlot.E].IsReady())
+            if (!unit.IsMe || target == null || this.orbwalkerModule.Orbwalker.ActiveMode != this.requiredOrbwalkerMode
+                || !this.spellsModule.Spells[SpellSlot.E].IsReady())
             {
                 return;
             }
@@ -81,7 +87,7 @@
                 return;
             }
 
-            SpellsModule.Spells[SpellSlot.E].Cast();
+            this.spellsModule.Spells[SpellSlot.E].Cast();
         }
 
         #endregion

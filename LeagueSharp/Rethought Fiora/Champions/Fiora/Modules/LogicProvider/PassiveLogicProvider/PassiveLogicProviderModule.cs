@@ -46,20 +46,20 @@
 
         #region Properties
 
-        internal static List<PassiveInstance> PassiveList { get; } = new List<PassiveInstance>();
+        internal List<PassiveInstance> PassiveList { get; } = new List<PassiveInstance>();
 
         #endregion
 
         #region Public Methods and Operators
 
-        public static PassiveInstance GetPassiveInstance(Obj_AI_Hero hero)
+        public PassiveInstance GetPassiveInstance(Obj_AI_Hero hero)
         {
-            return PassiveList.FirstOrDefault(x => x.Owner.NetworkId == hero.NetworkId);
+            return this.PassiveList.FirstOrDefault(x => x.Owner.NetworkId == hero.NetworkId);
         }
 
-        public static bool HasFioraUlt(Obj_AI_Hero unit)
+        public bool HasFioraUlt(Obj_AI_Hero unit)
         {
-            return (PassiveList.Any(x => x.Owner.NetworkId == unit.NetworkId)) ;
+            return this.PassiveList.Any(x => x.Owner.NetworkId == unit.NetworkId);
         }
 
         #endregion
@@ -71,8 +71,8 @@
         /// </summary>
         protected override void OnDisable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            GameObject.OnCreate -= GameObjectOnOnCreate;
-            GameObject.OnDelete -= GameObjectOnOnDelete;
+            GameObject.OnCreate -= this.GameObjectOnOnCreate;
+            GameObject.OnDelete -= this.GameObjectOnOnDelete;
         }
 
         /// <summary>
@@ -80,8 +80,8 @@
         /// </summary>
         protected override void OnEnable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            GameObject.OnCreate += GameObjectOnOnCreate;
-            GameObject.OnDelete += GameObjectOnOnDelete;
+            GameObject.OnCreate += this.GameObjectOnOnCreate;
+            GameObject.OnDelete += this.GameObjectOnOnDelete;
         }
 
         /// <summary>
@@ -89,11 +89,11 @@
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
-        private static void GameObjectOnOnCreate(GameObject sender, EventArgs args)
+        private void GameObjectOnOnCreate(GameObject sender, EventArgs args)
         {
             var emitter = sender as Obj_GeneralParticleEmitter;
 
-            if (emitter == null || !IsFioraPassive(emitter) || emitter.Team == ObjectManager.Player.Team)
+            if (emitter == null || !this.IsFioraPassive(emitter) || emitter.Team == ObjectManager.Player.Team)
             {
                 return;
             }
@@ -102,7 +102,7 @@
 
             if (target != null)
             {
-                PassiveList.Add(new PassiveInstance(sender, target));
+                this.PassiveList.Add(new PassiveInstance(sender, target));
             }
         }
 
@@ -111,17 +111,17 @@
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
-        private static void GameObjectOnOnDelete(GameObject sender, EventArgs args)
+        private void GameObjectOnOnDelete(GameObject sender, EventArgs args)
         {
             var emitter = sender as Obj_GeneralParticleEmitter;
 
-            if (emitter == null || !IsFioraPassive(emitter) || emitter.Team == ObjectManager.Player.Team
-                || PassiveList.All(x => x.NetworkId.Equals(emitter.NetworkId)))
+            if (emitter == null || !this.IsFioraPassive(emitter) || emitter.Team == ObjectManager.Player.Team
+                || this.PassiveList.All(x => x.NetworkId.Equals(emitter.NetworkId)))
             {
                 return;
             }
 
-            PassiveList.RemoveAll(x => x.NetworkId.Equals(emitter.NetworkId));
+            this.PassiveList.RemoveAll(x => x.NetworkId.Equals(emitter.NetworkId));
         }
 
         /// <summary>
@@ -129,7 +129,7 @@
         /// </summary>
         /// <param name="gameObject">The gameObject.</param>
         /// <returns></returns>
-        private static bool IsFioraPassive(GameObject gameObject)
+        private bool IsFioraPassive(GameObject gameObject)
             =>
                 gameObject.Name.Contains("Fiora_Base_R_Mark") || gameObject.Name.Contains("Fiora_Base_R")
                 || gameObject.Name.Contains("Timeout") || gameObject.Name.Contains("Fiora_Base_Passive");

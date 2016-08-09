@@ -22,7 +22,7 @@
 
         /// <summary>
         ///     Capitalizes the first char of the specified string.
-        ///     IE: word > Word, i'am a sentece > I'am a sentence
+        ///     IE: word > Word, I'm a sentence > I'm a sentence
         /// </summary>
         /// <param name="str">The string.</param>
         /// <returns></returns>
