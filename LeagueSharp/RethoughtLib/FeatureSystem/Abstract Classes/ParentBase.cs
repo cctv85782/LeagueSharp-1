@@ -161,32 +161,15 @@
         /// <param name="featureBaseEventArgs"></param>
         protected virtual void OnChildDisabled(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            Console.WriteLine($"Child Disabled from: {this} > " + featureBaseEventArgs.Sender);
-
             var child = featureBaseEventArgs.Sender;
 
-            if (child == null)
+            if (child == null || child.Equals(this))
             {
                 return;
             }
-            if (child.Equals(this))
-            {
-                Console.WriteLine("Returned");
-                return;
-            }
-
             this.Children[child] = child.Switch.Enabled;
 
-            // Disables the Parent if all Children are disabled
-
-            foreach (var child2 in this.Children)
-            {
-                Console.WriteLine($"Parent: {this}, Child: {child2.Key.Name} > Value: {child2.Value}");
-            }
-
             if (this.Children.Any(x => x.Value)) return;
-
-            Console.WriteLine($"{this} > All Children Disabled");
 
             this.Switch.OnOnDisableEvent(new FeatureBaseEventArgs(this));
         }
@@ -198,18 +181,10 @@
         /// <param name="featureBaseEventArgs"></param>
         protected virtual void OnChildEnabled(object o, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            Console.WriteLine($"Child Enabled from: {this} > " + featureBaseEventArgs.Sender);
-
             var child = featureBaseEventArgs.Sender;
 
-            if (child == null)
+            if (child == null || child.Equals(this))
             {
-                return;
-            }
-
-            if (child.Equals(this))
-            {
-                Console.WriteLine("Returned");
                 return;
             }
 
@@ -217,8 +192,6 @@
 
             // Enables the Parent if one Children is enabled
             if (this.Switch.Enabled) return;
-
-            Console.WriteLine("Enabling Parent " + this);
 
             this.Switch.OnOnEnableEvent(new FeatureBaseEventArgs(this));
         }
@@ -251,8 +224,6 @@
         /// </summary>
         protected override void OnDisable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            Console.WriteLine($"Parent: {this} Disabled, Sender: {sender}, {featureBaseEventArgs.Sender}");
-
             foreach (var child in this.Children.ToList())
             {
                 if (!child.Key.Switch.Enabled)
@@ -269,8 +240,6 @@
         /// </summary>
         protected override void OnEnable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            Console.WriteLine($"Parent: {this} Enabled, Sender: {sender}, {featureBaseEventArgs.Sender}");
-
             foreach (var child in this.Children.ToList())
             {
                 if (!child.Value)

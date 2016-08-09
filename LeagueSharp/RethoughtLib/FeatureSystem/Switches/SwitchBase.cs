@@ -12,11 +12,6 @@ namespace RethoughtLib.FeatureSystem.Switches
 
     public abstract class SwitchBase
     {
-        #region Fields
-
-
-        #endregion
-
         #region Constructors and Destructors
 
         protected SwitchBase(Menu menu)
@@ -62,8 +57,6 @@ namespace RethoughtLib.FeatureSystem.Switches
 
         #region Public Methods and Operators
 
-        private Base.FeatureBaseEventArgs OnOnDisableEventCache;
-
         /// <summary>
         ///     Raises the <see cref="E:OnDisableEvent" /> event.
         /// </summary>
@@ -75,19 +68,12 @@ namespace RethoughtLib.FeatureSystem.Switches
             this.OnDisableEvent?.Invoke(this, e);
         }
 
-        private Base.FeatureBaseEventArgs OnOnEnableEventCache;
-
-        private bool CheckedEnabled;
-
-        private bool CheckedDisabled;
-
         /// <summary>
         ///     Raises the <see cref="E:OnEnableEvent" /> event.
         /// </summary>
         /// <param name="e">The <see cref="Base.FeatureBaseEventArgs" /> instance containing the event data.</param>
         public virtual void OnOnEnableEvent(Base.FeatureBaseEventArgs e)
         {
-
             this.Enabled = true;
 
             this.OnEnableEvent?.Invoke(this, e);
