@@ -51,3 +51,7 @@ E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\obj\x86\Debug\RethoughtLibTest.csprojResolveAssemblyReference.cache
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\obj\x86\Debug\RethoughtLibTest.exe
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\obj\x86\Debug\RethoughtLibTest.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\clipper_library.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\Priority Queue.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\Priority Queue.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Debug\Priority Queue.xml

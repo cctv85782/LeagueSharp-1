@@ -5,7 +5,7 @@
     /// <summary>
     ///     The quad ease in out.
     /// </summary>
-    public class QuadEaseOut : Transition
+    public class QuadEaseOut : TransitionBase
     {
         #region Constructors and Destructors
 
@@ -27,7 +27,7 @@
         /// <summary>
         ///     The equation.
         /// </summary>
-        /// <param name="t">
+        /// <param name="time">
         ///     The t.
         /// </param>
         /// <param name="b">
@@ -36,15 +36,15 @@
         /// <param name="c">
         ///     The c.
         /// </param>
-        /// <param name="d">
+        /// <param name="startTime">
         ///     The d.
         /// </param>
         /// <returns>
         ///     The <see cref="double" />.
         /// </returns>
-        public override double Equation(double t, double b, double c, double d)
+        public override double Equation(double time, double b, double c, double startTime)
         {
-            return -c * (t /= d) * (t - 2) + b;
+            return -c * (time /= startTime) * (time - 2) + b;
         }
 
         #endregion

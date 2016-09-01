@@ -34,7 +34,7 @@ namespace RethoughtLib.UI.Notifications
         /// <summary>
         ///     The transition
         /// </summary>
-        internal Transition Transition = new ExpoEaseInOut(0.5);
+        internal TransitionBase TransitionBase = new ExpoEaseInOut(0.5);
 
         /// <summary>
         ///     The design
@@ -76,10 +76,10 @@ namespace RethoughtLib.UI.Notifications
         {
             if (this.Moving)
             {
-                this.Design.Transition.Start(this.Position, this.Position.Extend(this.StartPosition, this.Design.Width));
+                this.Design.TransitionBase.Start(this.Position.To3D(), this.Position.Extend(this.StartPosition, this.Design.Width).To3D());
             }
 
-            this.Position = this.Design.Transition.GetPosition();
+            this.Position = this.Design.TransitionBase.GetPosition().To2D();
         }
 
         /// <summary>

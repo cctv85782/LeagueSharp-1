@@ -3,37 +3,18 @@
     #region Using Directives
 
     using System;
+    using System.Linq;
 
     using global::RethoughtLib.CastManager.Abstract_Classes;
     using global::RethoughtLib.Events;
     using global::RethoughtLib.FeatureSystem.Abstract_Classes;
 
+    using RethoughtLib.PriorityQuequeV2;
+
     #endregion
 
-    internal class CastManagerModule : ChildBase
+    public class CastManagerModule : ChildBase, ICastManager
     {
-        #region Fields
-
-        /// <summary>
-        ///     The cast manager
-        /// </summary>
-        public CastManagerBase CastManager;
-
-        #endregion
-
-        #region Constructors and Destructors
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="CastManagerModule" /> class.
-        /// </summary>
-        /// <param name="castManager">The cast manager.</param>
-        public CastManagerModule(CastManagerBase castManager)
-        {
-            this.CastManager = castManager;
-        }
-
-        #endregion
-
         #region Public Properties
 
         /// <summary>
@@ -70,9 +51,37 @@
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void OnPostUpdate(EventArgs args)
         {
-            this.CastManager.Process();
+            this.Process();
         }
 
         #endregion
+
+        /// <summary>
+        /// Gets or sets the queque.
+        /// </summary>
+        /// <value>
+        /// The queque.
+        /// </value>
+        public PriorityQueue<int, Action> Queque { get; set; }
+
+        /// <summary>
+        ///     Processes all items that are supposed to get casted.
+        /// </summary>
+        public void Process()
+        {
+            try
+            {
+                for (var i = 0; i < this.Queque.Dictionary.ToList().Count; i++)
+                {
+                    var action = this.Queque.Dequeue();
+
+                    action?.Invoke();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ex: " + ex);
+            }
+        }
     }
 }

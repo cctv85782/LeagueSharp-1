@@ -6,6 +6,7 @@
 
     using RethoughtLib;
     using RethoughtLib.Bootstraps.Abstract_Classes;
+    using RethoughtLib.Core;
 
     using RethoughtLibTest.Champions.Unknown;
 

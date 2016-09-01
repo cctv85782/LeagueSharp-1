@@ -5,6 +5,8 @@
     using System;
     using System.Collections.Generic;
 
+    using LeagueSharp.Common;
+
     using RethoughtLib.Bootstraps.Abstract_Classes;
     using RethoughtLib.FeatureSystem.Implementations;
 
@@ -49,15 +51,18 @@
         /// </summary>
         public override void Load()
         {
-            Console.WriteLine("Loading Yorick");
+            Console.WriteLine("Loading Unknown");
             /* do something here to load your assembly
              * for example you could do this > */
 
-            // basically the root of our structure (menu-wise)
+            // basically the root of our structure (menu-wise), acts like a normal parent but has a root menu instead. Can be disabled and enabled as well.
             var superParent = new SuperParent("SuperParent");
 
-            // something like a combo menu
-            var comboParent = new Parent("ComboParent");
+            // creates a new instance of the orbwalker
+            var orbwalker = new Orbwalking.Orbwalker(superParent.Menu);
+
+            // something like a combo menu, here I created a Parent which automatically enables or disables the children attached to it based on the orbwalker mode
+            var comboParent = new OrbwalkingParent("Combo", orbwalker, Orbwalking.OrbwalkingMode.Combo);
 
             // our actual feature containing the logic
             var child = new ExampleChild("Q");
@@ -66,13 +71,13 @@
             var child4 = new ExampleChild("R");
 
             // assigns "Combo" to "My Yorick Assembly"
-            superParent.AddChild(comboParent);
+            superParent.Add(comboParent);
 
             // assigns the feature to "Combo"
-            comboParent.AddChild(child);
-            comboParent.AddChild(child2);
-            comboParent.AddChild(child3);
-            comboParent.AddChild(child4);
+            comboParent.Add(child);
+            comboParent.Add(child2);
+            comboParent.Add(child3);
+            comboParent.Add(child4);
 
             // loads everything
             superParent.OnLoadInvoker();

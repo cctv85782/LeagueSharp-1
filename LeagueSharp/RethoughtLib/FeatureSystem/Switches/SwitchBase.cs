@@ -14,6 +14,10 @@ namespace RethoughtLib.FeatureSystem.Switches
     {
         #region Constructors and Destructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SwitchBase"/> class.
+        /// </summary>
+        /// <param name="menu">The menu.</param>
         protected SwitchBase(Menu menu)
         {
             this.Menu = menu;
@@ -66,6 +70,42 @@ namespace RethoughtLib.FeatureSystem.Switches
             this.Enabled = false;
 
             this.OnDisableEvent?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Disables the Switch.
+        ///     Default Behavior:
+        ///         > will only trigger OnDisableEvent and set Enabled to false
+        /// </summary>
+        /// <param name="e">The <see cref="Base.FeatureBaseEventArgs"/> instance containing the event data.</param>
+        public virtual void InternalDisable(Base.FeatureBaseEventArgs e = null)
+        {
+            if (e == null)
+            {
+                e = new Base.FeatureBaseEventArgs(null);
+            }
+
+            this.Enabled = false;
+
+            this.OnDisableEvent?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Enables the Switch.
+        ///     Default Behavior:
+        ///         > will only trigger OnEnableEvent and set Enabled to true
+        /// </summary>
+        /// <param name="e">The <see cref="Base.FeatureBaseEventArgs"/> instance containing the event data.</param>
+        public virtual void InternalEnable(Base.FeatureBaseEventArgs e = null)
+        {
+            if (e == null)
+            {
+                e = new Base.FeatureBaseEventArgs(null);
+            }
+
+            this.Enabled = true;
+
+            this.OnEnableEvent?.Invoke(this, e);
         }
 
         /// <summary>

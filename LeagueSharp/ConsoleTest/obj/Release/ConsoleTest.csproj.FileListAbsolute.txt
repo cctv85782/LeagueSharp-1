@@ -1,0 +1,21 @@
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\bin\Release\ConsoleTest.exe.config
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\obj\Release\ConsoleTest.csprojResolveAssemblyReference.cache
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\bin\Release\ConsoleTest.exe
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\bin\Release\ConsoleTest.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\bin\Release\RethoughtLib.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\bin\Release\SharpDX.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\bin\Release\LeagueSharp.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\bin\Release\SharpDX.Direct3D9.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\bin\Release\LeagueSharp.Common.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\bin\Release\Priority Queue.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\bin\Release\LeagueSharp.Data.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\bin\Release\clipper_library.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\bin\Release\Newtonsoft.Json.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\bin\Release\RethoughtLib.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\bin\Release\LeagueSharp.Common.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\bin\Release\Priority Queue.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\bin\Release\Priority Queue.xml
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\bin\Release\LeagueSharp.Data.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\bin\Release\clipper_library.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\obj\Release\ConsoleTest.exe
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\ConsoleTest\obj\Release\ConsoleTest.pdb

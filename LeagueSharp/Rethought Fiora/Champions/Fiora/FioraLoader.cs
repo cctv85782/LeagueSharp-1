@@ -78,22 +78,22 @@
 
             var qLogicProvider = new QLogicProviderModule(spellsModule, wallLogicProvider);
 
-            coreParent.AddChildren(
+            coreParent.Add(
                 new ChildBase[]
                     {
                         spellsModule
                     });
 
-            comboParent.AddChildren(
+            comboParent.Add(
                 new ChildBase[]
                     {
                         new Modules.Combo.Q(spellsModule, orbwalkerModule, passiveLogicProvider, qLogicProvider),
                         new Modules.Combo.W(),
                         new Modules.Combo.E(spellsModule, orbwalkerModule, passiveLogicProvider),
-                        new Modules.Combo.R(),
+                        new Modules.Combo.R(spellsModule),
                     });
 
-            laneClearParent.AddChildren(
+            laneClearParent.Add(
                 new ChildBase[]
                     {
                         new Modules.LaneClear.Q(),
@@ -101,7 +101,7 @@
                         new Modules.LastHit.E(Orbwalking.OrbwalkingMode.LaneClear, spellsModule, orbwalkerModule),
                     });
 
-            mixedParent.AddChildren(
+            mixedParent.Add(
                 new ChildBase[]
                     {
                         new Modules.Mixed.Q(),
@@ -110,20 +110,20 @@
 
                     });
 
-            lasthitParent.AddChildren(
+            lasthitParent.Add(
                 new ChildBase[]
                     {
                         new Modules.LastHit.Q(Orbwalking.OrbwalkingMode.LastHit, spellsModule, orbwalkerModule, wallLogicProvider, qLogicProvider),
                         new Modules.LastHit.E(Orbwalking.OrbwalkingMode.LastHit, spellsModule, orbwalkerModule),
                     });
 
-            logicProviderParent.AddChildren(
+            logicProviderParent.Add(
                 new ChildBase[]
                     {
                         passiveLogicProvider, qLogicProvider, wallLogicProvider
                     });
 
-            superParent.AddChildren(
+            superParent.Add(
                 new Base[]
                     {
                         orbwalkerModule,

@@ -32,3 +32,24 @@ E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\RethoughtLibTest\bin\Relea
 E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\RethoughtLibTest\obj\Release\RethoughtLibTest.csprojResolveAssemblyReference.cache
 E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\RethoughtLibTest\obj\Release\RethoughtLibTest.exe
 E:\Visual Studio Projects\LeagueSharpDev\RethoughtLib\RethoughtLibTest\obj\Release\RethoughtLibTest.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Release\RethoughtLibTest.exe.config
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Release\RethoughtLibTest.exe
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Release\RethoughtLibTest.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Release\LeagueSharp.Common.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Release\LeagueSharp.Data.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Release\LeagueSharp.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Release\RethoughtLib.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Release\SharpDX.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Release\SharpDX.Direct3D9.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Release\Priority Queue.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Release\clipper_library.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Release\Newtonsoft.Json.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Release\RethoughtLib.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Release\LeagueSharp.Common.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Release\LeagueSharp.Data.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Release\Priority Queue.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Release\Priority Queue.xml
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\bin\Release\clipper_library.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\obj\Release\RethoughtLibTest.csprojResolveAssemblyReference.cache
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\obj\Release\RethoughtLibTest.exe
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLibTest\obj\Release\RethoughtLibTest.pdb

@@ -32,12 +32,22 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="LeagueSharp">
       <HintPath>E:\Program Files (x86)\cRRQOkSFgDev\References\LeagueSharp.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.Common">
       <HintPath>E:\Program Files (x86)\cRRQOkSFgDev\References\LeagueSharp.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="LeagueSharp.Data">
+      <HintPath>E:\Program Files (x86)\cRRQOkSFgDev\References\LeagueSharp.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Priority Queue, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OptimizedPriorityQueue.3.0.0\lib\net45\Priority Queue.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="SharpDX">
       <HintPath>E:\Program Files (x86)\cRRQOkSFgDev\References\SharpDX.dll</HintPath>
@@ -62,23 +72,42 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Algorithm\ShortestPathAlgorithm\ConnectionTypes\AutoVector2Connection.cs" />
-    <Compile Include="Algorithm\ShortestPathAlgorithm\ConnectionTypes\AutoVector3Connection.cs" />
-    <Compile Include="Algorithm\ShortestPathAlgorithm\ConnectionTypes\Connection.cs" />
-    <Compile Include="Algorithm\ShortestPathAlgorithm\ConnectionTypes\FuncConnection.cs" />
-    <Compile Include="Algorithm\ShortestPathAlgorithm\ConnectionTypes\SimpleConnection.cs" />
-    <Compile Include="Algorithm\ShortestPathAlgorithm\ShortestPathAlgorithm.cs" />
-    <Compile Include="Algorithm\ShortestPathAlgorithm\DjikstraTest.cs" />
-    <Compile Include="Algorithm\ShortestPathAlgorithm\PathTypes\Path.cs" />
+    <Compile Include="Algorithm\Graphs\Graph.cs" />
+    <Compile Include="Algorithm\Graphs\GraphGenerator.cs" />
+    <Compile Include="Algorithm\Graphs\IGraphGenerator.cs" />
+    <Compile Include="Algorithm\Pathfinding\AStar\AStar.cs" />
+    <Compile Include="Algorithm\Pathfinding\AStar\AStarEdge.cs" />
+    <Compile Include="Algorithm\Pathfinding\AStar\AStarModule.cs" />
+    <Compile Include="Algorithm\Pathfinding\AStar\Enums\HeuristicFormula.cs" />
+    <Compile Include="Algorithm\Pathfinding\AStar\Enums\PathFinderNodeState.cs" />
+    <Compile Include="Algorithm\Pathfinding\AStar\AStarNode.cs" />
+    <Compile Include="Algorithm\Pathfinding\AStar\Heuristics\HeuristicEuclidean.cs" />
+    <Compile Include="Algorithm\Pathfinding\AStar\Heuristics\HeuristicEuclideanNoSqr.cs" />
+    <Compile Include="Algorithm\Pathfinding\AStar\Heuristics\HeuristicMaxDxdy.cs" />
+    <Compile Include="Algorithm\Pathfinding\AStar\Heuristics\IHeuristic.cs" />
+    <Compile Include="Algorithm\Pathfinding\AStar\Heuristics\HeuristicManhatten.cs" />
+    <Compile Include="Algorithm\Pathfinding\Dijkstra\ConnectionTypes\AutoVector2Connection.cs" />
+    <Compile Include="Algorithm\Pathfinding\Dijkstra\ConnectionTypes\AutoVector3Connection.cs" />
+    <Compile Include="Algorithm\Pathfinding\Dijkstra\ConnectionTypes\Connection.cs" />
+    <Compile Include="Algorithm\Pathfinding\Dijkstra\ConnectionTypes\FuncConnection.cs" />
+    <Compile Include="Algorithm\Pathfinding\Dijkstra\ConnectionTypes\SimpleConnection.cs" />
+    <Compile Include="Algorithm\Pathfinding\Dijkstra\Dijkstra.cs" />
+    <Compile Include="Algorithm\Pathfinding\Dijkstra\DjikstraTest.cs" />
+    <Compile Include="Algorithm\Pathfinding\Dijkstra\PathTypes\Path.cs" />
+    <Compile Include="Algorithm\Pathfinding\EdgeBase.cs" />
+    <Compile Include="Algorithm\Pathfinding\IPathfinder.cs" />
+    <Compile Include="Algorithm\Pathfinding\NodeBase.cs" />
+    <Compile Include="Algorithm\Pathfinding\PathfinderBase.cs" />
     <Compile Include="AssemblyInteractor\AssemblyInteractor.cs" />
     <Compile Include="AssemblyInteractor\Implementations\EvadeSharp.cs" />
     <Compile Include="AssemblyInteractor\Abstract Classes\Assembly.cs" />
-    <Compile Include="CastManager\Abstract Classes\CastManagerBase.cs" />
+    <Compile Include="CastManager\Abstract Classes\ICastManager.cs" />
     <Compile Include="ChatLogger\Abstract Classes\ChatLoggerBase.cs" />
     <Compile Include="ChatLogger\Implementations\ChatLoggerModule.cs" />
     <Compile Include="Classes\Injectables\DependencyInjectionBase.cs" />
     <Compile Include="Classes\Injectables\Abstrahations\DIContainerBase.cs" />
     <Compile Include="Classes\General Intefaces\ITagable.cs" />
+    <Compile Include="Core\RethoughtLibModule.cs" />
     <Compile Include="DamageCalculator\DamageTypes\DamageType.cs" />
     <Compile Include="DamageCalculator\DamageTypes\IDamageType.cs" />
     <Compile Include="DamageCalculator\DamageTypes\Implementations\Magical.cs" />
@@ -97,6 +126,8 @@
     <Compile Include="Design\Implementations\Vector4Offset.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\Base.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\ChildBase.cs" />
+    <Compile Include="FeatureSystem\Implementations\OrbwalkingParent.cs" />
+    <Compile Include="FeatureSystem\Switches\KeybindSwitch.cs" />
     <Compile Include="FeatureSystem\Switches\SwitchBase.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\ParentBase.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\SuperParentBase.cs" />
@@ -104,8 +135,7 @@
     <Compile Include="FeatureSystem\Switches\BoolSwitch.cs" />
     <Compile Include="FeatureSystem\Implementations\Parent.cs" />
     <Compile Include="FeatureSystem\Implementations\SuperParent.cs" />
-    <Compile Include="RethoughtLib.cs" />
-    <Compile Include="CastManager\Implementations\CastManager.cs" />
+    <Compile Include="Core\RethoughtLib.cs" />
     <Compile Include="CastManager\Implementations\CastManagerModule.cs" />
     <Compile Include="ChatLogger\Implementations\ChatLogger.cs" />
     <Compile Include="ChatLogger\Implementations\DefaultFormat.cs" />
@@ -125,9 +155,15 @@
     <Compile Include="Design\Implementations\IntOffset.cs" />
     <Compile Include="Design\Offset.cs" />
     <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="HealthPrediction\Abstract Classes\HealthPredictionBase.cs" />
+    <Compile Include="HealthPrediction\Abstract Classes\HealthPredictionCalculatingModule.cs" />
+    <Compile Include="HealthPrediction\Implementations\HealthPrediction.cs" />
+    <Compile Include="HealthPrediction\Implementations\HealthPredictionObservers\AutoAttackObserver.cs" />
+    <Compile Include="HealthPrediction\Implementations\HealthPredictionOutput.cs" />
+    <Compile Include="LogicProvider\Interfaces\IWallLogicProvider.cs" />
+    <Compile Include="LogicProvider\Modules\WallLogicProviderModule.cs" />
     <Compile Include="LogicProvider\PotionLogicProvider.cs" />
     <Compile Include="LogicProvider\TurretLogicProvider.cs" />
-    <Compile Include="LogicProvider\WallDashLogicProvider.cs" />
     <Compile Include="Menu\Interfaces\IMenuPreset.cs" />
     <Compile Include="Menu\Interfaces\ITranslation.cs" />
     <Compile Include="Menu\MenuExtensions.cs" />
@@ -143,6 +179,7 @@
     <Compile Include="TargetValidator\Interfaces\ICheckable.cs" />
     <Compile Include="TargetValidator\TargetValidator.cs" />
     <Compile Include="TargetValidator\TargetValidatorBase.cs" />
+    <Compile Include="Transitions\Implementations\Linear.cs" />
     <Compile Include="UI\Core\Designs\Design.cs" />
     <Compile Include="UI\Core\Displayer\Displayer.cs" />
     <Compile Include="UI\Core\Element.cs" />
@@ -156,10 +193,10 @@
     <Compile Include="UI\Notifications\Notifications.cs" />
     <Compile Include="UI\TestClass.cs" />
     <Compile Include="PriorityQuequeV2\PriorityQueque.cs" />
-    <Compile Include="PriorityQueque\DefaultPriorityQueque.cs" />
+    <Compile Include="PriorityQueque\PriorityQueque.cs" />
     <Compile Include="PriorityQueque\IPriorityQueque.cs" />
     <Compile Include="PriorityQueque\PriorityQuequeItem.cs" />
-    <Compile Include="PriorityQueque\PriorityQueque.cs" />
+    <Compile Include="PriorityQueque\PriorityQuequeContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -173,7 +210,7 @@
     <Compile Include="Transitions\Implementations\QuadEaseInOut.cs" />
     <Compile Include="Transitions\Implementations\QuadEaseOut.cs" />
     <Compile Include="Transitions\Implementations\QuartEaseInOut.cs" />
-    <Compile Include="Transitions\Abstract Base\Transition.cs" />
+    <Compile Include="Transitions\Abstract Base\TransitionBase.cs" />
     <Compile Include="Events\Events.cs" />
     <Compile Include="Utility\Logger.cs" />
     <Compile Include="Utility\Math.cs" />
@@ -183,6 +220,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

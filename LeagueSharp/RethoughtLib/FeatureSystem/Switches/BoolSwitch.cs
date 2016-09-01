@@ -2,24 +2,45 @@
 {
     #region Using Directives
 
+    using System;
+
     using global::RethoughtLib.FeatureSystem.Abstract_Classes;
 
     using LeagueSharp.Common;
 
     #endregion
 
-    internal class BoolSwitch : SwitchBase
+    /// <summary>
+    ///     Switch that displays a bool that can get named
+    /// </summary>
+    /// <seealso cref="RethoughtLib.FeatureSystem.Switches.SwitchBase" />
+    public class BoolSwitch : SwitchBase
     {
         #region Fields
 
+        /// <summary>
+        ///     The owner
+        /// </summary>
         private readonly Base owner;
 
+        /// <summary>
+        ///     Whether checked disabled
+        /// </summary>
         private bool checkedDisabled;
 
+        /// <summary>
+        ///     Whether checked enabled
+        /// </summary>
         private bool checkedEnabled;
 
+        /// <summary>
+        ///     The on ondisable event cache
+        /// </summary>
         private Base.FeatureBaseEventArgs onOnDisableEventCache;
 
+        /// <summary>
+        ///     The on onenable event cache
+        /// </summary>
         private Base.FeatureBaseEventArgs onOnEnableEventCache;
 
         #endregion
@@ -32,6 +53,7 @@
         /// <param name="menu">The menu.</param>
         /// <param name="boolName">Name of the bool.</param>
         /// <param name="boolValue">if set to <c>true</c> [bool value].</param>
+        /// <param name="owner">The owner.</param>
         public BoolSwitch(Menu menu, string boolName, bool boolValue, Base owner)
             : base(menu)
         {
@@ -73,7 +95,9 @@
             if (!this.checkedDisabled)
             {
                 this.checkedDisabled = true;
+
                 this.onOnDisableEventCache = e;
+
                 this.Menu.Item(this.BoolName).SetValue(false);
             }
             else
@@ -81,6 +105,8 @@
                 this.checkedDisabled = false;
 
                 e = this.onOnDisableEventCache;
+
+                Console.WriteLine("Disabling " + this.owner);
 
                 base.OnOnDisableEvent(e);
             }
@@ -104,6 +130,8 @@
                 this.checkedEnabled = false;
 
                 e = this.onOnEnableEventCache;
+
+                Console.WriteLine("Enabling " + this.owner);
 
                 base.OnOnEnableEvent(e);
             }

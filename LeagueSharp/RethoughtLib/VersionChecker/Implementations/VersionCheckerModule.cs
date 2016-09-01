@@ -1,14 +1,14 @@
-﻿namespace RethoughtLib.FeatureSystem.Presets
+﻿namespace RethoughtLib.VersionChecker.Implementations
 {
     #region Using Directives
 
     using System;
 
-    using global::RethoughtLib.Events;
-    using global::RethoughtLib.FeatureSystem.Abstract_Classes;
-
     using LeagueSharp;
     using LeagueSharp.Common;
+
+    using RethoughtLib.Events;
+    using RethoughtLib.FeatureSystem.Abstract_Classes;
 
     #endregion
 

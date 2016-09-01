@@ -1,0 +1,21 @@
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Release\Rethought Camera.exe.config
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Release\Rethought Camera.exe
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Release\Rethought Camera.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Release\LeagueSharp.Common.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Release\LeagueSharp.Data.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Release\LeagueSharp.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Release\Priority Queue.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Release\RethoughtLib.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Release\SharpDX.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Release\SharpDX.Direct3D9.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Release\clipper_library.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Release\Newtonsoft.Json.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Release\RethoughtLib.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Release\LeagueSharp.Common.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Release\LeagueSharp.Data.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Release\Priority Queue.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Release\Priority Queue.xml
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Release\clipper_library.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\obj\Release\Rethought Camera.csprojResolveAssemblyReference.cache
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\obj\Release\Rethought Camera.exe
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\obj\Release\Rethought Camera.pdb

@@ -7,7 +7,7 @@
     /// <summary>
     ///     The expo ease in out.
     /// </summary>
-    public class ExpoEaseInOut : Transition
+    public class ExpoEaseInOut : TransitionBase
     {
         #region Constructors and Destructors
 
@@ -26,10 +26,12 @@
 
         #region Public Methods and Operators
 
+
+        // TODO RENAME FUCKING PARAMS AND GIVE EXPLANATION
         /// <summary>
         ///     The equation.
         /// </summary>
-        /// <param name="t">
+        /// <param name="time">
         ///     The t.
         /// </param>
         /// <param name="b">
@@ -38,30 +40,30 @@
         /// <param name="c">
         ///     The c.
         /// </param>
-        /// <param name="d">
+        /// <param name="startTime">
         ///     The d.
         /// </param>
         /// <returns>
         ///     The <see cref="double" />.
         /// </returns>
-        public override double Equation(double t, double b, double c, double d)
+        public override double Equation(double time, double b, double c, double startTime)
         {
-            if (t == 0)
+            if (time == 0)
             {
                 return b;
             }
 
-            if (t == d)
+            if (time == startTime)
             {
                 return b + c;
             }
 
-            if ((t /= d / 2) < 1)
+            if ((time /= startTime / 2) < 1)
             {
-                return c / 2 * Math.Pow(2, 10 * (t - 1)) + b;
+                return c / 2 * Math.Pow(2, 10 * (time - 1)) + b;
             }
 
-            return c / 2 * (-Math.Pow(2, -10 * --t) + 2) + b;
+            return c / 2 * (-Math.Pow(2, -10 * --time) + 2) + b;
         }
 
         #endregion

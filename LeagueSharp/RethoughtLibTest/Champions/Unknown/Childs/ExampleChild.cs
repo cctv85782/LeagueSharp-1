@@ -13,10 +13,14 @@
 
     internal sealed class ExampleChild : ChildBase
     {
+        #region Constructors and Destructors
+
         public ExampleChild(string name)
         {
             this.Name = name;
         }
+
+        #endregion
 
         #region Public Properties
 

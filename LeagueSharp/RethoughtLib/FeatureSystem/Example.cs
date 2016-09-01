@@ -30,12 +30,12 @@
              *
             */
 
-            root.AddChild(comboParent);
+            root.Add(comboParent);
 
-            comboParent.AddChild(child);
-            comboParent.AddChild(child2);
+            comboParent.Add(child);
+            comboParent.Add(child2);
 
-            /* Output:
+            /* Example Output:
              * Root > Parent           > Child            > Enabled [On/Off]
              *        Enabled [On/Off]   Child2           > Enabled [On/Off]
              *                           Enabled [On/Off]

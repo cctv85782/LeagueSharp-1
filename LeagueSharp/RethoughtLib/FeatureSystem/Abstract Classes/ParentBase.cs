@@ -12,7 +12,7 @@
     {
         #region Fields
 
-        protected internal readonly Dictionary<Base, bool> Children = new Dictionary<Base, bool>();
+        public readonly Dictionary<Base, bool> Children = new Dictionary<Base, bool>();
 
         #endregion
 
@@ -36,7 +36,7 @@
         ///     Adds the child.
         /// </summary>
         /// <param name="child">The child.</param>
-        public void AddChild(Base child)
+        public void Add(Base child)
         {
             this.OnChildAddInvoker(new ParentBaseEventArgs() { Child = child });
         }
@@ -45,11 +45,11 @@
         ///     Adds the children.
         /// </summary>
         /// <param name="children">The children.</param>
-        public void AddChildren(IEnumerable<Base> children)
+        public void Add(IEnumerable<Base> children)
         {
             foreach (var child in children)
             {
-                this.OnChildAddInvoker(new ParentBaseEventArgs() { Child = child });
+                this.Add(child);
             }
         }
 
@@ -57,7 +57,7 @@
         ///     Removes the children.
         /// </summary>
         /// <param name="child">The child.</param>
-        public void RemoveChildren(Base child)
+        public void Remove(Base child)
         {
             if (!this.Children.ContainsKey(child))
             {
@@ -105,6 +105,7 @@
             {
                 if (this.Menu.SubMenu(child.Menu.Name).Items.Contains(menuEntry))
                 {
+                    Console.WriteLine("Merging");
                     continue;
                 }
 
@@ -125,19 +126,7 @@
 
             child.OnInitializeInvoker();
 
-            child.Switch.OnEnableEvent += this.OnChildEnabled;
-            child.Switch.OnDisableEvent += this.OnChildDisabled;
-
             this.Children.Add(child, child.Switch.Enabled);
-
-            if (this.Menu.SubMenu(child.Menu.Name) != null)
-            {
-                this.MergeChild(child);
-            }
-            else
-            {
-                this.Menu.AddSubMenu(child.Menu);
-            }
         }
 
         /// <summary>
@@ -156,17 +145,23 @@
 
         /// <summary>
         ///     Called when [child disabled].
+        ///     Default Behavior:
+        ///     > if the sender is the parent do nothing
+        ///     > else if the sender is a child and all children are disabled then the parent will get disabled if it was enabled
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="featureBaseEventArgs"></param>
         protected virtual void OnChildDisabled(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
+            Console.WriteLine($"Parent {this}: Child Disabled, Sender: " + featureBaseEventArgs.Sender);
+
             var child = featureBaseEventArgs.Sender;
 
             if (child == null || child.Equals(this))
             {
                 return;
             }
+
             this.Children[child] = child.Switch.Enabled;
 
             if (this.Children.Any(x => x.Value)) return;
@@ -176,24 +171,28 @@
 
         /// <summary>
         ///     Called when [child enabled].
+        ///     Default Behavior:
+        ///     > if the sender is the parent do nothing
+        ///     > else if the sender is a child enable the parent if the parent was disabled
         /// </summary>
         /// <param name="o">The o.</param>
         /// <param name="featureBaseEventArgs"></param>
         protected virtual void OnChildEnabled(object o, FeatureBaseEventArgs featureBaseEventArgs)
         {
+            Console.WriteLine($"Parent {this}: Child Enabled, Sender: " + featureBaseEventArgs.Sender);
+
             var child = featureBaseEventArgs.Sender;
 
-            if (child == null || child.Equals(this))
+            if (child == null || child == this)
             {
                 return;
             }
 
             this.Children[child] = child.Switch.Enabled;
 
-            // Enables the Parent if one Children is enabled
             if (this.Switch.Enabled) return;
 
-            this.Switch.OnOnEnableEvent(new FeatureBaseEventArgs(this));
+            this.Switch.OnOnEnableEvent(new FeatureBaseEventArgs(this) { Receiver = this});
         }
 
         /// <summary>
@@ -224,12 +223,18 @@
         /// </summary>
         protected override void OnDisable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
+            Console.WriteLine($"Parent {this} > OnDisable");
+
             foreach (var child in this.Children.ToList())
             {
                 if (!child.Key.Switch.Enabled)
                 {
                     continue;
                 }
+
+                Console.WriteLine($"Parent {this} > OnEnable: Disabling " + child);
+
+                this.Children[child.Key] = true;
 
                 child.Key.Switch.OnOnDisableEvent(new FeatureBaseEventArgs(this));
             }
@@ -240,12 +245,16 @@
         /// </summary>
         protected override void OnEnable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
+            Console.WriteLine($"Parent {this} > OnEnable");
+
             foreach (var child in this.Children.ToList())
             {
                 if (!child.Value)
                 {
                     continue;
                 }
+
+                Console.WriteLine($"Parent {this} > OnEnable: Enabling " + child);
 
                 child.Key.Switch.OnOnEnableEvent(new FeatureBaseEventArgs(this));
             }
@@ -268,9 +277,28 @@
         {
             base.OnLoad(sender, featureBaseEventArgs);
 
-            foreach (var child in this.Children.ToList())
+            foreach (var keyValuePair in this.Children.ToList())
             {
-                child.Key.OnLoadInvoker();
+                Console.WriteLine("Loading " + keyValuePair.Key.Name);
+                var child = keyValuePair.Key;
+
+                child.OnLoadInvoker();
+
+                child.Switch.OnEnableEvent += this.OnChildEnabled;
+                child.Switch.OnDisableEvent += this.OnChildDisabled;
+
+                // This Parents Menu already contains a Menu with the same name
+                if (this.Menu.Children.Contains(child.Menu))
+                {
+                    Console.WriteLine($"Merged {child.Name} to {this.Name}'s menu");
+
+                    this.MergeChild(child);
+                }
+                else
+                {
+                    Console.WriteLine($"Added {child.Name} to {this.Name}'s menu");
+                    this.Menu.AddSubMenu(child.Menu);
+                }
             }
         }
 

@@ -42,6 +42,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>E:\Program Files (x86)\cRRQOkSFgDev\References\LeagueSharp.Common.dll</HintPath>
     </Reference>
+    <Reference Include="LeagueSharp.Data, Version=1.1.0.1, Culture=neutral, PublicKeyToken=7b6e8d26eaf0534f, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>E:\Program Files (x86)\cRRQOkSFgDev\References\LeagueSharp.Data.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX, Version=2.6.3.0, Culture=neutral, PublicKeyToken=345b829e6e492981, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>E:\Program Files (x86)\cRRQOkSFgDev\References\SharpDX.dll</HintPath>
@@ -57,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Champions\Unknown\Childs\ExampleChild.cs" />
+    <Compile Include="Champions\Unknown\Parents\OrbwalkingParent.cs" />
     <Compile Include="CustomMultiBootstrap.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -65,6 +70,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RethoughtLib\RethoughtLib.csproj">

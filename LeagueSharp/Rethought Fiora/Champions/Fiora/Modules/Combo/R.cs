@@ -5,13 +5,23 @@
     using System;
 
     using LeagueSharp;
+    using LeagueSharp.Common;
 
     using RethoughtLib.FeatureSystem.Abstract_Classes;
+
+    using Rethought_Fiora.Champions.Fiora.Modules.Core.SpellsModule;
 
     #endregion
 
     internal class R : ChildBase
     {
+        private readonly SpellsModule spellsModule;
+
+        public R(SpellsModule spellsModule)
+        {
+            this.spellsModule = spellsModule;
+        }
+
         #region Public Properties
 
         /// <summary>
@@ -31,7 +41,7 @@
         /// </summary>
         protected override void OnDisable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            Game.OnUpdate -= this.GameOnOnUpdate;
+            Orbwalking.OnAttack -= this.ObjAiBase_OnOnProcessSpellCast;
         }
 
         /// <summary>
@@ -39,7 +49,7 @@
         /// </summary>
         protected override void OnEnable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            Game.OnUpdate += this.GameOnOnUpdate;
+            Orbwalking.OnAttack += this.ObjAiBase_OnOnProcessSpellCast;
         }
 
         /// <summary>
@@ -50,9 +60,22 @@
             throw new NotImplementedException();
         }
 
-        private void GameOnOnUpdate(EventArgs args)
+        // TODO: HealthPrediction to catch things like ignite or incoming attacks
+        private void ObjAiBase_OnOnProcessSpellCast(AttackableUnit unit, AttackableUnit target)
         {
-            throw new NotImplementedException();
+            if (!unit.IsMe)
+            {
+                return;
+            }
+
+            var targetObj = (Obj_AI_Base)target;
+
+            // we low life, aa is going to kill target, enemies around us => Cast R on target
+            if (targetObj.Health - ObjectManager.Player.GetAutoAttackDamage(targetObj) <= 0
+                && ObjectManager.Player.HealthPercent < 5 && ObjectManager.Player.CountEnemiesInRange(2500) > 1)
+            {
+                this.spellsModule.Spells[SpellSlot.R].Cast(targetObj);
+            }
         }
 
         #endregion

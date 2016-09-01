@@ -1,4 +1,4 @@
-﻿namespace RethoughtLib.FeatureSystem.Abstract_Classes
+﻿    namespace RethoughtLib.FeatureSystem.Abstract_Classes
 {
     #region Using Directives
 
@@ -10,10 +10,16 @@
 
     #endregion
 
+    /// <summary>
+    ///     Base class of Parent-Child System
+    /// </summary>
     public abstract class Base
     {
         #region Fields
 
+        /// <summary>
+        /// The switch
+        /// </summary>
         public SwitchBase Switch;
 
         #endregion
@@ -63,12 +69,12 @@
         #region Public Properties
 
         /// <summary>
-        ///     Gets or sets a value indicating whether this <see cref="Base" /> is initialized.
+        ///     Gets or sets a value indicating whether <c>this</c> <see cref="Base" /> is initialized.
         /// </summary>
         /// <value>
         ///     <c>true</c> if initialized; otherwise, <c>false</c>.
         /// </value>
-        public bool Initialized { get; protected internal set; } = false;
+        public bool Initialized { get; protected internal set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether this <see cref="Base" /> is loaded.
@@ -76,7 +82,7 @@
         /// <value>
         ///     <c>true</c> if loaded; otherwise, <c>false</c>.
         /// </value>
-        public bool Loaded { get; protected internal set; } = false;
+        public bool Loaded { get; protected internal set; }
 
         /// <summary>
         ///     Gets or sets the menu.
@@ -111,8 +117,7 @@
 
             if (this.Loaded)
             {
-                throw new InvalidOperationException(
-                    $"{this}, can't invoke OnLoadEvent if {this} it has already been loaded.");
+                return;
             }
 
             this.Loaded = true;
@@ -239,7 +244,10 @@
         protected virtual void SetMenu()
         {
             this.Menu = new Menu(this.Name, this.Name);
+        }
 
+        protected virtual void SetSwitch()
+        {
             this.Switch = new BoolSwitch(this.Menu, "Enabled", true, this);
         }
 
@@ -251,6 +259,7 @@
         private void OnCoreInitialize(object sender, FeatureBaseEventArgs e)
         {
             this.SetMenu();
+            this.SetSwitch();
 
             if (this.Switch != null)
             {
@@ -268,10 +277,18 @@
 
         #endregion
 
+        /// <summary>
+        ///     FeatureBaseEventArgs
+        /// </summary>
+        /// <seealso cref="System.EventArgs" />
         public class FeatureBaseEventArgs : EventArgs
         {
             #region Constructors and Destructors
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="FeatureBaseEventArgs"/> class.
+            /// </summary>
+            /// <param name="sender">The sender.</param>
             public FeatureBaseEventArgs(Base sender)
             {
                 this.Sender = sender;
@@ -281,7 +298,15 @@
 
             #region Public Properties
 
+            /// <summary>
+            /// Gets or sets the sender.
+            /// </summary>
+            /// <value>
+            /// The sender.
+            /// </value>
             public Base Sender { get; set; }
+
+            public Base Receiver { get; set; }
 
             #endregion
         }
