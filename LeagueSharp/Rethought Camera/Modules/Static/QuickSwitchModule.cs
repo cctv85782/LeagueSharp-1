@@ -114,7 +114,7 @@
         /// <param name="hero">The object.</param>
         private void Execute(OnValueChangeEventArgs args, GameObject hero)
         {
-            if (this.executing)
+            if (this.executing || !this.Switch.Enabled)
             {
                 return;
             }
@@ -126,6 +126,10 @@
             Game.OnUpdate += this.GameOnOnUpdate;
         }
 
+        /// <summary>
+        /// OnGameUpdate
+        /// </summary>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void GameOnOnUpdate(EventArgs args)
         {
             if (this.TransitionsModule.ActiveTransitionBase.Moving)
