@@ -91,7 +91,7 @@
             base.OnDisable(sender, featureBaseEventArgs);
 
             this.previousTransition = this.ActiveTransitionBase;
-            this.ActiveTransitionBase = new Linear(this.Duration);
+            this.ActiveTransitionBase = new QuadEaseInOut(this.Duration);
         }
 
         /// <summary>
@@ -117,7 +117,6 @@
             var cubicEaseInOut = new CubicEaseInOut(this.Duration);
             var elasticEaseInOut = new ElasticEaseInOut(this.Duration);
             var expoEaseInOut = new ExpoEaseInOut(this.Duration);
-            var linear = new Linear(this.Duration);
             var quadEaseInOut = new QuadEaseInOut(this.Duration);
             var quadEaseOut = new QuadEaseOut(this.Duration);
             var quartEaseInOut = new QuartEaseInOut(this.Duration);
@@ -131,7 +130,6 @@
             this.availableTransitions.Add("Quadratic Ease Out", quadEaseOut);
             this.availableTransitions.Add("Quart Ease Out and In", quartEaseInOut);
             this.availableTransitions.Add("Ease Out and In", easeOutIn);
-            this.availableTransitions.Add("Linear", linear);
         }
 
         /// <summary>

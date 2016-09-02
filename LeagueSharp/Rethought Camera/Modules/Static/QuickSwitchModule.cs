@@ -123,8 +123,6 @@
 
             this.TransitionsModule.ActiveTransitionBase.Start(Camera.Position, hero.Position, Utils.TickCount);
 
-            Console.WriteLine("Transisting");
-
             Game.OnUpdate += this.GameOnOnUpdate;
         }
 

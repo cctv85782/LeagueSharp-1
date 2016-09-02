@@ -16,6 +16,7 @@
 
     #endregion
 
+    // TODO CLEANUP
     internal class CameraModule : ChildBase
     {
         #region Fields
@@ -90,14 +91,9 @@
 
             var newVec = Math.VectorBetween(this.Position, position);
 
-            Console.WriteLine("Distance between: " + newVec);
-
             Action action = () =>
                 {
-                    Console.WriteLine("Old Position Vector: " + this.Position);
                     this.Position = this.Position + newVec;
-
-                    Console.WriteLine("New Position Vector: " + this.Position);
                 };
 
             this.queque.Enqueue(priority, action);
@@ -108,7 +104,6 @@
         /// </summary>
         public void Reset()
         {
-            Console.WriteLine("Reset");
             this.Position = Vector3.Zero;
             this.actionLimiter = false;
         }
