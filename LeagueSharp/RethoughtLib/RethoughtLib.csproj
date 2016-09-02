@@ -179,7 +179,6 @@
     <Compile Include="TargetValidator\Interfaces\ICheckable.cs" />
     <Compile Include="TargetValidator\TargetValidator.cs" />
     <Compile Include="TargetValidator\TargetValidatorBase.cs" />
-    <Compile Include="Transitions\Implementations\Linear.cs" />
     <Compile Include="UI\Core\Designs\Design.cs" />
     <Compile Include="UI\Core\Displayer\Displayer.cs" />
     <Compile Include="UI\Core\Element.cs" />
