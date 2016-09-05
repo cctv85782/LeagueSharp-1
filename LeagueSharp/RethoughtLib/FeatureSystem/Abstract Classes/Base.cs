@@ -168,7 +168,7 @@
         }
 
         [Obsolete]
-        public virtual void OnInitialize(object sender, FeatureBaseEventArgs featureBaseEventArgs)
+        protected virtual void OnInitialize(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
 
         }
