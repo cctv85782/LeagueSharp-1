@@ -49,15 +49,12 @@ E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\Reth
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\LeagueSharp.Common.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\LeagueSharp.Data.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\LeagueSharp.dll
-E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\Priority Queue.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\SharpDX.Direct3D9.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\SharpDX.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\clipper_library.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\Newtonsoft.Json.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\LeagueSharp.Common.pdb
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\LeagueSharp.Data.pdb
-E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\Priority Queue.pdb
-E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\Priority Queue.xml
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\clipper_library.pdb
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\obj\Debug\RethoughtLib.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\obj\Debug\RethoughtLib.pdb

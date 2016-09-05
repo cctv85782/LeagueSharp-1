@@ -46,7 +46,7 @@
         }
 
         /// <summary>
-        ///     Called when [enable]
+        ///     Called when [OnEnable]
         /// </summary>
         protected override void OnEnable(object sender, FeatureBaseEventArgs eventArgs)
         {

@@ -168,10 +168,6 @@
 
                     foreach (var module in this.Modules)
                     {
-                        var value = module.Tags.ToList();
-
-                        Console.WriteLine("Processing Module: " + module.InternalName + " Tags: " + value);
-
                         if (string.IsNullOrWhiteSpace(module.DisplayName) || !module.Tags.Any())
                         {
                             unknownModulesCount++;

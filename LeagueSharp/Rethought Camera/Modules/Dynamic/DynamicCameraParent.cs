@@ -30,12 +30,17 @@
 
         #region Constructors and Destructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DynamicCameraParent"/> class.
+        /// </summary>
+        /// <param name="camera">The camera.</param>
         public DynamicCameraParent(CameraModule camera)
         {
             this.cameraModule = camera;
         }
 
         #endregion
+
 
         #region Public Properties
 
@@ -82,6 +87,10 @@
             this.Switch = new KeybindSwitch(this.Menu, "Enabled", 'H', this);
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:Update" /> event.
+        /// </summary>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnUpdate(EventArgs args)
         {
             if (MenuGUI.IsChatOpen || MenuGUI.IsShopOpen)

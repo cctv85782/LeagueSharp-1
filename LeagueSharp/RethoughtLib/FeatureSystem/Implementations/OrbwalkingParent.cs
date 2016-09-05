@@ -87,16 +87,16 @@
         {
             if (this.orbwalker.ActiveMode != this.orbwalkingMode)
             {
-                foreach (var child in this.Children.Where(x => x.Value))
+                foreach (var keyValuePair in this.Children.Where(x => x.Value.Item1))
                 {
-                    child.Key.Switch.InternalDisable(new FeatureBaseEventArgs(this));
+                    keyValuePair.Key.Disable(this);
                 }
             }
             else
             {
-                foreach (var child in this.Children.Where(x => !x.Value))
+                foreach (var child in this.Children.Where(x => x.Value.Item1))
                 {
-                    child.Key.Switch.InternalEnable(new FeatureBaseEventArgs(this));
+                    child.Key.Enable(this);
                 }
             }
         }

@@ -47,9 +47,6 @@
     <Reference Include="LeagueSharp.SDK">
       <HintPath>..\..\..\..\Program Files (x86)\zDxLkGK5iNew\References\LeagueSharp.SDK.dll</HintPath>
     </Reference>
-    <Reference Include="RethoughtLib">
-      <HintPath>..\..\..\..\Program Files (x86)\zDxLkGK5iNew\References\RethoughtLib.dll</HintPath>
-    </Reference>
     <Reference Include="SharpDX, Version=2.6.3.0, Culture=neutral, PublicKeyToken=345b829e6e492981, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Program Files (x86)\LeagueSharp\System\SharpDX.dll</HintPath>
@@ -92,7 +89,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\RethoughtLib\RethoughtLib.csproj">
+      <Project>{f02de14b-9a69-4a2b-85ba-640d939b44ce}</Project>
+      <Name>RethoughtLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -45,10 +45,6 @@
     <Reference Include="LeagueSharp.Data">
       <HintPath>E:\Program Files (x86)\cRRQOkSFgDev\References\LeagueSharp.Data.dll</HintPath>
     </Reference>
-    <Reference Include="Priority Queue, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OptimizedPriorityQueue.3.0.0\lib\net45\Priority Queue.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="SharpDX">
       <HintPath>E:\Program Files (x86)\cRRQOkSFgDev\References\SharpDX.dll</HintPath>
     </Reference>
@@ -128,6 +124,7 @@
     <Compile Include="FeatureSystem\Abstract Classes\ChildBase.cs" />
     <Compile Include="FeatureSystem\Implementations\OrbwalkingParent.cs" />
     <Compile Include="FeatureSystem\Switches\KeybindSwitch.cs" />
+    <Compile Include="FeatureSystem\Switches\NullSwitch.cs" />
     <Compile Include="FeatureSystem\Switches\SwitchBase.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\ParentBase.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\SuperParentBase.cs" />

@@ -57,6 +57,7 @@
 
             // basically the root of our structure (menu-wise), acts like a normal parent but has a root menu instead. Can be disabled and enabled as well.
             var superParent = new SuperParent("SuperParent");
+            superParent.Initialize();
 
             // creates a new instance of the orbwalker
             var orbwalker = new Orbwalking.Orbwalker(superParent.Menu);
@@ -80,7 +81,7 @@
             comboParent.Add(child4);
 
             // loads everything
-            superParent.OnLoadInvoker();
+            superParent.Load();
         }
 
         #endregion

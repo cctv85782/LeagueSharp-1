@@ -4,8 +4,6 @@
 
     using System.Collections.Generic;
 
-    using LeagueSharp.Common;
-
     using RethoughtLib.Bootstraps.Abstract_Classes;
     using RethoughtLib.FeatureSystem.Implementations;
 
@@ -13,7 +11,6 @@
     using Rethought_Camera.Modules.Camera;
     using Rethought_Camera.Modules.Dynamic;
     using Rethought_Camera.Modules.Static;
-    using Rethought_Camera.Modules.Transitions;
 
     #endregion
 
@@ -57,11 +54,11 @@
             var superParent = new SuperParent(this.DisplayName);
 
             var cameraModule = new CameraModule();
-            var movetoMouse = new MoveToMouseModule(cameraModule);
+            var dynamic = new DynamicCameraParent(cameraModule);
+            var movetoMouse = new MoveToMouseModule(cameraModule, dynamic);
             var zoomhack = new ZoomHackModule(cameraModule);
             var quickswitch = new QuickSwitchModule(cameraModule);
 
-            var dynamic = new DynamicCameraParent(cameraModule);
             dynamic.Add(new MouseModule());
             dynamic.Add(new FarmModule());
             dynamic.Add(new ComboModule());
@@ -72,7 +69,7 @@
             superParent.Add(quickswitch);
             superParent.Add(dynamic);
 
-            superParent.OnLoadInvoker();
+            superParent.Load();
         }
 
         #endregion

@@ -2,6 +2,8 @@
 {
     #region Using Directives
 
+    using System;
+
     using LeagueSharp.Common;
 
     using RethoughtLib.FeatureSystem.Abstract_Classes;
@@ -31,8 +33,6 @@
         public ZoomHackModule(CameraModule cameraModule)
         {
             this.cameraModule = cameraModule;
-
-            this.Switch = new BoolSwitch(this.Menu, "Enabled", false, this);
         }
 
         #endregion
@@ -60,6 +60,8 @@
         {
             base.OnDisable(sender, eventArgs);
 
+            //CustomEvents.Game.OnGameEnd -= this.OnGameEnd;
+
             this.cameraModule.ZoomHack = false;
         }
 
@@ -71,6 +73,8 @@
         protected override void OnEnable(object sender, FeatureBaseEventArgs eventArgs)
         {
             base.OnEnable(sender, eventArgs);
+
+            //CustomEvents.Game.OnGameEnd += this.OnGameEnd;
 
             this.cameraModule.ZoomHack = true;
         }
@@ -84,10 +88,35 @@
         {
             base.OnLoad(sender, featureBaseEventArgs);
 
+            //this.Menu.AddItem(new MenuItem("tempfix", "Temp Fix: ZoomHack not working after reload").SetValue(true));
+
             this.Menu.AddItem(
-                new MenuItem("warning", "DISCLAIMER").SetTooltip(
+                new MenuItem("warning", "Use At Your Own Risk").SetTooltip(
                     "ZoomHack is more likely detectable, USE IT AT YOUR OWN RISK"));
+
+            this.Menu.AddItem(
+                new MenuItem("tip", "Pro-Tip: Use it with the Dynamic Camera!").SetTooltip(
+                    "ZoomHack combined with the Dynamic Camera has a great effect and ensures a lot of vision!"));
         }
+
+        /// <summary>
+        ///     Sets the switch.
+        /// </summary>
+        protected override void SetSwitch()
+        {
+            this.Switch = new BoolSwitch(this.Menu, "Enabled", false, this);
+        }
+
+        ///// <summary>
+        /////     Raises the <see cref="E:GameEnd" /> event.
+        ///// </summary>
+        ///// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
+        //private void OnGameEnd(EventArgs args)
+        //{
+        //    if (!this.Menu.Item("tempfix").GetValue<bool>()) return;
+
+        //    this.Disable();
+        //}
 
         #endregion
     }

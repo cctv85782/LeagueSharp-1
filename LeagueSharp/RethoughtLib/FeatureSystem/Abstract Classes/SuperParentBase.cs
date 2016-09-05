@@ -4,8 +4,6 @@
 
     using System;
 
-    using global::RethoughtLib.FeatureSystem.Switches;
-
     using LeagueSharp.Common;
 
     #endregion
@@ -19,33 +17,25 @@
         /// </summary>
         protected override void OnLoad(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            this.Menu.AddToMainMenu();
-
             base.OnLoad(sender, featureBaseEventArgs);
+
+            this.Menu.AddToMainMenu();
         }
 
         /// <summary>
-        /// Initializes the menu, overwrite this method to change the menu type. Do not overwrite if you only want to change
-        /// the menu content.
+        ///     Initializes the menu, overwrite this method to change the menu type. Do not overwrite if you only want to change
+        ///     the menu content.
         /// </summary>
         protected override void SetMenu()
         {
             this.Menu = new Menu(this.Name, this.Name, true);
-
-            this.Switch = new BoolSwitch(this.Menu, "Enabled", true, this);
         }
 
-        /// <summary>
-        ///     Called when [unload].
-        /// </summary>
-        protected override void OnUnload(object sender, FeatureBaseEventArgs featureBaseEventArgs)
+        /// <summary>Returns a string that represents the current object.</summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString()
         {
-            Menu.Remove(this.Menu);
-
-            foreach (var child in this.Children)
-            {
-                child.Key.OnUnLoadInvoker();
-            }
+            return "SuperParent " + this.Name;
         }
 
         #endregion

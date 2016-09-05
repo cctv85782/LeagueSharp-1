@@ -43,9 +43,6 @@
     <Reference Include="LeagueSharp.Data">
       <HintPath>..\..\..\..\Program Files (x86)\zDxLkGK5iNew\References\LeagueSharp.Data.dll</HintPath>
     </Reference>
-    <Reference Include="RethoughtLib">
-      <HintPath>..\RethoughtLib\bin\Release\RethoughtLib.dll</HintPath>
-    </Reference>
     <Reference Include="SebbyLib">
       <HintPath>..\..\..\..\Program Files (x86)\LeagueSharp\System\SebbyLib.dll</HintPath>
     </Reference>
@@ -100,6 +97,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RethoughtLib\RethoughtLib.csproj">
+      <Project>{f02de14b-9a69-4a2b-85ba-640d939b44ce}</Project>
+      <Name>RethoughtLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

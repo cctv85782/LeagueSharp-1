@@ -151,7 +151,7 @@
                         logicProviderParent,
                     });
 
-            superParent.OnLoadInvoker();
+            superParent.Load();
         }
 
         #endregion

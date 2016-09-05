@@ -47,8 +47,6 @@
             public ExampleChild(string name)
             {
                 this.Name = name;
-
-                this.OnInitializeInvoker();
             }
 
             /// <summary>

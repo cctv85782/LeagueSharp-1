@@ -79,7 +79,7 @@
         /// <returns></returns>
         public Vector3 DashEndPosition(Vector3 start, Vector3 end)
         {
-            return this.wallDashLogicProviderModule.PositionAfterDash(start, end, 1).To2D();
+            return this.wallDashLogicProviderModule.PositionAfterDash(start, end);
         }
 
         /// <summary>
@@ -116,7 +116,7 @@
         }
 
         /// <summary>
-        ///     Called when [enable]
+        ///     Called when [OnEnable]
         /// </summary>
         protected override void OnEnable(object sender, FeatureBaseEventArgs eventArgs)
         {

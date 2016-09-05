@@ -110,14 +110,6 @@
         }
 
         /// <summary>
-        ///     Called when [initialize].
-        /// </summary>
-        protected override void OnInitialize(object sender, FeatureBaseEventArgs featureBaseEventArgs)
-        {
-            base.OnInitialize(sender, featureBaseEventArgs);
-        }
-
-        /// <summary>
         ///     Called when [load].
         /// </summary>
         protected override void OnLoad(object sender, FeatureBaseEventArgs featureBaseEventArgs)

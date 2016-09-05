@@ -83,6 +83,8 @@
         /// <param name="featureBaseEventArgs"></param>
         protected override void OnLoad(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
+            base.OnLoad(sender, featureBaseEventArgs);
+
             var enemies = this.Menu.AddSubMenu(new Menu("Enemies", "enemies"));
             var allies = this.Menu.AddSubMenu(new Menu("Allies", "allies"));
 
@@ -94,17 +96,19 @@
                 index++;
                 if (hero.IsEnemy)
                 {
-                    enemies.AddItem(new MenuItem(hero.ChampionName, hero.ChampionName).SetValue(new KeyBind(index.ToString().ToCharArray()[0], KeyBindType.Press)))
-                        .ValueChanged += (o, args) => { this.Execute(args, hero); };
+                    enemies.AddItem(
+                        new MenuItem(hero.ChampionName, hero.ChampionName).SetValue(
+                            new KeyBind(index.ToString().ToCharArray()[0], KeyBindType.Press))).ValueChanged +=
+                        (o, args) => { this.Execute(args, hero); };
                 }
                 else if (hero.IsAlly)
                 {
-                    allies.AddItem(new MenuItem(hero.ChampionName, hero.ChampionName).SetValue(new KeyBind(index2.ToString().ToCharArray()[0], KeyBindType.Press)))
-                        .ValueChanged += (o, args) => { this.Execute(args, hero); };
+                    allies.AddItem(
+                        new MenuItem(hero.ChampionName, hero.ChampionName).SetValue(
+                            new KeyBind(index2.ToString().ToCharArray()[0], KeyBindType.Press))).ValueChanged +=
+                        (o, args) => { this.Execute(args, hero); };
                 }
             }
-
-            base.OnLoad(sender, featureBaseEventArgs);
         }
 
         /// <summary>
@@ -127,9 +131,9 @@
         }
 
         /// <summary>
-        /// OnGameUpdate
+        ///     OnGameUpdate
         /// </summary>
-        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void GameOnOnUpdate(EventArgs args)
         {
             if (this.TransitionsModule.ActiveTransitionBase.Moving)

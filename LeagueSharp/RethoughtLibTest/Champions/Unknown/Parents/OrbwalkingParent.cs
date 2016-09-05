@@ -85,20 +85,20 @@
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void GameOnOnUpdate(EventArgs args)
         {
-            if (this.orbwalker.ActiveMode != this.orbwalkingMode)
-            {
-                foreach (var child in this.Children.Where(x => x.Value))
-                {
-                    child.Key.Switch.OnOnDisableEvent(new FeatureBaseEventArgs(this));
-                }
-            }
-            else
-            {
-                foreach (var child in this.Children.Where(x => !x.Value))
-                {
-                    child.Key.Switch.OnOnEnableEvent(new FeatureBaseEventArgs(this));
-                }
-            }
+            //if (this.orbwalker.ActiveMode != this.orbwalkingMode)
+            //{
+            //    foreach (var child in this.Children.Where(x => x.Value))
+            //    {
+            //        child.Key.Switch.Disable(new FeatureBaseEventArgs(this));
+            //    }
+            //}
+            //else
+            //{
+            //    foreach (var child in this.Children.Where(x => !x.Value))
+            //    {
+            //        child.Key.Switch.Enable(new FeatureBaseEventArgs(this));
+            //    }
+            //}
         }
 
         #endregion

@@ -4,6 +4,7 @@
 
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using LeagueSharp.Common;
 
@@ -91,6 +92,7 @@
             base.OnDisable(sender, featureBaseEventArgs);
 
             this.previousTransition = this.ActiveTransitionBase;
+
             this.ActiveTransitionBase = new QuadEaseInOut(this.Duration);
         }
 
@@ -101,15 +103,17 @@
         {
             base.OnEnable(sender, featureBaseEventArgs);
 
+            if (this.previousTransition == null) return;
+
             this.ActiveTransitionBase = this.previousTransition;
         }
 
         /// <summary>
-        ///     Called when [initialize].
+        ///     Called when [load].
         /// </summary>
-        protected override void OnInitialize(object sender, FeatureBaseEventArgs featureBaseEventArgs)
+        protected override void OnLoad(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            base.OnInitialize(sender, featureBaseEventArgs);
+            base.OnLoad(sender, featureBaseEventArgs);
 
             this.availableTransitions = new Dictionary<string, TransitionBase>();
 
@@ -130,24 +134,11 @@
             this.availableTransitions.Add("Quadratic Ease Out", quadEaseOut);
             this.availableTransitions.Add("Quart Ease Out and In", quartEaseInOut);
             this.availableTransitions.Add("Ease Out and In", easeOutIn);
-        }
 
-        /// <summary>
-        ///     Called when [load].
-        /// </summary>
-        protected override void OnLoad(object sender, FeatureBaseEventArgs featureBaseEventArgs)
-        {
-            base.OnLoad(sender, featureBaseEventArgs);
-
-            var stringArray = new List<string>();
-
-            foreach (var transition in this.availableTransitions)
-            {
-                stringArray.Add(transition.Key);
-            }
+            var stringArray = this.availableTransitions.Keys.ToArray();
 
             this.Menu.AddItem(new MenuItem("transition", "Transition"))
-                .SetValue(new StringList(stringArray.ToArray()))
+                .SetValue(new StringList(stringArray))
                 .ValueChanged +=
                 (o, args) =>
                     {

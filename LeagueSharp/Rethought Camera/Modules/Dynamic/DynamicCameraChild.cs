@@ -8,7 +8,7 @@
 
     #endregion
 
-    internal abstract class DynamicCameraChild : ChildBase
+    internal abstract class DynamicCameraChild : Base
     {
         #region Public Methods and Operators
 

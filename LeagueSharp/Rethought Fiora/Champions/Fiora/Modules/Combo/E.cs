@@ -78,7 +78,7 @@
         }
 
         /// <summary>
-        ///     Called when [enable]
+        ///     Called when [OnEnable]
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="featureBaseEventArgs"></param>

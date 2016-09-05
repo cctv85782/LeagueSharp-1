@@ -6,13 +6,8 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using LeagueSharp.Common;
-
-    using Priority_Queue;
-
     using RethoughtLib.Algorithm.Pathfinding.AStar.Heuristics;
-
-    using SharpDX;
+    using RethoughtLib.PriorityQuequeV2;
 
     #endregion
 
@@ -22,19 +17,19 @@
         #region Fields
 
         /// <summary>
-        /// The edges
+        ///     The closed nodes
+        /// </summary>
+        private readonly List<TNode> closedNodes = new List<TNode>();
+
+        /// <summary>
+        ///     The edges
         /// </summary>
         private readonly List<TEdge> edges;
 
         /// <summary>
-        /// The open nodes
+        ///     The open nodes
         /// </summary>
-        private readonly SimplePriorityQueue<TNode> openNodes = new SimplePriorityQueue<TNode>();
-
-        /// <summary>
-        /// The closed nodes
-        /// </summary>
-        private readonly List<TNode> closedNodes = new List<TNode>();
+        private readonly PriorityQueue<float, TNode> openNodes = new PriorityQueue<float, TNode>();
 
         /// <summary>
         ///     The heuristic estimate
@@ -46,7 +41,7 @@
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AStar" /> class.
+        ///     Initializes a new instance of the <see cref="AStar" /> class.
         /// </summary>
         /// <param name="edges">The edges representing a graph.</param>
         public AStar(List<TEdge> edges)
@@ -103,7 +98,7 @@
             start.G = 0;
             start.F = start.G + start.H;
 
-            this.openNodes.Enqueue(start, start.F);
+            this.openNodes.Enqueue(start.F, start);
 
             while (this.openNodes.Count > 0)
             {
@@ -137,13 +132,17 @@
 
                     AStarNode resultNodeOpen = null;
 
-                    foreach (var node in this.openNodes)
+                    foreach (var queque in this.openNodes.Dictionary.Values)
                     {
-                        iOpen++;
+                        foreach (var node in queque.Reverse())
+                        {
+                            if (node.Position != newNode.Position) continue;
+                            resultNodeOpen = node;
 
-                        if (node.Position != newNode.Position) continue;
-                        resultNodeOpen = node;
-                        break;
+                            iOpen++;
+
+                            break;
+                        }
                     }
 
                     if (resultNodeOpen != null && iOpen != -1 && resultNodeOpen.G <= newNode.G) continue;
@@ -180,7 +179,7 @@
 
                     newNode.F = newNode.G + newNode.H;
 
-                    this.openNodes.Enqueue(newNode, newNode.F);
+                    this.openNodes.Enqueue(newNode.F, newNode);
                 }
 
                 this.closedNodes.Add(parentNode);
@@ -192,7 +191,7 @@
 
             for (var i = this.closedNodes.Count - 1; i >= 0; i--)
             {
-                    if (Math.Abs(fNode.ParentNode.Position.X - this.closedNodes[i].Position.X) < 0.1f
+                if (Math.Abs(fNode.ParentNode.Position.X - this.closedNodes[i].Position.X) < 0.1f
                     && Math.Abs(fNode.ParentNode.Position.Y - this.closedNodes[i].Position.Y) < 0.1f
                     || i == this.closedNodes.Count - 1)
                 {

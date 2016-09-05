@@ -65,55 +65,23 @@ namespace RethoughtLib.FeatureSystem.Switches
         ///     Raises the <see cref="E:OnDisableEvent" /> event.
         /// </summary>
         /// <param name="e">The <see cref="Base.FeatureBaseEventArgs" /> instance containing the event data.</param>
-        public virtual void OnOnDisableEvent(Base.FeatureBaseEventArgs e)
+        public virtual void Disable(Base.FeatureBaseEventArgs e)
         {
-            this.Enabled = false;
-
-            this.OnDisableEvent?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Disables the Switch.
-        ///     Default Behavior:
-        ///         > will only trigger OnDisableEvent and set Enabled to false
-        /// </summary>
-        /// <param name="e">The <see cref="Base.FeatureBaseEventArgs"/> instance containing the event data.</param>
-        public virtual void InternalDisable(Base.FeatureBaseEventArgs e = null)
-        {
-            if (e == null)
-            {
-                e = new Base.FeatureBaseEventArgs(null);
-            }
+            if (!this.Enabled) return;
 
             this.Enabled = false;
 
             this.OnDisableEvent?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Enables the Switch.
-        ///     Default Behavior:
-        ///         > will only trigger OnEnableEvent and set Enabled to true
-        /// </summary>
-        /// <param name="e">The <see cref="Base.FeatureBaseEventArgs"/> instance containing the event data.</param>
-        public virtual void InternalEnable(Base.FeatureBaseEventArgs e = null)
-        {
-            if (e == null)
-            {
-                e = new Base.FeatureBaseEventArgs(null);
-            }
-
-            this.Enabled = true;
-
-            this.OnEnableEvent?.Invoke(this, e);
         }
 
         /// <summary>
         ///     Raises the <see cref="E:OnEnableEvent" /> event.
         /// </summary>
         /// <param name="e">The <see cref="Base.FeatureBaseEventArgs" /> instance containing the event data.</param>
-        public virtual void OnOnEnableEvent(Base.FeatureBaseEventArgs e)
+        public virtual void Enable(Base.FeatureBaseEventArgs e)
         {
+            if (this.Enabled) return;
+
             this.Enabled = true;
 
             this.OnEnableEvent?.Invoke(this, e);

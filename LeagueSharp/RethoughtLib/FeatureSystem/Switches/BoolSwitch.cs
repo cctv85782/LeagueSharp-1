@@ -4,9 +4,9 @@
 
     using System;
 
-    using global::RethoughtLib.FeatureSystem.Abstract_Classes;
-
     using LeagueSharp.Common;
+
+    using RethoughtLib.FeatureSystem.Abstract_Classes;
 
     #endregion
 
@@ -22,26 +22,6 @@
         ///     The owner
         /// </summary>
         private readonly Base owner;
-
-        /// <summary>
-        ///     Whether checked disabled
-        /// </summary>
-        private bool checkedDisabled;
-
-        /// <summary>
-        ///     Whether checked enabled
-        /// </summary>
-        private bool checkedEnabled;
-
-        /// <summary>
-        ///     The on ondisable event cache
-        /// </summary>
-        private Base.FeatureBaseEventArgs onOnDisableEventCache;
-
-        /// <summary>
-        ///     The on onenable event cache
-        /// </summary>
-        private Base.FeatureBaseEventArgs onOnEnableEventCache;
 
         #endregion
 
@@ -90,51 +70,30 @@
         ///     Raises the <see cref="E:OnDisableEvent" /> event.
         /// </summary>
         /// <param name="e">The <see cref="Base.FeatureBaseEventArgs" /> instance containing the event data.</param>
-        public override void OnOnDisableEvent(Base.FeatureBaseEventArgs e)
+        public override void Disable(Base.FeatureBaseEventArgs e)
         {
-            if (!this.checkedDisabled)
+            if (e.Sender == this.owner)
             {
-                this.checkedDisabled = true;
-
-                this.onOnDisableEventCache = e;
-
-                this.Menu.Item(this.BoolName).SetValue(false);
+                base.Disable(e);
+                return;
             }
-            else
-            {
-                this.checkedDisabled = false;
 
-                e = this.onOnDisableEventCache;
-
-                Console.WriteLine("Disabling " + this.owner);
-
-                base.OnOnDisableEvent(e);
-            }
+            this.Menu.Item(this.BoolName).SetValue(false);
         }
 
         /// <summary>
         ///     Raises the <see cref="E:OnEnableEvent" /> event.
         /// </summary>
         /// <param name="e">The <see cref="Base.FeatureBaseEventArgs" /> instance containing the event data.</param>
-        public override void OnOnEnableEvent(Base.FeatureBaseEventArgs e)
+        public override void Enable(Base.FeatureBaseEventArgs e)
         {
-            if (!this.checkedEnabled)
+            if (e.Sender == this.owner)
             {
-                this.checkedEnabled = true;
-
-                this.onOnEnableEventCache = e;
-                this.Menu.Item(this.BoolName).SetValue(true);
+                base.Enable(e);
+                return;
             }
-            else
-            {
-                this.checkedEnabled = false;
 
-                e = this.onOnEnableEventCache;
-
-                Console.WriteLine("Enabling " + this.owner);
-
-                base.OnOnEnableEvent(e);
-            }
+            this.Menu.Item(this.BoolName).SetValue(true);
         }
 
         /// <summary>
@@ -142,28 +101,28 @@
         /// </summary>
         public override void Setup()
         {
-            this.Menu.AddItem(new MenuItem(this.BoolName, this.BoolName).SetValue(this.BoolValue)).ValueChanged +=
-                delegate(object sender, OnValueChangeEventArgs args)
+            var menuItem = this.Menu.AddItem(new MenuItem(this.owner.Name + this.BoolName, this.BoolName).SetValue(this.BoolValue));
+
+            menuItem.ValueChanged +=
+                delegate (object sender, OnValueChangeEventArgs args)
+                {
+                    if (args.GetNewValue<bool>())
                     {
-                        if (args.GetNewValue<bool>())
-                        {
-                            this.OnOnEnableEvent(new Base.FeatureBaseEventArgs(this.owner));
-                        }
-                        else if (!args.GetNewValue<bool>())
-                        {
-                            this.OnOnDisableEvent(new Base.FeatureBaseEventArgs(this.owner));
-                        }
-                    };
+                        this.Enable(new Base.FeatureBaseEventArgs(this.owner));
+                    }
+                    else if (!args.GetNewValue<bool>())
+                    {
+                        this.Disable(new Base.FeatureBaseEventArgs(this.owner));
+                    }
+                };
 
-            this.Enabled = this.Menu.Item(this.BoolName).GetValue<bool>();
-
-            if (this.Enabled)
+            if (this.Menu.Item(this.owner.Name + this.BoolName).GetValue<bool>())
             {
-                this.OnOnEnableEvent(new Base.FeatureBaseEventArgs(this.owner));
+                this.Enable(new Base.FeatureBaseEventArgs(this.owner));
             }
             else
             {
-                this.OnOnDisableEvent(new Base.FeatureBaseEventArgs(this.owner));
+                this.Disable(new Base.FeatureBaseEventArgs(this.owner));
             }
         }
 

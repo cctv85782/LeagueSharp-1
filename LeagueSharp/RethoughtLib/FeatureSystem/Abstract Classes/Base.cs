@@ -1,12 +1,15 @@
-﻿    namespace RethoughtLib.FeatureSystem.Abstract_Classes
+﻿namespace RethoughtLib.FeatureSystem.Abstract_Classes
 {
     #region Using Directives
 
     using System;
-
-    using global::RethoughtLib.FeatureSystem.Switches;
+    using System.Collections.Generic;
+    using System.Linq;
 
     using LeagueSharp.Common;
+
+    using RethoughtLib.FeatureSystem.Switches;
+    using RethoughtLib.Menu;
 
     #endregion
 
@@ -18,63 +21,30 @@
         #region Fields
 
         /// <summary>
-        /// The switch
+        ///     The switch
         /// </summary>
         public SwitchBase Switch;
-
-        #endregion
-
-        #region Constructors and Destructors
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Base" /> class.
-        /// </summary>
-        protected Base()
-        {
-            this.OnInitializeEvent += this.OnCoreInitialize;
-            this.OnInitializeEvent += this.OnInitialize;
-        }
 
         #endregion
 
         #region Public Events
 
         /// <summary>
-        ///     Occurs when [on initialize event].
-        /// </summary>
-        public event EventHandler<FeatureBaseEventArgs> OnInitializeEvent;
-
-        /// <summary>
         ///     Occurs when [on load event].
         /// </summary>
         public event EventHandler<FeatureBaseEventArgs> OnLoadEvent;
-
-        /// <summary>
-        ///     Occurs when [on refresh event].
-        /// </summary>
-        public event EventHandler<FeatureBaseEventArgs> OnRefreshEvent;
-
-        /// <summary>
-        ///     Occurs when [on initialize event].
-        /// </summary>
-        public event EventHandler<FeatureBaseEventArgs> OnTerminateEvent;
-
-        /// <summary>
-        ///     Occurs when [on unload event].
-        /// </summary>
-        public event EventHandler<FeatureBaseEventArgs> OnUnLoadEvent;
 
         #endregion
 
         #region Public Properties
 
         /// <summary>
-        ///     Gets or sets a value indicating whether <c>this</c> <see cref="Base" /> is initialized.
+        ///     Gets or sets a value indicating whether this <see cref="Base" /> is initialized.
         /// </summary>
         /// <value>
         ///     <c>true</c> if initialized; otherwise, <c>false</c>.
         /// </value>
-        public bool Initialized { get; protected internal set; }
+        public bool Initialized { get; private set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether this <see cref="Base" /> is loaded.
@@ -82,7 +52,7 @@
         /// <value>
         ///     <c>true</c> if loaded; otherwise, <c>false</c>.
         /// </value>
-        public bool Loaded { get; protected internal set; }
+        public bool Loaded { get; private set; }
 
         /// <summary>
         ///     Gets or sets the menu.
@@ -105,20 +75,115 @@
         #region Public Methods and Operators
 
         /// <summary>
-        ///     Called when [on load event].
+        ///     Disables the specified sender.
         /// </summary>
-        public virtual void OnLoadInvoker()
+        /// <param name="sender">The sender.</param>
+        public void Disable(Base sender = null)
         {
-            if (!this.Initialized)
+            if (sender == null)
             {
-                throw new InvalidOperationException(
-                    $"{this}, can't invoke OnLoadEvent if {this} it has not been initialized.");
+                sender = this;
             }
 
+            this.Switch.Disable(new FeatureBaseEventArgs(sender));
+        }
+
+        /// <summary>
+        ///     Enables the specified sender.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        public void Enable(Base sender = null)
+        {
+            if (sender == null)
+            {
+                sender = this;
+            }
+
+            this.Switch.Enable(new FeatureBaseEventArgs(sender));
+        }
+
+        /// <summary>
+        ///     "Hides" this instance
+        /// </summary>
+        /// <param name="hideSubMenus">if set to <c>true</c> [hide sub menus].</param>
+        public void Hide(bool hideSubMenus = true)
+        {
+            this.Menu.DisplayName += " (Hidden)";
+
+            var currentMenu = this.Menu;
+
+            if (!hideSubMenus) return;
+
+            var todo = new List<Menu>();
+
+            var index = 0;
+
+            do
+            {
+                {
+                    if (!currentMenu.Children.Any()) break;
+
+                    todo.AddRange(currentMenu.Children);
+
+                    index++;
+
+                    currentMenu = todo[index];
+                }
+            }
+            while (true);
+
+            foreach (var menu in todo)
+            {
+                foreach (var menuItem in menu.Items)
+                {
+                    menuItem.Hide();
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Initializes this instance.
+        /// </summary>
+        public void Initialize()
+        {
+            if (this.Initialized)
+            {
+                return;
+            }
+
+            this.Initialized = true;
+
+            this.OnLoadEvent += this.OnLoad;
+
+            this.SetMenu();
+            this.SetSwitch();
+        }
+
+        [Obsolete]
+        public void OnLoadInvoker()
+        {
+            this.Load();
+        }
+
+        /// <summary>
+        ///     Loads this instance.
+        /// </summary>
+        public virtual void Load()
+        {
             if (this.Loaded)
             {
                 return;
             }
+
+            if (!this.Initialized)
+            {
+                this.Initialize();
+            }
+
+            this.Switch.OnDisableEvent += this.OnDisable;
+            this.Switch.OnEnableEvent += this.OnEnable;
+
+            this.Switch.Setup();
 
             this.Loaded = true;
 
@@ -130,74 +195,11 @@
         #region Methods
 
         /// <summary>
-        ///     Called when [on initialize event].
-        /// </summary>
-        protected internal virtual void OnInitializeInvoker()
-        {
-            if (this.Initialized || this.Loaded)
-            {
-                return;
-            }
-
-            this.Initialized = true;
-
-            this.OnInitializeEvent?.Invoke(null, new FeatureBaseEventArgs(this));
-        }
-
-        /// <summary>
-        ///     Called when [on refresh event].
-        /// </summary>
-        protected internal virtual void OnRefreshInvoker()
-        {
-            if (!this.Initialized)
-            {
-                throw new InvalidOperationException(
-                    $"{this}, can't invoke OnRefreshEvent if {this} it has not been initialized.");
-            }
-
-            this.OnRefreshEvent?.Invoke(null, new FeatureBaseEventArgs(this));
-        }
-
-        /// <summary>
-        ///     Called when [uninitialize].
-        /// </summary>
-        protected internal virtual void OnTerminate(object sender, FeatureBaseEventArgs featureBaseEventArgs)
-        {
-            this.OnUnLoadInvoker();
-
-            this.Menu = null;
-            this.Loaded = false;
-            this.Initialized = false;
-        }
-
-        /// <summary>
-        ///     Called when [terminate event].
-        /// </summary>
-        /// <exception cref="System.InvalidOperationException"></exception>
-        protected internal virtual void OnTerminateInvoker()
-        {
-            if (!this.Initialized)
-            {
-                throw new InvalidOperationException(
-                    $"{this}, can't invoke OnTerminateEvent if {this} it has not been initialized.");
-            }
-
-            this.OnTerminateEvent?.Invoke(null, new FeatureBaseEventArgs(this));
-        }
-
-        /// <summary>
-        ///     Called when [on unload event].
-        /// </summary>
-        protected internal virtual void OnUnLoadInvoker()
-        {
-            this.OnUnLoadEvent?.Invoke(null, new FeatureBaseEventArgs(this));
-        }
-
-        /// <summary>
         ///     Called when [disable].
         /// </summary>
         protected virtual void OnDisable(object sender, FeatureBaseEventArgs eventArgs)
         {
+            Console.WriteLine($"{this}: OnDisable");
         }
 
         /// <summary>
@@ -205,13 +207,7 @@
         /// </summary>
         protected virtual void OnEnable(object sender, FeatureBaseEventArgs eventArgs)
         {
-        }
-
-        /// <summary>
-        ///     Called when [initialize].
-        /// </summary>
-        protected virtual void OnInitialize(object sender, FeatureBaseEventArgs featureBaseEventArgs)
-        {
+            Console.WriteLine($"{this}: OnEnable");
         }
 
         /// <summary>
@@ -219,15 +215,7 @@
         /// </summary>
         protected virtual void OnLoad(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-        }
-
-        /// <summary>
-        ///     Called when [refresh].
-        /// </summary>
-        protected virtual void OnRefresh(object sender, FeatureBaseEventArgs featureBaseEventArgs)
-        {
-            this.OnTerminateInvoker();
-            this.OnInitializeInvoker();
+            Console.WriteLine($"{this}: OnLoad");
         }
 
         /// <summary>
@@ -235,44 +223,25 @@
         /// </summary>
         protected virtual void OnUnload(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            this.Switch.OnOnDisableEvent(featureBaseEventArgs);
+            this.Switch.Disable(featureBaseEventArgs);
         }
 
         /// <summary>
-        ///     Initializes the menu
+        ///     Sets the menu
         /// </summary>
         protected virtual void SetMenu()
         {
+            Console.WriteLine($"{this}: SetMenu");
             this.Menu = new Menu(this.Name, this.Name);
         }
 
+        /// <summary>
+        ///     Sets the switch.
+        /// </summary>
         protected virtual void SetSwitch()
         {
+            Console.WriteLine($"{this}: SetSwitch");
             this.Switch = new BoolSwitch(this.Menu, "Enabled", true, this);
-        }
-
-        /// <summary>
-        ///     Called when [core initialize].
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="FeatureBaseEventArgs" /> instance containing the event data.</param>
-        private void OnCoreInitialize(object sender, FeatureBaseEventArgs e)
-        {
-            this.SetMenu();
-            this.SetSwitch();
-
-            if (this.Switch != null)
-            {
-                this.Switch.Setup(this.Menu);
-
-                this.Switch.OnDisableEvent += this.OnDisable;
-                this.Switch.OnEnableEvent += this.OnEnable;
-            }
-
-            this.OnLoadEvent += this.OnLoad;
-            this.OnUnLoadEvent += this.OnUnload;
-            this.OnRefreshEvent += this.OnRefresh;
-            this.OnTerminateEvent += this.OnTerminate;
         }
 
         #endregion
@@ -286,7 +255,7 @@
             #region Constructors and Destructors
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="FeatureBaseEventArgs"/> class.
+            ///     Initializes a new instance of the <see cref="FeatureBaseEventArgs" /> class.
             /// </summary>
             /// <param name="sender">The sender.</param>
             public FeatureBaseEventArgs(Base sender)
@@ -299,14 +268,12 @@
             #region Public Properties
 
             /// <summary>
-            /// Gets or sets the sender.
+            ///     Gets or sets the sender.
             /// </summary>
             /// <value>
-            /// The sender.
+            ///     The sender.
             /// </value>
             public Base Sender { get; set; }
-
-            public Base Receiver { get; set; }
 
             #endregion
         }

@@ -7,14 +7,11 @@ E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Debug\
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Debug\RethoughtLib.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Debug\SharpDX.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Debug\SharpDX.Direct3D9.dll
-E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Debug\Priority Queue.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Debug\clipper_library.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Debug\Newtonsoft.Json.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Debug\RethoughtLib.pdb
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Debug\LeagueSharp.Common.pdb
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Debug\LeagueSharp.Data.pdb
-E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Debug\Priority Queue.pdb
-E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Debug\Priority Queue.xml
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Debug\clipper_library.pdb
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\obj\Debug\Rethought Camera.csprojResolveAssemblyReference.cache
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\obj\Debug\Rethought Camera.exe

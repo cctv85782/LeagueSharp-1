@@ -28,14 +28,6 @@
         #region Methods
 
         /// <summary>
-        ///     Called when [on initialize event].
-        /// </summary>
-        protected internal override void OnInitializeInvoker()
-        {
-            base.OnInitializeInvoker();
-        }
-
-        /// <summary>
         ///     Called when [disable].
         /// </summary>
         protected override void OnDisable(object sender, FeatureBaseEventArgs eventArgs)

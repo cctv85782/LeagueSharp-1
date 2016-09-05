@@ -32,7 +32,6 @@
         /// </summary>
         /// <param name="menu">The menu.</param>
         /// <param name="boolName">Name of the bool.</param>
-        /// <param name="boolValue">if set to <c>true</c> [bool value].</param>
         /// <param name="owner">The owner.</param>
         public KeybindSwitch(Menu menu, string boolName, char key, Base owner)
             : base(menu)
@@ -67,55 +66,30 @@
         #region Public Methods and Operators
 
         /// <summary>
-        ///     Raises the <see cref="E:OnDisableEvent" /> event.
-        /// </summary>
-        /// <param name="e">The <see cref="Base.FeatureBaseEventArgs" /> instance containing the event data.</param>
-        public override void OnOnDisableEvent(Base.FeatureBaseEventArgs e)
-        {
-            Console.WriteLine("Disabling " + this.owner);
-
-            base.OnOnDisableEvent(e);
-        }
-
-        /// <summary>
-        ///     Raises the <see cref="E:OnEnableEvent" /> event.
-        /// </summary>
-        /// <param name="e">The <see cref="Base.FeatureBaseEventArgs" /> instance containing the event data.</param>
-        public override void OnOnEnableEvent(Base.FeatureBaseEventArgs e)
-        {
-            Console.WriteLine("Enabling " + this.owner);
-
-            base.OnOnEnableEvent(e);
-        }
-
-        /// <summary>
         ///     Setups this instance.
         /// </summary>
         public override void Setup()
         {
-            this.Menu.AddItem(
-                new MenuItem(this.BoolName, this.BoolName).SetValue(new KeyBind(this.Key, KeyBindType.Toggle)))
+            this.Menu.AddItem(new MenuItem(this.owner.Name + this.BoolName, this.BoolName).SetValue(new KeyBind(this.Key, KeyBindType.Toggle)))
                 .ValueChanged += delegate(object sender, OnValueChangeEventArgs args)
                     {
                         if (args.GetNewValue<KeyBind>().Active)
                         {
-                            this.OnOnEnableEvent(new Base.FeatureBaseEventArgs(this.owner));
+                            this.Enable(new Base.FeatureBaseEventArgs(this.owner));
                         }
                         else
                         {
-                            this.OnOnDisableEvent(new Base.FeatureBaseEventArgs(this.owner));
+                            this.Disable(new Base.FeatureBaseEventArgs(this.owner));
                         }
                     };
 
-            this.Enabled = this.Menu.Item(this.BoolName).GetValue<KeyBind>().Active;
-
-            if (this.Enabled)
+            if (this.Menu.Item(this.owner.Name + this.BoolName).GetValue<KeyBind>().Active)
             {
-                this.OnOnEnableEvent(new Base.FeatureBaseEventArgs(this.owner));
+                this.Enable(new Base.FeatureBaseEventArgs(this.owner));
             }
             else
             {
-                this.OnOnDisableEvent(new Base.FeatureBaseEventArgs(this.owner));
+                this.Disable(new Base.FeatureBaseEventArgs(this.owner));
             }
         }
 
