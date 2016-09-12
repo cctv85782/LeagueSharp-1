@@ -10,29 +10,23 @@
 
     #endregion
 
-    public class VersionChecker
+    public class VersionChecker : IVersionChecker
     {
         #region Fields
-
-        /// <summary>
-        ///     force update
-        /// </summary>
-        public bool ForceUpdate;
 
         /// <summary>
         ///     The local version
         /// </summary>
         public Version LocalVersion = Assembly.GetCallingAssembly().GetName().Version;
 
-        /// <summary>
-        ///     update available
-        /// </summary>
-        public bool UpdateAvailable;
-
         #endregion
 
         #region Constructors and Destructors
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="VersionChecker" /> class.
+        /// </summary>
+        /// <param name="githubPath">The github path.</param>
         public VersionChecker(string githubPath)
         {
             this.GitHubPath = githubPath;
@@ -42,12 +36,31 @@
 
         #region Public Properties
 
+        /// <summary>
+        ///     Gets or sets the name of the assembly.
+        /// </summary>
+        /// <value>
+        ///     The name of the assembly.
+        /// </value>
         public string AssemblyName { get; set; }
 
         /// <summary>
         ///     The git hub path
         /// </summary>
         public string GitHubPath { get; set; }
+
+        /// <summary>
+        ///     Gets the relative result of comparison.
+        /// </summary>
+        /// <value>
+        ///     The relative result.
+        /// </value>
+        public int RelativeResult { get; private set; }
+
+        /// <summary>
+        ///     update available
+        /// </summary>
+        public bool UpdateAvailable { get; private set; }
 
         #endregion
 
@@ -64,7 +77,25 @@
         }
 
         /// <summary>
-        ///     Gets the git hub version.
+        ///     Compares the specified versions.
+        /// </summary>
+        /// <param name="version1">The first version.</param>
+        /// <param name="version2">The second version.</param>
+        /// <value>
+        ///     0 if equal, 1 if first version is higher, -1 if second version is higher
+        /// </value>
+        public void Compare(Version version1, Version version2)
+        {
+            this.RelativeResult = version1.CompareTo(version2);
+
+            if (this.RelativeResult < 0)
+            {
+                this.UpdateAvailable = true;
+            }
+        }
+
+        /// <summary>
+        ///     Gets the GitHub version.
         /// </summary>
         /// <returns></returns>
         public async Task<Version> GetGitHubVersion()
@@ -100,29 +131,6 @@
                     });
 
             return null;
-        }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        ///     Compares the specified versions.
-        /// </summary>
-        /// <param name="version1">The version1.</param>
-        /// <param name="version2">The version2.</param>
-        private void Compare(Version version1, Version version2)
-        {
-            var result = version1.CompareTo(version2);
-
-#if DEBUG
-            Console.WriteLine($"[{this}] Result of comparing: {result}");
-#endif
-
-            if (result < 0)
-            {
-                this.UpdateAvailable = true;
-            }
         }
 
         #endregion

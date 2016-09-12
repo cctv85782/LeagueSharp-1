@@ -9,6 +9,7 @@
     using LeagueSharp.Common;
 
     using RethoughtLib.FeatureSystem.Abstract_Classes;
+    using RethoughtLib.FeatureSystem.Switches;
     using RethoughtLib.Transitions.Abstract_Base;
     using RethoughtLib.Transitions.Implementations;
 
@@ -79,6 +80,14 @@
         ///     The name.
         /// </value>
         public override string Name { get; set; }
+
+        /// <summary>
+        ///     Sets the switch.
+        /// </summary>
+        protected override void SetSwitch()
+        {
+            this.Switch = new UnreversibleSwitch(this.Menu);
+        }
 
         #endregion
 

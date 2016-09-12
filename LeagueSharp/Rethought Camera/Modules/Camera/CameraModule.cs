@@ -5,7 +5,6 @@
     using System;
 
     using LeagueSharp;
-    using LeagueSharp.Common;
 
     using RethoughtLib.FeatureSystem.Abstract_Classes;
     using RethoughtLib.PriorityQuequeV2;
@@ -22,23 +21,58 @@
         #region Fields
 
         /// <summary>
-        /// The queque
+        ///     The queque
         /// </summary>
         private readonly PriorityQueue<int, Action> queque = new PriorityQueue<int, Action>();
 
         /// <summary>
-        /// The action limiter
+        ///     The action limiter
         /// </summary>
-        private bool actionLimiter = false;
+        public bool ActionLimiter { get; set; }
 
         /// <summary>
-        /// The zoom hack
+        ///     The maximum zoom
+        /// </summary>
+        private float maxZoom;
+
+        /// <summary>
+        ///     The zoom
+        /// </summary>
+        private float zoom;
+
+        /// <summary>
+        ///     The zoom hack
         /// </summary>
         private bool zoomHack;
 
         #endregion
 
         #region Public Properties
+
+        /// <summary>
+        ///     Gets or sets the maximum zoom.
+        /// </summary>
+        /// <value>
+        ///     The maximum zoom.
+        /// </value>
+        public float MaxZoom
+        {
+            get
+            {
+                return this.maxZoom;
+            }
+            set
+            {
+                if (!this.Switch.Enabled)
+                {
+                    return;
+                }
+
+                this.maxZoom = value;
+
+                Camera.MaxZoom = this.maxZoom;
+            }
+        }
 
         /// <summary>
         ///     Gets or sets the name.
@@ -57,6 +91,31 @@
         public Vector3 Position { get; set; }
 
         /// <summary>
+        ///     Gets or sets the zoom.
+        /// </summary>
+        /// <value>
+        ///     The zoom.
+        /// </value>
+        public float Zoom
+        {
+            get
+            {
+                return this.zoom;
+            }
+            set
+            {
+                if (!this.Switch.Enabled)
+                {
+                    return;
+                }
+
+                this.zoom = value;
+
+                Camera.Zoom = this.zoom;
+            }
+        }
+
+        /// <summary>
         ///     Gets or sets a value indicating whether [zoom hack].
         /// </summary>
         /// <value>
@@ -72,7 +131,7 @@
             {
                 this.zoomHack = value;
 
-                Camera.ExtendedZoom = value;
+                Camera.ExtendedZoom = this.zoomHack;
             }
         }
 
@@ -81,7 +140,7 @@
         #region Public Methods and Operators
 
         /// <summary>
-        ///     Applies a force on the camera position. Force should be normalized!
+        ///     Applies a force on the camera position.
         /// </summary>
         /// <param name="position">The new endposition of the camera</param>
         /// <param name="priority">The priority.</param>
@@ -91,10 +150,7 @@
 
             var newVec = Math.VectorBetween(this.Position, position);
 
-            Action action = () =>
-                {
-                    this.Position = this.Position + newVec;
-                };
+            Action action = () => { this.Position += newVec; };
 
             this.queque.Enqueue(priority, action);
         }
@@ -105,7 +161,7 @@
         public void Reset()
         {
             this.Position = Vector3.Zero;
-            this.actionLimiter = false;
+            this.ActionLimiter = false;
         }
 
         /// <summary>
@@ -117,7 +173,7 @@
         {
             Action action = () => { this.Position = position; };
 
-            this.actionLimiter = true;
+            this.ActionLimiter = true;
 
             this.queque.Enqueue(priority, action);
         }
@@ -127,7 +183,7 @@
         #region Methods
 
         /// <summary>
-        /// Called when [load].
+        ///     Called when [load].
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="featureBaseEventArgs"></param>
@@ -150,7 +206,7 @@
             {
                 this.queque.Dequeue().Invoke();
 
-                if (!this.actionLimiter)
+                if (!this.ActionLimiter)
                 {
                     continue;
                 }

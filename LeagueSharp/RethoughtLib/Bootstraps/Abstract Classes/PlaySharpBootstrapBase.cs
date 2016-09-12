@@ -19,7 +19,7 @@
         /// <summary>
         ///     The modules
         /// </summary>
-        protected List<LoadableBase> Modules = new List<LoadableBase>();
+        public List<LoadableBase> Modules = new List<LoadableBase>();
 
         /// <summary>
         ///     Gets or sets the string that gets checked for check for.
@@ -27,7 +27,7 @@
         /// <value>
         ///     The check for.
         /// </value>
-        protected List<string> Strings = new List<string>();
+        protected internal List<string> Strings = new List<string>();
 
         #endregion
 

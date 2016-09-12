@@ -8,11 +8,11 @@
 
     using LeagueSharp.Common;
 
-    using global::RethoughtLib.Menu.Interfaces;
+    using RethoughtLib.Menu.Interfaces;
 
     #endregion
 
-    public class DynamicMenu : IMenuPreset
+    public class DynamicMenu : IGenerator
     {
         #region Fields
 
@@ -77,8 +77,10 @@
         /// <summary>
         ///     Setups the menu.
         /// </summary>
-        public void Generate()
+        public void Generate(Menu menu)
         {
+            this.Menu = menu;
+
             if (this.Menu == null || this.menuSets == null || !this.menuSets.Any())
             {
                 return;
@@ -90,13 +92,13 @@
 
 #if DEBUG
             Console.WriteLine(string.Empty);
-                Console.WriteLine(@"==== Setting up new DynamicMenu ====");
-                Console.WriteLine(@"DisplayName: " + this.displayName);
-                Console.WriteLine(@"Internal Menu Name: " + this.Menu.Name + this.displayName);
-                Console.WriteLine(@"MenuSets Amount: " + this.menuSets.Count);
-                Console.WriteLine(@"Internal Selecter Name: " + this.selecter.Name);
-                Console.WriteLine(@"Displaying Selecter Name: " + this.selecter.DisplayName);
-                Console.WriteLine(@"Example Naming: " + this.displayName + @"SomeItemName");
+            Console.WriteLine(@"==== Setting up new DynamicMenu ====");
+            Console.WriteLine(@"DisplayName: " + this.displayName);
+            Console.WriteLine(@"Internal Menu Name: " + this.Menu.Name + this.displayName);
+            Console.WriteLine(@"MenuSets Amount: " + this.menuSets.Count);
+            Console.WriteLine(@"Internal Selecter Name: " + this.selecter.Name);
+            Console.WriteLine(@"Displaying Selecter Name: " + this.selecter.DisplayName);
+            Console.WriteLine(@"Example Naming: " + this.displayName + @"SomeItemName");
 #endif
 
             var value = this.selecter.GetValue<StringList>();
@@ -146,6 +148,6 @@
                 + 1);
         }
 
-#endregion
+        #endregion
     }
 }

@@ -6,6 +6,7 @@
     using System.Linq;
 
     using LeagueSharp;
+    using LeagueSharp.Common;
 
     using RethoughtLib.FeatureSystem.Abstract_Classes;
     using RethoughtLib.FeatureSystem.Switches;
@@ -80,6 +81,8 @@
         {
             base.OnEnable(sender, eventArgs);
             Game.OnUpdate += this.OnUpdate;
+
+            this.cameraModule.SetPosition(ObjectManager.Player.Position, 0);
         }
 
         protected override void SetSwitch()
@@ -93,14 +96,14 @@
         /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnUpdate(EventArgs args)
         {
-            if (MenuGUI.IsChatOpen || MenuGUI.IsShopOpen)
+            if (MenuGUI.IsChatOpen || MenuGUI.IsShopOpen || ObjectManager.Player.IsDead)
             {
                 return;
             }
 
             foreach (var child in this.Children.Keys.OfType<DynamicCameraChild>())
             {
-                if (!child.Switch.Enabled)
+                if (!this.Children[child].Item1)
                 {
                     continue;
                 }

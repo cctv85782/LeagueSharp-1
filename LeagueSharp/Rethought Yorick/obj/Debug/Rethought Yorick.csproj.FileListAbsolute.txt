@@ -1,0 +1,20 @@
+E:\Visual Studio Projects\LeagueSharp-WIP\LeagueSharpWIP\Rethought YorickNew\bin\Debug\Rethought Yorick.exe.config
+E:\Visual Studio Projects\LeagueSharp-WIP\LeagueSharpWIP\Rethought YorickNew\obj\Debug\Rethought Yorick.csprojResolveAssemblyReference.cache
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\bin\Debug\Rethought Yorick.exe.config
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\bin\Debug\Rethought Yorick.exe
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\bin\Debug\Rethought Yorick.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\bin\Debug\LeagueSharp.Common.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\bin\Debug\LeagueSharp.Data.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\bin\Debug\LeagueSharp.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\bin\Debug\RethoughtLib.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\bin\Debug\SharpDX.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\bin\Debug\SharpDX.Direct3D9.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\bin\Debug\clipper_library.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\bin\Debug\Newtonsoft.Json.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\bin\Debug\RethoughtLib.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\bin\Debug\LeagueSharp.Common.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\bin\Debug\LeagueSharp.Data.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\bin\Debug\clipper_library.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\obj\Debug\Rethought Yorick.csprojResolveAssemblyReference.cache
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\obj\Debug\Rethought Yorick.exe
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\obj\Debug\Rethought Yorick.pdb

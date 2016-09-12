@@ -51,7 +51,7 @@
             DynamicCameraParent dynamicCameraParent,
             TransitionsModule transitionsModule = null)
         {
-            this.TransitionsModule = transitionsModule ?? new TransitionsModule("Transition Module");
+            this.TransitionsModule = transitionsModule ?? new TransitionsModule("Transition");
 
             this.Add(this.TransitionsModule);
 
@@ -96,22 +96,11 @@
                 .ValueChanged += (o, args) =>
                     {
                         if (args.GetNewValue<KeyBind>().Active) this.Execute(args);
+
+                        if (!this.Menu.Item("disabledynamic").GetValue<bool>()) return;
+
+                        this.dynamicCameraParent.Disable(this);
                     };
-        }
-
-        private void DisableDynamic()
-        {
-            if (!this.Menu.Item("disabledynamic").GetValue<bool>()) return;
-
-            this.dynamicActive = this.dynamicCameraParent.Switch.Enabled;
-
-            if (!this.dynamicActive)
-            {
-                Console.WriteLine("Dynamic Not Active");
-                return;
-            }
-
-            this.dynamicCameraParent.Disable(this);
         }
 
         /// <summary>
@@ -124,8 +113,6 @@
             {
                 return;
             }
-
-            this.DisableDynamic();
 
             this.executing = true;
 

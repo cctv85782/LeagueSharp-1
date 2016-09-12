@@ -22,6 +22,9 @@
     using Rethought_Yasuo.Yasuo.Modules.Core.SpellParent.Implementations;
     using Rethought_Yasuo.Yasuo.Modules.Guardians;
 
+    using OrbwalkingChild = Rethought_Yasuo.Yasuo.Modules.OrbwalkingChild;
+    using SpellChild = Rethought_Yasuo.Yasuo.Modules.Core.SpellParent.SpellChild;
+
     #endregion
 
     // TODO
@@ -75,7 +78,7 @@
 
             var castManagerModule = new CastManagerModule();
 
-            var orbwalkerModule = new OrbwalkerModule(superParent.Menu);
+            var orbwalkerModule = new (superParent.Menu);
 
             var comboParent = new OrbwalkingParent("Combo", orbwalkerModule.Orbwalker, Orbwalking.OrbwalkingMode.Combo);
             var lasthitParent = new OrbwalkingParent("LastHit", orbwalkerModule.Orbwalker, Orbwalking.OrbwalkingMode.LastHit);

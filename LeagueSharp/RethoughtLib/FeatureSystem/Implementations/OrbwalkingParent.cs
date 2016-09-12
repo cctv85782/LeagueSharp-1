@@ -24,7 +24,7 @@
         /// <summary>
         ///     The orbwalking mode
         /// </summary>
-        private readonly Orbwalking.OrbwalkingMode orbwalkingMode;
+        private readonly Orbwalking.OrbwalkingMode[] orbwalkingMode;
 
         #endregion
 
@@ -36,10 +36,14 @@
         /// <param name="name">The name.</param>
         /// <param name="orbwalker">The orbwalker.</param>
         /// <param name="orbwalkingMode">The orbwalking mode.</param>
-        public OrbwalkingParent(string name, Orbwalking.Orbwalker orbwalker, Orbwalking.OrbwalkingMode orbwalkingMode)
+        public OrbwalkingParent(
+            string name,
+            Orbwalking.Orbwalker orbwalker,
+            params Orbwalking.OrbwalkingMode[] orbwalkingMode)
         {
             this.Name = name;
             this.orbwalker = orbwalker;
+
             this.orbwalkingMode = orbwalkingMode;
         }
 
@@ -85,18 +89,18 @@
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void GameOnOnUpdate(EventArgs args)
         {
-            if (this.orbwalker.ActiveMode != this.orbwalkingMode)
+            if (!this.orbwalkingMode.Any(x => x == this.orbwalker.ActiveMode))
             {
                 foreach (var keyValuePair in this.Children.Where(x => x.Value.Item1))
                 {
-                    keyValuePair.Key.Disable(this);
+                    keyValuePair.Key.Switch.InternalDisable(new FeatureBaseEventArgs(this));
                 }
             }
             else
             {
                 foreach (var child in this.Children.Where(x => x.Value.Item1))
                 {
-                    child.Key.Enable(this);
+                    child.Key.Switch.InternalEnable(new FeatureBaseEventArgs(this));
                 }
             }
         }

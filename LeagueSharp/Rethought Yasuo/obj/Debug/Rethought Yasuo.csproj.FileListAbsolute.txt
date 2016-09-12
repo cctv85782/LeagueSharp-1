@@ -1,0 +1,2 @@
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yasuo\obj\Debug\Rethought Yasuo.csprojResolveAssemblyReference.cache
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yasuo\obj\Debug\Rethought Yasuo.csproj.Rethought Yasuo.exe.config

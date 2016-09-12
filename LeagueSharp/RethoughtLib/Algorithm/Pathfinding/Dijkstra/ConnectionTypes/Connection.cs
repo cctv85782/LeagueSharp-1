@@ -1,4 +1,4 @@
-namespace RethoughtLib.Algorithm.Dijkstra.ConnectionTypes
+namespace RethoughtLib.Algorithm.Pathfinding.Dijkstra.ConnectionTypes
 {
     /// <summary>
     ///     Base class for Connections

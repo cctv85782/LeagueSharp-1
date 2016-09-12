@@ -7,8 +7,8 @@
 
     using LeagueSharp;
 
-    using RethoughtLib.Algorithm.Dijkstra;
-    using RethoughtLib.Algorithm.Dijkstra.ConnectionTypes;
+    using RethoughtLib.Algorithm.Pathfinding.Dijkstra;
+    using RethoughtLib.Algorithm.Pathfinding.Dijkstra.ConnectionTypes;
     using RethoughtLib.CastManager.Abstract_Classes;
 
     using Rethought_Yasuo.Yasuo.Modules.Core.GridGenerator;

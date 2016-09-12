@@ -78,7 +78,7 @@
                 return;
             }
 
-            this.Menu.Item(this.BoolName).SetValue(false);
+            this.Menu.Item(this.owner.Name + this.BoolName).SetValue(false);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@
                 return;
             }
 
-            this.Menu.Item(this.BoolName).SetValue(true);
+            this.Menu.Item(this.owner.Name + this.BoolName).SetValue(true);
         }
 
         /// <summary>

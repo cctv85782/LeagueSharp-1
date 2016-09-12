@@ -65,7 +65,9 @@
     <Compile Include="Modules\Dynamic\FarmModule.cs" />
     <Compile Include="Modules\Dynamic\MouseModule.cs" />
     <Compile Include="Modules\Force\Force.cs" />
-    <Compile Include="Modules\Static\DeathCamModule.cs" />
+    <Compile Include="Modules\Static\DeathCam\DeathCamModule.cs" />
+    <Compile Include="Modules\Static\DeathCam\DeathCamParent.cs" />
+    <Compile Include="Modules\Static\DeathCam\OnAAModule.cs" />
     <Compile Include="Modules\Static\MoveToMouseModule.cs" />
     <Compile Include="Modules\Static\QuickSwitchModule.cs" />
     <Compile Include="Modules\Transitions\TransitionModule.cs" />

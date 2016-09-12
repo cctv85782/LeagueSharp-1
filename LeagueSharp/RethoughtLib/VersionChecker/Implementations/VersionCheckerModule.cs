@@ -7,7 +7,6 @@
     using LeagueSharp;
     using LeagueSharp.Common;
 
-    using RethoughtLib.Events;
     using RethoughtLib.FeatureSystem.Abstract_Classes;
 
     #endregion
@@ -18,7 +17,15 @@
     {
         #region Fields
 
-        public global::RethoughtLib.VersionChecker.Implementations.VersionChecker ImplementationVersionChecker;
+        /// <summary>
+        ///     The implementation of a version checker
+        /// </summary>
+        public IVersionChecker ImplementationVersionChecker;
+
+        /// <summary>
+        ///     The github path
+        /// </summary>
+        private string githubPath;
 
         /// <summary>
         ///     last checked
@@ -44,7 +51,7 @@
             this.GithubPath = githubPath;
             this.AssemblyName = assemblyName;
 
-            this.ImplementationVersionChecker = new global::RethoughtLib.VersionChecker.Implementations.VersionChecker(this.GithubPath);
+            this.ImplementationVersionChecker = new VersionChecker(this.GithubPath);
         }
 
         #endregion
@@ -65,7 +72,19 @@
         /// <value>
         ///     The git-hub path.
         /// </value>
-        public string GithubPath { get; set; }
+        public string GithubPath
+        {
+            get
+            {
+                return this.githubPath;
+            }
+            set
+            {
+                this.githubPath = value;
+
+                this.ImplementationVersionChecker.GitHubPath = this.githubPath;
+            }
+        }
 
         /// <summary>
         ///     Gets the name.
@@ -102,21 +121,14 @@
 
             if (this.ImplementationVersionChecker.UpdateAvailable)
             {
-                if (this.ImplementationVersionChecker.ForceUpdate)
+                if (this.Menu.Item(this.Name + "NotifyNewVersion").GetValue<bool>())
                 {
-                    Notifications.AddNotification(this.AssemblyName + "- IMPORTANT UPDATE!", dispose: false);
-                }
-                else
-                {
-                    if (this.Menu.Item(this.Name + "NotifyNewVersion").GetValue<bool>())
+                    if (!this.notified)
                     {
-                        if (!this.notified)
-                        {
-                            Notifications.AddNotification(this.AssemblyName + "- Update Available!", 2500);
+                        Notifications.AddNotification(this.AssemblyName + "- Update Available!", 2500);
 
-                            this.notified = true;
-                            this.Draw();
-                        }
+                        this.notified = true;
+                        this.Draw();
                     }
                 }
                 this.Menu.Item(this.Name + "Version").DisplayName = "Version is outdated";
@@ -133,7 +145,7 @@
         /// </summary>
         protected override void OnDisable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            Events.OnUpdate -= this.OnUpdate;
+            Game.OnUpdate -= this.OnUpdate;
         }
 
         /// <summary>
@@ -141,7 +153,7 @@
         /// </summary>
         protected override void OnEnable(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
-            Events.OnUpdate += this.OnUpdate;
+            Game.OnUpdate += this.OnUpdate;
         }
 
         /// <summary>
@@ -151,8 +163,8 @@
         {
             this.Menu.AddItem(
                 this.ImplementationVersionChecker.UpdateAvailable
-                    ? new MenuItem(this.Name + "Version", "Version: " + 1337)
-                    : new MenuItem(this.Name + "Version", "Version is outdated"));
+                    ? new MenuItem(this.Name + "Version", $"{this.AssemblyName} is up2date")
+                    : new MenuItem(this.Name + "Version", $"{this.AssemblyName} is outdated"));
 
             this.Menu.AddItem(
                 new MenuItem(this.Name + "LiveCheck", "Check For new Version").SetValue(true)

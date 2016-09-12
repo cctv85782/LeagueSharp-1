@@ -4,9 +4,9 @@ namespace RethoughtLib.FeatureSystem.Switches
 
     using System;
 
-    using global::RethoughtLib.FeatureSystem.Abstract_Classes;
-
     using LeagueSharp.Common;
+
+    using RethoughtLib.FeatureSystem.Abstract_Classes;
 
     #endregion
 
@@ -15,7 +15,7 @@ namespace RethoughtLib.FeatureSystem.Switches
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SwitchBase"/> class.
+        ///     Initializes a new instance of the <see cref="SwitchBase" /> class.
         /// </summary>
         /// <param name="menu">The menu.</param>
         protected SwitchBase(Menu menu)
@@ -79,6 +79,32 @@ namespace RethoughtLib.FeatureSystem.Switches
         /// </summary>
         /// <param name="e">The <see cref="Base.FeatureBaseEventArgs" /> instance containing the event data.</param>
         public virtual void Enable(Base.FeatureBaseEventArgs e)
+        {
+            if (this.Enabled) return;
+
+            this.Enabled = true;
+
+            this.OnEnableEvent?.Invoke(this, e);
+        }
+
+        /// <summary>
+        ///     Bypasses the Disable method and directly invokes the OnDisableEvent
+        /// </summary>
+        /// <param name="e">The <see cref="Base.FeatureBaseEventArgs" /> instance containing the event data.</param>
+        public void InternalDisable(Base.FeatureBaseEventArgs e)
+        {
+            if (!this.Enabled) return;
+
+            this.Enabled = false;
+
+            this.OnDisableEvent?.Invoke(this, e);
+        }
+
+        /// <summary>
+        ///     Bypasses the Enable method and directly invokes the OnEnableEvent
+        /// </summary>
+        /// <param name="e">The <see cref="Base.FeatureBaseEventArgs" /> instance containing the event data.</param>
+        public void InternalEnable(Base.FeatureBaseEventArgs e)
         {
             if (this.Enabled) return;
 

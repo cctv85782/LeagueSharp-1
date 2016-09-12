@@ -1,4 +1,4 @@
-﻿namespace RethoughtLib.Algorithm.Dijkstra.ConnectionTypes
+﻿namespace RethoughtLib.Algorithm.Pathfinding.Dijkstra.ConnectionTypes
 {
     #region Using Directives
 

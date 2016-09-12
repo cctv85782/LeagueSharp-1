@@ -7,14 +7,13 @@
     using RethoughtLib.Bootstraps.Abstract_Classes;
     using RethoughtLib.FeatureSystem.Implementations;
 
-    using Rethought_Camera.Modules;
     using Rethought_Camera.Modules.Camera;
     using Rethought_Camera.Modules.Dynamic;
     using Rethought_Camera.Modules.Static;
 
     #endregion
 
-    internal class CameraLoader : LoadableBase
+    public class RethoughtCameraV1 : LoadableBase
     {
         #region Public Properties
 
@@ -32,7 +31,7 @@
         /// <value>
         ///     The name.
         /// </value>
-        public override string InternalName { get; set; } = "Rethought_Camera";
+        public override string InternalName { get; set; } = "Rethought_Camera_1";
 
         /// <summary>
         ///     Gets or sets the tags.
@@ -40,7 +39,7 @@
         /// <value>
         ///     The tags.
         /// </value>
-        public override IEnumerable<string> Tags { get; set; } = new[] { "Utility", "Always" };
+        public override IEnumerable<string> Tags { get; set; } = new[] { "Version_1" };
 
         #endregion
 
@@ -51,18 +50,24 @@
         /// </summary>
         public override void Load()
         {
+            // root
             var superParent = new SuperParent(this.DisplayName);
 
+            // essential
             var cameraModule = new CameraModule();
-            var dynamic = new DynamicCameraParent(cameraModule);
-            var movetoMouse = new MoveToMouseModule(cameraModule, dynamic);
-            var zoomhack = new ZoomHackModule(cameraModule);
-            var quickswitch = new QuickSwitchModule(cameraModule);
 
+            // dynamic
+            var dynamic = new DynamicCameraParent(cameraModule);
             dynamic.Add(new MouseModule());
             dynamic.Add(new FarmModule());
             dynamic.Add(new ComboModule());
 
+            // static
+            var movetoMouse = new MoveToMouseModule(cameraModule, dynamic);
+            var zoomhack = new ZoomHackModule(cameraModule);
+            var quickswitch = new QuickSwitchModule(cameraModule, dynamic);
+
+            // root assignments
             superParent.Add(cameraModule);
             superParent.Add(movetoMouse);
             superParent.Add(zoomhack);
@@ -70,6 +75,8 @@
             superParent.Add(dynamic);
 
             superParent.Load();
+
+            this.RootMenu = superParent.Menu;
         }
 
         #endregion

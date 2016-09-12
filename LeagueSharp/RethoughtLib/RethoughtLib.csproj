@@ -122,9 +122,19 @@
     <Compile Include="Design\Implementations\Vector4Offset.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\Base.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\ChildBase.cs" />
+    <Compile Include="FeatureSystem\Behaviors\IBehavior.cs" />
+    <Compile Include="FeatureSystem\Guardians\PlayerMustNotBeWindingUp.cs" />
+    <Compile Include="FeatureSystem\Guardians\Custom.cs" />
+    <Compile Include="FeatureSystem\Guardians\GuardianBase.cs" />
+    <Compile Include="FeatureSystem\Guardians\PlayerMustHaveBuff.cs" />
+    <Compile Include="FeatureSystem\Guardians\PlayerMustHaveBuffType.cs" />
+    <Compile Include="FeatureSystem\Guardians\PlayerMustNotBeDashing.cs" />
+    <Compile Include="FeatureSystem\Guardians\SpellMustBeReady.cs" />
+    <Compile Include="FeatureSystem\Implementations\OrbwalkingChild.cs" />
     <Compile Include="FeatureSystem\Implementations\OrbwalkingParent.cs" />
+    <Compile Include="FeatureSystem\Implementations\SpellChild.cs" />
     <Compile Include="FeatureSystem\Switches\KeybindSwitch.cs" />
-    <Compile Include="FeatureSystem\Switches\NullSwitch.cs" />
+    <Compile Include="FeatureSystem\Switches\UnreversibleSwitch.cs" />
     <Compile Include="FeatureSystem\Switches\SwitchBase.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\ParentBase.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\SuperParentBase.cs" />
@@ -211,6 +221,7 @@
     <Compile Include="Utility\Logger.cs" />
     <Compile Include="Utility\Math.cs" />
     <Compile Include="Utility\String.cs" />
+    <Compile Include="VersionChecker\Implementations\IVersionChecker.cs" />
     <Compile Include="VersionChecker\Implementations\VersionChecker.cs" />
     <Compile Include="VersionChecker\Implementations\VersionCheckerModule.cs" />
   </ItemGroup>

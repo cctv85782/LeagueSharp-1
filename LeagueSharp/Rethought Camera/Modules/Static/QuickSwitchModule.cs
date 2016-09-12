@@ -10,6 +10,7 @@
     using RethoughtLib.FeatureSystem.Abstract_Classes;
 
     using Rethought_Camera.Modules.Camera;
+    using Rethought_Camera.Modules.Dynamic;
     using Rethought_Camera.Modules.Transitions;
 
     #endregion
@@ -28,6 +29,8 @@
         /// </summary>
         private bool executing;
 
+        private DynamicCameraParent dynamicCameraParent;
+
         #endregion
 
         #region Constructors and Destructors
@@ -36,12 +39,13 @@
         ///     Initializes a new instance of the <see cref="QuickSwitchModule" /> class.
         /// </summary>
         /// <param name="cameraModule">The camera module.</param>
+        /// <param name="dynamicCameraParent">The dynamic camera parent</param>
         /// <param name="transitionsModule">The transitions module, can be null and a default will be attached</param>
-        public QuickSwitchModule(CameraModule cameraModule, TransitionsModule transitionsModule = null)
+        public QuickSwitchModule(CameraModule cameraModule, DynamicCameraParent dynamicCameraParent, TransitionsModule transitionsModule = null)
         {
             if (transitionsModule == null)
             {
-                this.TransitionsModule = new TransitionsModule("Transition Module");
+                this.TransitionsModule = new TransitionsModule("Transitions");
                 this.Add(this.TransitionsModule);
             }
             else
@@ -50,6 +54,7 @@
             }
 
             this.cameraModule = cameraModule;
+            this.dynamicCameraParent = dynamicCameraParent;
         }
 
         #endregion
@@ -109,6 +114,17 @@
                         (o, args) => { this.Execute(args, hero); };
                 }
             }
+
+            if (enemies.Items.Count == 0)
+            {
+                enemies.AddItem(new MenuItem("nothingfound1", "No Enemies found. :("));
+            }
+            if (allies.Items.Count == 0)
+            {
+                allies.AddItem(new MenuItem("nothingfound2", "No Allies found. :("));
+            }
+
+            this.Menu.AddItem(new MenuItem("disabledynamic", "Disable Dynamic Camera on Move").SetValue(true));
         }
 
         /// <summary>
@@ -128,6 +144,10 @@
             this.TransitionsModule.ActiveTransitionBase.Start(Camera.Position, hero.Position, Utils.TickCount);
 
             Game.OnUpdate += this.GameOnOnUpdate;
+
+            if (!this.Menu.Item("disabledynamic").GetValue<bool>()) return;
+
+            this.dynamicCameraParent.Disable(this);
         }
 
         /// <summary>

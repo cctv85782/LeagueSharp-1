@@ -1,4 +1,4 @@
-﻿namespace RethoughtLib.Algorithm.AStar.Enums
+﻿namespace RethoughtLib.Algorithm.Pathfinding.AStar.Enums
 {
     public enum HeuristicFormula
     {

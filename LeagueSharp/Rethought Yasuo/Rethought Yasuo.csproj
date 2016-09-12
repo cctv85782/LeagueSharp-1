@@ -59,7 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Yasuo\Modules\Behaviors\IBehaivior.cs" />
+    <Compile Include="Yasuo\Modules\Behaviors\IBehavior.cs" />
     <Compile Include="Yasuo\Modules\Combo\NonDashingQ2Module.cs" />
     <Compile Include="Yasuo\Modules\Core\GridGenerator\Grid.cs" />
     <Compile Include="Yasuo\Modules\Core\GridGenerator\GridGeneratorModule.cs" />
@@ -89,7 +89,6 @@
     <Compile Include="Yasuo\Modules\Combo\NonDashingQ1Module.cs" />
     <Compile Include="Yasuo\Modules\Combo\R.cs" />
     <Compile Include="Yasuo\Modules\Combo\W.cs" />
-    <Compile Include="Yasuo\Modules\Core\OrbwalkerModule.cs" />
     <Compile Include="Yasuo\Modules\Core\SpellParent\SpellParent.cs" />
     <Compile Include="Yasuo\Modules\Evade\RiposteModule.cs" />
     <Compile Include="Program.cs" />

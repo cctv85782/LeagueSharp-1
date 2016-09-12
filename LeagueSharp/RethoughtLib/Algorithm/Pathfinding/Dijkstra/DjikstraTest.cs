@@ -1,4 +1,4 @@
-﻿namespace RethoughtLib.Algorithm.Dijkstra
+﻿namespace RethoughtLib.Algorithm.Pathfinding.Dijkstra
 {
     #region Using Directives
 
@@ -7,7 +7,7 @@
 
     using LeagueSharp.Common;
 
-    using RethoughtLib.Algorithm.Dijkstra.ConnectionTypes;
+    using RethoughtLib.Algorithm.Pathfinding.Dijkstra.ConnectionTypes;
 
     using SharpDX;
 

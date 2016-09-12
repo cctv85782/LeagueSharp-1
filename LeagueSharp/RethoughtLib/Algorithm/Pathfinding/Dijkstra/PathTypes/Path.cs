@@ -1,10 +1,10 @@
-﻿namespace RethoughtLib.Algorithm.Dijkstra.PathTypes
+﻿namespace RethoughtLib.Algorithm.Pathfinding.Dijkstra.PathTypes
 {
     #region Using Directives
 
     using System.Collections.Generic;
 
-    using RethoughtLib.Algorithm.Dijkstra.ConnectionTypes;
+    using RethoughtLib.Algorithm.Pathfinding.Dijkstra.ConnectionTypes;
 
     #endregion
 

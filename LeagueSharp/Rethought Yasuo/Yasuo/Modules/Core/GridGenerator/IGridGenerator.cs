@@ -2,7 +2,7 @@
 {
     #region Using Directives
 
-    using RethoughtLib.Algorithm.Dijkstra.ConnectionTypes;
+    using RethoughtLib.Algorithm.Pathfinding.Dijkstra.ConnectionTypes;
 
     #endregion
 

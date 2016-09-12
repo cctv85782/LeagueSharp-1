@@ -4,7 +4,7 @@
 
     using System.Collections.Generic;
 
-    using RethoughtLib.Algorithm.Dijkstra.ConnectionTypes;
+    using RethoughtLib.Algorithm.Pathfinding.Dijkstra.ConnectionTypes;
 
     #endregion
 

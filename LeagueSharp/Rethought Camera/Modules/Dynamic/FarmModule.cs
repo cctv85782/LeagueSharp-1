@@ -53,39 +53,22 @@
         #region Methods
 
         /// <summary>
-        ///     Called when [disable].
-        /// </summary>
-        protected override void OnDisable(object sender, FeatureBaseEventArgs eventArgs)
-        {
-            base.OnDisable(sender, eventArgs);
-
-            Game.OnUpdate -= this.OnUpdate;
-        }
-
-        /// <summary>
-        ///     Called when [enable]
-        /// </summary>
-        protected override void OnEnable(object sender, FeatureBaseEventArgs eventArgs)
-        {
-            base.OnEnable(sender, eventArgs);
-
-            Game.OnUpdate += this.OnUpdate;
-        }
-
-        /// <summary>
         ///     Called when [load].
         /// </summary>
         protected override void OnLoad(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
             base.OnLoad(sender, featureBaseEventArgs);
 
-            this.Menu.AddItem(new MenuItem("keybind1", "Keybind").SetValue(new KeyBind('V', KeyBindType.Press)));
+            this.Menu.AddItem(new MenuItem("keybind1", "Keybind").SetValue(new KeyBind('V', KeyBindType.Press)))
+                .ValueChanged += (o, args) => { this.ProcessKeybind(args); };
 
             this.Menu.AddItem(
-                new MenuItem("keybind2", "Alternative Keybind").SetValue(new KeyBind('X', KeyBindType.Press)));
+                new MenuItem("keybind2", "Alternative Keybind").SetValue(new KeyBind('X', KeyBindType.Press)))
+                .ValueChanged += (o, args) => { this.ProcessKeybind(args); };
 
             this.Menu.AddItem(
-                new MenuItem("keybind3", "Alternative Keybind").SetValue(new KeyBind('C', KeyBindType.Press)));
+                new MenuItem("keybind3", "Alternative Keybind").SetValue(new KeyBind('C', KeyBindType.Press)))
+                .ValueChanged += (o, args) => { this.ProcessKeybind(args); };
 
             this.Menu.AddItem(
                 new MenuItem("range", "Range").SetValue(new Slider(1000, 100, 1500))
@@ -94,19 +77,19 @@
             this.Menu.AddItem(
                 new MenuItem("rangedivider", "Resistance").SetValue(new Slider(57000, 1000, 70000))
                     .SetTooltip("How hard the camera will be slowed"));
+
+            this.Switch.InternalDisable(new FeatureBaseEventArgs(this));
         }
 
-        private void OnUpdate(EventArgs args)
+        private void ProcessKeybind(OnValueChangeEventArgs args)
         {
-            if (!this.Menu.Item("keybind1").GetValue<KeyBind>().Active &&
-                !this.Menu.Item("keybind2").GetValue<KeyBind>().Active &&
-                !this.Menu.Item("keybind3").GetValue<KeyBind>().Active)
+            if (args.GetNewValue<KeyBind>().Active)
             {
-                this.Switch.Enabled = false;
+                this.Switch.InternalEnable(new FeatureBaseEventArgs(this));
             }
             else
             {
-                this.Switch.Enabled = true;
+                this.Switch.InternalDisable(new FeatureBaseEventArgs(this));
             }
         }
 

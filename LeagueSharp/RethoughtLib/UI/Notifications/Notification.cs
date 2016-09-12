@@ -11,6 +11,7 @@ namespace RethoughtLib.UI.Notifications
     using global::RethoughtLib.UI.Notifications.Designs;
 
     using SharpDX;
+    using SharpDX.Direct3D9;
 
     #endregion
 
@@ -87,7 +88,7 @@ namespace RethoughtLib.UI.Notifications
         /// </summary>
         public override void Draw()
         {
-            
+
         }
 
         #endregion

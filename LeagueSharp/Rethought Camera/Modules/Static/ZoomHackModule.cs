@@ -1,8 +1,6 @@
-﻿namespace Rethought_Camera.Modules
+﻿namespace Rethought_Camera.Modules.Static
 {
     #region Using Directives
-
-    using System;
 
     using LeagueSharp.Common;
 
@@ -60,8 +58,6 @@
         {
             base.OnDisable(sender, eventArgs);
 
-            //CustomEvents.Game.OnGameEnd -= this.OnGameEnd;
-
             this.cameraModule.ZoomHack = false;
         }
 
@@ -73,8 +69,6 @@
         protected override void OnEnable(object sender, FeatureBaseEventArgs eventArgs)
         {
             base.OnEnable(sender, eventArgs);
-
-            //CustomEvents.Game.OnGameEnd += this.OnGameEnd;
 
             this.cameraModule.ZoomHack = true;
         }
@@ -88,7 +82,20 @@
         {
             base.OnLoad(sender, featureBaseEventArgs);
 
-            //this.Menu.AddItem(new MenuItem("tempfix", "Temp Fix: ZoomHack not working after reload").SetValue(true));
+
+            //var maxZoom = this.Menu.AddItem(new MenuItem("maxzoom", "Max Zoom").SetValue(new Slider(100, 1, 10000)));
+
+            //maxZoom.ValueChanged += (o, args) => { this.cameraModule.MaxZoom = args.GetNewValue<Slider>().Value; };
+
+            //this.cameraModule.MaxZoom = maxZoom.GetValue<Slider>().Value;
+
+
+            //var zoom = this.Menu.AddItem(new MenuItem("zoom", "Zoom").SetValue(new Slider(100, 1, 10000)));
+
+            //zoom.ValueChanged += (o, args) => { this.cameraModule.MaxZoom = args.GetNewValue<Slider>().Value; };
+
+            //this.cameraModule.Zoom = zoom.GetValue<Slider>().Value;
+
 
             this.Menu.AddItem(
                 new MenuItem("warning", "Use At Your Own Risk").SetTooltip(
@@ -106,17 +113,6 @@
         {
             this.Switch = new BoolSwitch(this.Menu, "Enabled", false, this);
         }
-
-        ///// <summary>
-        /////     Raises the <see cref="E:GameEnd" /> event.
-        ///// </summary>
-        ///// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
-        //private void OnGameEnd(EventArgs args)
-        //{
-        //    if (!this.Menu.Item("tempfix").GetValue<bool>()) return;
-
-        //    this.Disable();
-        //}
 
         #endregion
     }

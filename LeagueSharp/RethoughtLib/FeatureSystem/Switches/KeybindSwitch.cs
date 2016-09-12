@@ -61,6 +61,40 @@
         /// </value>
         public char Key { get; set; }
 
+        /// <summary>
+        ///     Raises the <see cref="E:OnDisableEvent" /> event.
+        /// </summary>
+        /// <param name="e">The <see cref="Base.FeatureBaseEventArgs" /> instance containing the event data.</param>
+        public override void Disable(Base.FeatureBaseEventArgs e)
+        {
+            if (e.Sender == this.owner)
+            {
+                base.Disable(e);
+                return;
+            }
+
+            var keybind = new KeyBind(this.Key, KeyBindType.Toggle) { Active = false };
+
+            this.Menu.Item(this.owner.Name + this.BoolName).SetValue(keybind);
+        }
+
+        /// <summary>
+        ///     Raises the <see cref="E:OnEnableEvent" /> event.
+        /// </summary>
+        /// <param name="e">The <see cref="Base.FeatureBaseEventArgs" /> instance containing the event data.</param>
+        public override void Enable(Base.FeatureBaseEventArgs e)
+        {
+            if (e.Sender == this.owner)
+            {
+                base.Enable(e);
+                return;
+            }
+
+            var keybind = new KeyBind(this.Key, KeyBindType.Toggle) { Active = true };
+
+            this.Menu.Item(this.owner.Name + this.BoolName).SetValue(keybind);
+        }
+
         #endregion
 
         #region Public Methods and Operators

@@ -5,14 +5,14 @@
     using System;
     using System.Linq;
 
-    using global::RethoughtLib.Menu.Interfaces;
-
     using LeagueSharp;
     using LeagueSharp.Common;
 
+    using RethoughtLib.Menu.Interfaces;
+
     #endregion
 
-    public class ChampionSliderMenu : IMenuPreset
+    public class ChampionSliderMenu : IGenerator
     {
         #region Fields
 
@@ -73,8 +73,10 @@
         /// <summary>
         ///     Generates this instance.
         /// </summary>
-        public void Generate()
+        public void Generate(Menu menu)
         {
+            this.Menu = menu;
+
             this.SetupMenu();
             this.AddEnemies();
         }

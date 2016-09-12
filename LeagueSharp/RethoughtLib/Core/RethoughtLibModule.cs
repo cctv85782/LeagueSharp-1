@@ -7,9 +7,20 @@ using System.Threading.Tasks;
 namespace RethoughtLib.Core
 {
     using global::RethoughtLib.FeatureSystem.Abstract_Classes;
+    using global::RethoughtLib.VersionChecker.Implementations;
 
-    internal class RethoughtLibModule : ChildBase
+    internal sealed class RethoughtLibModule : ParentBase
     {
+        public RethoughtLibModule(VersionCheckerModule versionCheckerModule = null)
+        {
+            var versionChecker = versionCheckerModule ?? new VersionCheckerModule("", this.Name);
+
+            versionChecker.GithubPath =
+                "https://github.com/MediaGithub/LeagueSharpDev/tree/master/LeagueSharp/RethoughtLib";
+
+            this.Add(versionChecker);
+        }
+
         /// <summary>
         ///     Gets or sets the name.
         /// </summary>

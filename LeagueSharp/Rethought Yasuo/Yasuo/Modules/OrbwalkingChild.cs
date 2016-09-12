@@ -6,6 +6,9 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using LeagueSharp;
+    using LeagueSharp.Common;
+
     using RethoughtLib.CastManager.Abstract_Classes;
     using RethoughtLib.FeatureSystem.Abstract_Classes;
 
@@ -18,15 +21,44 @@
     {
         #region Fields
 
+        /// <summary>
+        ///     The behaviors
+        /// </summary>
         protected readonly List<Action> Behaviors = new List<Action>();
 
+        /// <summary>
+        ///     The guardians
+        /// </summary>
         protected readonly List<Func<bool>> Guardians = new List<Func<bool>>();
 
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="OrbwalkingChild" /> class.
+        /// </summary>
+        /// <param name="castManager">The cast manager.</param>
         protected OrbwalkingChild(ICastManager castManager = null)
         {
             this.CastManager = castManager;
+
+            var Spell = new Spell(SpellSlot.E);
+            Spell.Cast();
+
+            L
         }
 
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        ///     Gets or sets the cast manager.
+        /// </summary>
+        /// <value>
+        ///     The cast manager.
+        /// </value>
         internal ICastManager CastManager { get; set; }
 
         #endregion
@@ -34,19 +66,19 @@
         #region Methods
 
         /// <summary>
-        ///     Adds the specified guardian
+        ///     Adds the specified behavior
         /// </summary>
-        /// <param name="guardian">The guardian.</param>
+        /// <param name="behavior">The behavior.</param>
         /// <returns></returns>
-        internal OrbwalkingChild Behavior(IBehavior guardian)
+        internal OrbwalkingChild Behavior(IBehavior behavior)
         {
-            return this.Behavior(guardian.Action);
+            return this.Behavior(behavior.Action);
         }
 
         /// <summary>
-        ///     Adds the specified guardian
+        ///     Adds the specified behavior
         /// </summary>
-        /// <param name="guardianFunc">The guardian function</param>
+        /// <param name="behaviorAction">The behavior action.</param>
         /// <returns></returns>
         internal OrbwalkingChild Behavior(Action behaviorAction)
         {
@@ -100,7 +132,7 @@
         }
 
         /// <summary>
-        /// Checks the guardians.
+        ///     Checks the guardians.
         /// </summary>
         /// <returns></returns>
         protected internal bool CheckGuardians()
