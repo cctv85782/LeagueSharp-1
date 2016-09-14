@@ -69,7 +69,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithm\Graphs\Graph.cs" />
-    <Compile Include="Algorithm\Graphs\GraphGenerator.cs" />
     <Compile Include="Algorithm\Graphs\IGraphGenerator.cs" />
     <Compile Include="Algorithm\Pathfinding\AStar\AStar.cs" />
     <Compile Include="Algorithm\Pathfinding\AStar\AStarEdge.cs" />
@@ -84,7 +83,6 @@
     <Compile Include="Algorithm\Pathfinding\AStar\Heuristics\HeuristicManhatten.cs" />
     <Compile Include="Algorithm\Pathfinding\Dijkstra\ConnectionTypes\AutoVector2Connection.cs" />
     <Compile Include="Algorithm\Pathfinding\Dijkstra\ConnectionTypes\AutoVector3Connection.cs" />
-    <Compile Include="Algorithm\Pathfinding\Dijkstra\ConnectionTypes\Connection.cs" />
     <Compile Include="Algorithm\Pathfinding\Dijkstra\ConnectionTypes\FuncConnection.cs" />
     <Compile Include="Algorithm\Pathfinding\Dijkstra\ConnectionTypes\SimpleConnection.cs" />
     <Compile Include="Algorithm\Pathfinding\Dijkstra\Dijkstra.cs" />
@@ -93,11 +91,10 @@
     <Compile Include="Algorithm\Pathfinding\EdgeBase.cs" />
     <Compile Include="Algorithm\Pathfinding\IPathfinder.cs" />
     <Compile Include="Algorithm\Pathfinding\NodeBase.cs" />
-    <Compile Include="Algorithm\Pathfinding\PathfinderBase.cs" />
     <Compile Include="AssemblyInteractor\AssemblyInteractor.cs" />
     <Compile Include="AssemblyInteractor\Implementations\EvadeSharp.cs" />
     <Compile Include="AssemblyInteractor\Abstract Classes\Assembly.cs" />
-    <Compile Include="CastManager\Abstract Classes\ICastManager.cs" />
+    <Compile Include="ActionManager\Abstract Classes\IActionManager.cs" />
     <Compile Include="ChatLogger\Abstract Classes\ChatLoggerBase.cs" />
     <Compile Include="ChatLogger\Implementations\ChatLoggerModule.cs" />
     <Compile Include="Classes\Injectables\DependencyInjectionBase.cs" />
@@ -120,6 +117,7 @@
     <Compile Include="Design\Implementations\Vector2Offset.cs" />
     <Compile Include="Design\Implementations\Vector3Offset.cs" />
     <Compile Include="Design\Implementations\Vector4Offset.cs" />
+    <Compile Include="Events\ObjAiBaseEvents.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\Base.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\ChildBase.cs" />
     <Compile Include="FeatureSystem\Behaviors\IBehavior.cs" />
@@ -143,7 +141,7 @@
     <Compile Include="FeatureSystem\Implementations\Parent.cs" />
     <Compile Include="FeatureSystem\Implementations\SuperParent.cs" />
     <Compile Include="Core\RethoughtLib.cs" />
-    <Compile Include="CastManager\Implementations\CastManagerModule.cs" />
+    <Compile Include="ActionManager\Implementations\ActionManagerModule.cs" />
     <Compile Include="ChatLogger\Implementations\ChatLogger.cs" />
     <Compile Include="ChatLogger\Implementations\DefaultFormat.cs" />
     <Compile Include="ChatLogger\Implementations\DefaultLogger.cs" />
@@ -178,6 +176,7 @@
     <Compile Include="Menu\MenuTranslator.cs" />
     <Compile Include="Menu\Presets\ChampionSliderMenu.cs" />
     <Compile Include="Menu\Presets\DynamicMenu.cs" />
+    <Compile Include="Orbwalker\Implementations\OrbwalkingModule.cs" />
     <Compile Include="TargetSelector\Implementations\LessAttack.cs" />
     <Compile Include="TargetSelector\Interfaces\ITargetSelectionMode.cs" />
     <Compile Include="TargetSelector\Abstract Classes\TargetSelectorBase.cs" />

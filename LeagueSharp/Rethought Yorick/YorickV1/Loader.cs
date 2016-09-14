@@ -11,9 +11,9 @@
     using RethoughtLib.FeatureSystem.Abstract_Classes;
     using RethoughtLib.FeatureSystem.Guardians;
     using RethoughtLib.FeatureSystem.Implementations;
+    using RethoughtLib.Orbwalker.Implementations;
 
     using Rethought_Yorick.YorickV1.Combo;
-    using Rethought_Yorick.YorickV1.Modules;
     using Rethought_Yorick.YorickV1.Spells;
 
     #endregion
@@ -40,7 +40,7 @@
         /// <value>
         ///     The name.
         /// </value>
-        public override string InternalName { get; set; } = "Rethought_Yorick";
+        public override string InternalName { get; set; } = "Rethought_Yorick_Version1";
 
         /// <summary>
         ///     Gets or sets the tags.
@@ -48,7 +48,7 @@
         /// <value>
         ///     The tags.
         /// </value>
-        public override IEnumerable<string> Tags { get; set; } = new[] { "Yorick" };
+        public override IEnumerable<string> Tags { get; set; } = new[] { "Version_1" };
 
         #endregion
 
@@ -61,7 +61,7 @@
         {
             var superParent = new SuperParent(this.DisplayName);
 
-            var orbwalkingModule = new OrbwalkingModule();
+            var orbwalkerModule = new OrbwalkerModule();
 
             var passiveObserver = new PassiveObserver();
 
@@ -76,24 +76,24 @@
 
             var comboParent = new OrbwalkingParent(
                 "Combo",
-                orbwalkingModule.OrbwalkerInstance,
+                orbwalkerModule.OrbwalkerInstance,
                 Orbwalking.OrbwalkingMode.Combo);
 
             var laneClearParent = new OrbwalkingParent(
                 "LaneClear",
-                orbwalkingModule.OrbwalkerInstance,
+                orbwalkerModule.OrbwalkerInstance,
                 Orbwalking.OrbwalkingMode.LaneClear);
 
             var lastHitParent = new OrbwalkingParent(
                 "LastHit",
-                orbwalkingModule.OrbwalkerInstance,
+                orbwalkerModule.OrbwalkerInstance,
                 Orbwalking.OrbwalkingMode.LastHit,
                 Orbwalking.OrbwalkingMode.Mixed,
                 Orbwalking.OrbwalkingMode.LaneClear);
 
             var mixedParent = new OrbwalkingParent(
                 "Mixed",
-                orbwalkingModule.OrbwalkerInstance,
+                orbwalkerModule.OrbwalkerInstance,
                 Orbwalking.OrbwalkingMode.Mixed);
 
             comboParent.Add(
@@ -135,7 +135,7 @@
 
             superParent.Add(new List<Base>()
                                 {
-                                    orbwalkingModule,
+                                    orbwalkerModule,
                                     spellParent,
                                     comboParent,
                                     laneClearParent,

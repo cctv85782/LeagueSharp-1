@@ -7,7 +7,7 @@
     using LeagueSharp;
     using LeagueSharp.Common;
 
-    using RethoughtLib.CastManager.Abstract_Classes;
+    using RethoughtLib.ActionManager.Abstract_Classes;
 
     using Rethought_Yasuo.Yasuo.Modules.Core.SpellParent;
     using Rethought_Yasuo.Yasuo.Modules.Core.SpellParent.Implementations;
@@ -37,8 +37,8 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="NonDashingQ1Module" /> class.
         /// </summary>
-        public NonDashingQ1Module(ISpellIndex spellParent, ICastManager castManager)
-            : base(castManager)
+        public NonDashingQ1Module(ISpellIndex spellParent, IActionManager actionManager)
+            : base(actionManager)
         {
             this.yasuoQ = (YasuoQ)spellParent[SpellSlot.Q];
 
@@ -135,7 +135,7 @@
             // TODO Menu Entry
             if (predictionOutput.Hitchance < HitChance.High) return;
 
-            this.CastManager.Queque.Enqueue(
+            this.ActionManager.Queque.Enqueue(
                 2,
                 () => this.spellParent[SpellSlot.Q].Spell.Cast(predictionOutput.CastPosition));
         }

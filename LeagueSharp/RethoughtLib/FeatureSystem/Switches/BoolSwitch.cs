@@ -64,6 +64,8 @@
 
         #endregion
 
+        private Base.FeatureBaseEventArgs Cache;
+
         #region Public Methods and Operators
 
         /// <summary>
@@ -74,9 +76,18 @@
         {
             if (e.Sender == this.owner)
             {
+                if (this.Cache != null)
+                {
+                    e = this.Cache;
+
+                    this.Cache = null;
+                }
+
                 base.Disable(e);
                 return;
             }
+
+            this.Cache = e;
 
             this.Menu.Item(this.owner.Name + this.BoolName).SetValue(false);
         }
@@ -89,9 +100,18 @@
         {
             if (e.Sender == this.owner)
             {
+                if (this.Cache != null)
+                {
+                    e = this.Cache;
+
+                    this.Cache = null;
+                }
+
                 base.Enable(e);
                 return;
             }
+
+            this.Cache = e;
 
             this.Menu.Item(this.owner.Name + this.BoolName).SetValue(true);
         }

@@ -1,0 +1,140 @@
+﻿namespace Rethought_Irelia.IreliaV1.Combo
+{
+    #region Using Directives
+
+    using System;
+
+    using LeagueSharp;
+    using LeagueSharp.Common;
+
+    using RethoughtLib.FeatureSystem.Implementations;
+
+    using Rethought_Irelia.IreliaV1.Spells;
+
+    #endregion
+
+    internal class E : OrbwalkingChild
+    {
+        #region Fields
+
+
+        /// <summary>
+        /// The irelia e
+        /// </summary>
+        private readonly IreliaE ireliaE;
+
+        /// <summary>
+        /// The target
+        /// </summary>
+        private Obj_AI_Hero target;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="E" /> class.
+        /// </summary>
+        /// <param name="ireliaE">The irelia e.</param>
+        public E(IreliaE ireliaE)
+        {
+            this.ireliaE = ireliaE;
+        }
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        ///     Gets or sets the name.
+        /// </summary>
+        /// <value>
+        ///     The name.
+        /// </value>
+        public override string Name { get; set; } = "E";
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        ///     Called when [disable].
+        /// </summary>
+        protected override void OnDisable(object sender, FeatureBaseEventArgs eventArgs)
+        {
+            base.OnDisable(sender, eventArgs);
+
+            Game.OnUpdate -= this.OnGameUpdate;
+        }
+
+        /// <summary>
+        ///     Called when [enable]
+        /// </summary>
+        protected override void OnEnable(object sender, FeatureBaseEventArgs eventArgs)
+        {
+            base.OnEnable(sender, eventArgs);
+
+            Game.OnUpdate += this.OnGameUpdate;
+        }
+
+        /// <summary>
+        ///     Called when [load].
+        /// </summary>
+        protected override void OnLoad(object sender, FeatureBaseEventArgs featureBaseEventArgs)
+        {
+            base.OnLoad(sender, featureBaseEventArgs);
+
+            this.Menu.AddItem(new MenuItem("stunwhenpossible", "Stun whenever possible").SetValue(true));
+
+            this.Menu.AddItem(new MenuItem("slowdown", "Stun when faster than the player").SetValue(true));
+
+            // TODO: If enemy has interruptable spells wait for them to cast E option, or if player is far below enemy health and enemy is stunnable
+        }
+
+        /// <summary>
+        ///     Slows the target down
+        /// </summary>
+        private void LogicSlowDown()
+        {
+            if (!this.Menu.Item("slowdown").GetValue<bool>()) return;
+
+            if (this.target.MoveSpeed > ObjectManager.Player.MoveSpeed && !this.target.IsMovementImpaired()
+                && ObjectManager.Player.Distance(this.target) > ObjectManager.Player.AttackRange - 50)
+            {
+                this.ireliaE.Spell.Cast(this.target);
+            }
+        }
+
+        /// <summary>
+        ///     Stuns whenever possible.
+        /// </summary>
+        private void LogicStunWhenPossible()
+        {
+            if (!this.Menu.Item("stunwhenpossible").GetValue<bool>()) return;
+
+            if (this.ireliaE.CanStun(this.target))
+            {
+                this.ireliaE.Spell.Cast(this.target);
+            }
+        }
+
+        /// <summary>
+        ///     Raises the <see cref="E:GameUpdate" /> event.
+        /// </summary>
+        /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void OnGameUpdate(EventArgs args)
+        {
+            if (!this.CheckGuardians()) return;
+
+            this.target = TargetSelector.GetTarget(this.ireliaE.Spell.Range, this.ireliaE.Spell.DamageType);
+
+            if (this.target == null) return;
+
+            this.LogicStunWhenPossible();
+
+            this.LogicSlowDown();
+        }
+
+        #endregion
+    }
+}

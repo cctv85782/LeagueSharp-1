@@ -61,6 +61,8 @@
         /// </value>
         public char Key { get; set; }
 
+        private Base.FeatureBaseEventArgs Cache;
+
         /// <summary>
         ///     Raises the <see cref="E:OnDisableEvent" /> event.
         /// </summary>
@@ -69,9 +71,17 @@
         {
             if (e.Sender == this.owner)
             {
+                if (this.Cache != null)
+                {
+                    e = this.Cache;
+                    this.Cache = null;
+                }
+
                 base.Disable(e);
                 return;
             }
+
+            this.Cache = e;
 
             var keybind = new KeyBind(this.Key, KeyBindType.Toggle) { Active = false };
 
@@ -86,9 +96,17 @@
         {
             if (e.Sender == this.owner)
             {
+                if (this.Cache != null)
+                {
+                    e = this.Cache;
+                    this.Cache = null;
+                }
+
                 base.Enable(e);
                 return;
             }
+
+            this.Cache = e;
 
             var keybind = new KeyBind(this.Key, KeyBindType.Toggle) { Active = true };
 

@@ -29,6 +29,8 @@
 
         public override Vector3 GetPosition()
         {
+            if (!this.InternalEnabled) return Vector3.Zero;
+
             var distanceFromPlayer = ObjectManager.Player.Position.Distance(Game.CursorPos);
 
             var distance = Math.Min(distanceFromPlayer, this.Menu.Item("range").GetValue<Slider>().Value);
@@ -56,6 +58,8 @@
             this.Menu.AddItem(
                 new MenuItem("rangedivider", "Resistance").SetValue(new Slider(43000, 1000, 70000))
                     .SetTooltip("How hard the camera will be slowed"));
+
+            this.InternalEnabled = true;
         }
 
         #endregion

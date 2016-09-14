@@ -6,7 +6,8 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using RethoughtLib.CastManager.Abstract_Classes;
+    using RethoughtLib.ActionManager.Abstract_Classes;
+    using RethoughtLib.ActionManager.Implementations;
     using RethoughtLib.FeatureSystem.Abstract_Classes;
     using RethoughtLib.FeatureSystem.Behaviors;
     using RethoughtLib.FeatureSystem.Guardians;
@@ -29,7 +30,46 @@
 
         #endregion
 
-        #region Methods
+        #region Constructors and Destructors
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="OrbwalkingChild" /> class.
+        /// </summary>
+        /// <param name="actionManager">
+        ///     The cast manager. If castManager is null an internal CastManagerModule will get generated which cannot be accessed
+        ///     by the Menu.
+        /// </param>
+        protected OrbwalkingChild(IActionManager actionManager = null)
+        {
+            if (actionManager == null)
+            {
+                var castManagerModule = new ActionManagerModule();
+
+                this.ActionManager = castManagerModule;
+
+                return;
+            }
+            else
+            {
+                this.ActionManager = actionManager;
+            }
+        }
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        ///     Gets or sets the cast manager.
+        /// </summary>
+        /// <value>
+        ///     The cast manager.
+        /// </value>
+        public IActionManager ActionManager { get; set; }
+
+        #endregion
+
+        #region Public Methods and Operators
 
         /// <summary>
         ///     Adds the specified behavior
@@ -75,6 +115,10 @@
 
             return this;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         ///     Checks the guardians.

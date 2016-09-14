@@ -7,17 +7,16 @@
     using LeagueSharp;
     using LeagueSharp.Common;
 
+    using RethoughtLib.ActionManager.Implementations;
     using RethoughtLib.Algorithm.Pathfinding.AStar;
     using RethoughtLib.Bootstraps.Abstract_Classes;
-    using RethoughtLib.CastManager.Implementations;
     using RethoughtLib.FeatureSystem.Abstract_Classes;
     using RethoughtLib.FeatureSystem.Implementations;
     using RethoughtLib.LogicProvider.Modules;
+    using RethoughtLib.Orbwalker.Implementations;
     using RethoughtLib.Utility;
 
-    using Rethought_Yasuo.Yasuo.Modules;
     using Rethought_Yasuo.Yasuo.Modules.Combo;
-    using Rethought_Yasuo.Yasuo.Modules.Core;
     using Rethought_Yasuo.Yasuo.Modules.Core.SpellParent;
     using Rethought_Yasuo.Yasuo.Modules.Core.SpellParent.Implementations;
     using Rethought_Yasuo.Yasuo.Modules.Guardians;
@@ -34,8 +33,6 @@
     internal class YasuoLoader : LoadableBase
     {
         #region Public Properties
-
-
 
         /// <summary>
         ///     Gets or sets the name that will get displayed.
@@ -76,17 +73,32 @@
 
             var logicProviderParent = new Parent("Logic Provider");
 
-            var castManagerModule = new CastManagerModule();
+            var castManagerModule = new ActionManagerModule();
 
-            var orbwalkerModule = new (superParent.Menu);
+            var orbwalkerModule = new OrbwalkerModule();
 
-            var comboParent = new OrbwalkingParent("Combo", orbwalkerModule.Orbwalker, Orbwalking.OrbwalkingMode.Combo);
-            var lasthitParent = new OrbwalkingParent("LastHit", orbwalkerModule.Orbwalker, Orbwalking.OrbwalkingMode.LastHit);
-            var mixedParent = new OrbwalkingParent("Mixed", orbwalkerModule.Orbwalker, Orbwalking.OrbwalkingMode.Mixed);
-            var laneClearParent = new OrbwalkingParent( "LaneClear", orbwalkerModule.Orbwalker, Orbwalking.OrbwalkingMode.LaneClear);
+            var comboParent = new OrbwalkingParent(
+                "Combo",
+                orbwalkerModule.OrbwalkerInstance,
+                Orbwalking.OrbwalkingMode.Combo);
+            var lasthitParent = new OrbwalkingParent(
+                "LastHit",
+                orbwalkerModule.OrbwalkerInstance,
+                Orbwalking.OrbwalkingMode.LastHit,
+                Orbwalking.OrbwalkingMode.Mixed,
+                Orbwalking.OrbwalkingMode.LaneClear);
+            var mixedParent = new OrbwalkingParent(
+                "Mixed",
+                orbwalkerModule.OrbwalkerInstance,
+                Orbwalking.OrbwalkingMode.Mixed);
+            var laneClearParent = new OrbwalkingParent(
+                "LaneClear",
+                orbwalkerModule.OrbwalkerInstance,
+                Orbwalking.OrbwalkingMode.LaneClear);
 
             var wallLogicProvider = new WallLogicProviderModule();
-            var astart = new AStarModule<AStarNode, AStarEdge<AStarNode>>();
+
+            var aStarModule = new AStarModule<AStarNode, AStarEdge<AStarNode>>();
 
             var yasuoQ = new YasuoQ();
             var yasuoW = new YasuoW();
@@ -95,15 +107,7 @@
             var yasuoPassive = new YasuoPassive();
 
             var spellsModule = new SpellParent();
-            spellsModule.Add(
-                new SpellChild[]
-                    {
-                        yasuoQ,
-                        yasuoW,
-                        yasuoE,
-                        yasuoR,
-                        yasuoPassive
-                    });
+            spellsModule.Add(new SpellChild[] { yasuoQ, yasuoW, yasuoE, yasuoR, yasuoPassive });
 
             coreParent.Add(new Base[] { spellsModule, castManagerModule, logicProviderParent });
 
@@ -112,23 +116,20 @@
             comboParent.Add(
                 new Base[]
                     {
-                        new NonDashingQ1Module(spellsModule, null)
-                            .Guardian(new SpellMustBeReady(spellsModule, SpellSlot.Q))
+                        new NonDashingQ1Module(spellsModule, null).Guardian(
+                            new SpellMustBeReady(spellsModule, SpellSlot.Q))
                             .Guardian(new PlayerMustNotHaveBuff(yasuoQ.ChargedBuffName))
                             .Guardian(new AutoMustNotBeCancelled())
                             .Guardian(new PlayerMustNotBeBlinded())
                             .Guardian(new PlayerMustNotBeDashing()),
-                        new NonDashingQ2Module(spellsModule, null)
-                            .Guardian(new SpellMustBeReady(spellsModule, SpellSlot.Q))
+                        new NonDashingQ2Module(spellsModule, null).Guardian(
+                            new SpellMustBeReady(spellsModule, SpellSlot.Q))
                             .Guardian(new PlayerMustHaveBuff(yasuoQ.ChargedBuffName))
                             .Guardian(new PlayerMustNotBeDashing()),
-                        new W(spellsModule, null)
-                            .Guardian(new SpellMustBeReady(spellsModule, SpellSlot.W)),
-                        new E(spellsModule, null, null)
-                            .Guardian(new SpellMustBeReady(spellsModule, SpellSlot.E))
+                        new W(spellsModule, null).Guardian(new SpellMustBeReady(spellsModule, SpellSlot.W)),
+                        new E(spellsModule, null, null).Guardian(new SpellMustBeReady(spellsModule, SpellSlot.E))
                             .Guardian(new AutoMustNotBeCancelled()),
-                        new R(spellsModule, null)
-                            .Guardian(new SpellMustBeReady(spellsModule, SpellSlot.R))
+                        new R(spellsModule, null).Guardian(new SpellMustBeReady(spellsModule, SpellSlot.R))
                     });
 
             foreach (var child in comboParent.Children)
@@ -137,7 +138,7 @@
 
                 if (orbwalkingChild != null)
                 {
-                    orbwalkingChild.CastManager = castManagerModule;
+                    orbwalkingChild.ActionManager = castManagerModule;
                 }
             }
 

@@ -2,19 +2,25 @@
 {
     #region Using Directives
 
+    using System;
     using System.Linq;
 
     using LeagueSharp;
     using LeagueSharp.Common;
 
-    using RethoughtLib.Utility;
-
     using SharpDX;
+
+    using Math = RethoughtLib.Utility.Math;
 
     #endregion
 
     internal class ComboModule : DynamicCameraChild
     {
+        #region Fields
+
+
+        #endregion
+
         #region Public Properties
 
         /// <summary>
@@ -31,6 +37,8 @@
 
         public override Vector3 GetPosition()
         {
+            if (!this.InternalEnabled) return Vector3.Zero;
+
             var units =
                 HeroManager.Enemies.Where(
                     x => x.Distance(ObjectManager.Player.Position) <= this.Menu.Item("range").GetValue<Slider>().Value)
@@ -52,6 +60,22 @@
         #region Methods
 
         /// <summary>
+        ///     Called when [disable].
+        /// </summary>
+        protected override void OnDisable(object sender, FeatureBaseEventArgs eventArgs)
+        {
+            base.OnDisable(sender, eventArgs);
+        }
+
+        /// <summary>
+        ///     Called when [enable]
+        /// </summary>
+        protected override void OnEnable(object sender, FeatureBaseEventArgs eventArgs)
+        {
+            base.OnEnable(sender, eventArgs);
+        }
+
+        /// <summary>
         ///     Called when [load].
         /// </summary>
         protected override void OnLoad(object sender, FeatureBaseEventArgs featureBaseEventArgs)
@@ -64,7 +88,6 @@
             this.Menu.AddItem(
                 new MenuItem("keybind2", "Alternative Keybind").SetValue(new KeyBind('C', KeyBindType.Press)))
                 .ValueChanged += (o, args) => { this.ProcessKeybind(args); };
-            ;
 
             this.Menu.AddItem(
                 new MenuItem("range", "Range").SetValue(new Slider(1000, 100, 1500))
@@ -73,20 +96,6 @@
             this.Menu.AddItem(
                 new MenuItem("rangedivider", "Resistance").SetValue(new Slider(57000, 1000, 70000))
                     .SetTooltip("How hard the camera will be slowed"));
-
-            this.Switch.InternalDisable(new FeatureBaseEventArgs(this));
-        }
-
-        private void ProcessKeybind(OnValueChangeEventArgs args)
-        {
-            if (args.GetNewValue<KeyBind>().Active)
-            {
-                this.Switch.InternalEnable(new FeatureBaseEventArgs(this));
-            }
-            else
-            {
-                this.Switch.InternalDisable(new FeatureBaseEventArgs(this));
-            }
         }
 
         #endregion

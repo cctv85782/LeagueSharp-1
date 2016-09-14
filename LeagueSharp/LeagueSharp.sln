@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rethought Camera", "Rethoug
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rethought Yorick", "Rethought Yorick\Rethought Yorick.csproj", "{4C68F84D-92DB-4726-AB2E-16057326B949}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rethought Irelia", "Rethought Irelia\Rethought Irelia.csproj", "{1EDDEDD7-1917-4A58-BADB-B8575D17013F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{4C68F84D-92DB-4726-AB2E-16057326B949}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C68F84D-92DB-4726-AB2E-16057326B949}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C68F84D-92DB-4726-AB2E-16057326B949}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EDDEDD7-1917-4A58-BADB-B8575D17013F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EDDEDD7-1917-4A58-BADB-B8575D17013F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EDDEDD7-1917-4A58-BADB-B8575D17013F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EDDEDD7-1917-4A58-BADB-B8575D17013F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

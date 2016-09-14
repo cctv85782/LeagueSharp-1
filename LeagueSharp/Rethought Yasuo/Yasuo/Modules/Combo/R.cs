@@ -8,7 +8,7 @@
     using LeagueSharp;
     using LeagueSharp.Common;
 
-    using RethoughtLib.CastManager.Abstract_Classes;
+    using RethoughtLib.ActionManager.Abstract_Classes;
 
     using Rethought_Yasuo.Yasuo.Modules.Core.SpellParent;
     using Rethought_Yasuo.Yasuo.Modules.Core.SpellParent.Implementations;
@@ -27,8 +27,8 @@
 
         #region Constructors and Destructors
 
-        public R(ISpellIndex spellParent, ICastManager castManager)
-            : base(castManager)
+        public R(ISpellIndex spellParent, IActionManager actionManager)
+            : base(actionManager)
         {
             this.spellParent = spellParent;
             this.yasuoR = (YasuoR)this.spellParent[SpellSlot.R];

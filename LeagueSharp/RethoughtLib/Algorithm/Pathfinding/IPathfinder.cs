@@ -6,11 +6,17 @@
 
     #endregion
 
-    internal interface IPathfinder<TNode>
+    public interface IPathfinder<TNode>
     {
         #region Public Methods and Operators
 
-        List<TNode> Run(TNode start, TNode end);
+        /// <summary>
+        /// Gets the Path from start to end
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <returns></returns>
+        List<TNode> GetPath(TNode start, TNode end);
 
         #endregion
     }

@@ -8,8 +8,6 @@
 
     using LeagueSharp.Common;
 
-    using RethoughtLib.Algorithm.Pathfinding.Dijkstra.ConnectionTypes;
-
     #endregion
 
     /// <summary>
@@ -18,7 +16,7 @@
     /// <typeparam name="T">Node</typeparam>
     /// <typeparam name="TV">Edge</typeparam>
     public class Dijkstra<T, TV>
-        where TV : Edge<T>
+        where TV : EdgeBase<T>
     {
         #region Fields
 

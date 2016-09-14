@@ -7,7 +7,7 @@
 
     using LeagueSharp;
 
-    using RethoughtLib.CastManager.Abstract_Classes;
+    using RethoughtLib.ActionManager.Abstract_Classes;
 
     using Rethought_Yasuo.Yasuo.Modules.Core.SpellParent;
     using Rethought_Yasuo.Yasuo.Modules.Core.SpellParent.Implementations;
@@ -26,8 +26,8 @@
 
         #region Constructors and Destructors
 
-        public W(ISpellIndex spellParent, ICastManager castManager)
-            : base(castManager)
+        public W(ISpellIndex spellParent, IActionManager actionManager)
+            : base(actionManager)
         {
             this.spellParent = spellParent;
 

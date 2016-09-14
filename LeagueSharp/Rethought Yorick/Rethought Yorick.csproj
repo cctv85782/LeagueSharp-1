@@ -72,7 +72,6 @@
     <Compile Include="YorickV1\Spells\DarkProcession.cs" />
     <Compile Include="YorickV1\Spells\EulogyOfTheIsles.cs" />
     <Compile Include="YorickV1\Spells\LastRites.cs" />
-    <Compile Include="YorickV1\Modules\OrbwalkingModule.cs" />
     <Compile Include="YorickV1\Spells\MourningMist.cs" />
     <Compile Include="YorickV1\Spells\PassiveObserver.cs" />
     <Compile Include="Program.cs" />
@@ -90,6 +89,7 @@
       <Name>RethoughtLib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

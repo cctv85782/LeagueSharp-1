@@ -11,7 +11,7 @@
 
     #endregion
 
-    public class AStar<TNode, TEdge> : PathfinderBase<TNode>
+    public class AStar<TNode, TEdge> : IPathfinder<TNode>
         where TNode : AStarNode where TEdge : AStarEdge<TNode>
     {
         #region Fields
@@ -30,11 +30,6 @@
         ///     The open nodes
         /// </summary>
         private readonly PriorityQueue<float, TNode> openNodes = new PriorityQueue<float, TNode>();
-
-        /// <summary>
-        ///     The heuristic estimate
-        /// </summary>
-        private float heuristicEstimate = 0f;
 
         #endregion
 
@@ -62,6 +57,11 @@
         public bool Finished { get; set; } = true;
 
         /// <summary>
+        ///     The heuristic estimate
+        /// </summary>
+        public float HeuristicEstimate { get; set; } = 0f;
+
+        /// <summary>
         ///     Gets or sets the heuristic formula.
         /// </summary>
         /// <value>
@@ -81,20 +81,19 @@
         #region Public Methods and Operators
 
         /// <summary>
-        ///     Runs the specified start.
+        ///     Gets the Path from start to end
         /// </summary>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
         /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public override List<TNode> Run(TNode start, TNode end)
+        public List<TNode> GetPath(TNode start, TNode end)
         {
             this.Finished = false;
 
             this.openNodes.Clear();
             this.closedNodes.Clear();
 
-            start.H = this.heuristicEstimate;
+            start.H = this.HeuristicEstimate;
             start.G = 0;
             start.F = start.G + start.H;
 
@@ -165,7 +164,7 @@
 
                     newNode.ParentNode = parentNode;
 
-                    newNode.H = this.heuristicEstimate * this.HeuristicFormula.Result(newNode, end);
+                    newNode.H = this.HeuristicEstimate * this.HeuristicFormula.Result(newNode, end);
 
                     if (this.TieBreaker)
                     {

@@ -4,12 +4,10 @@
 
     using System.Collections.Generic;
 
-    using RethoughtLib.Algorithm.Pathfinding.Dijkstra.ConnectionTypes;
-
     #endregion
 
     public abstract class Path<T, TV>
-        where TV : Edge<T>
+        where TV : EdgeBase<T>
     {
         #region Fields
 
@@ -33,14 +31,14 @@
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Path{T, TV}"/> class.
+        ///     Initializes a new instance of the <see cref="Path{T, TV}" /> class.
         /// </summary>
         protected Path()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Path{T, TV}"/> class.
+        ///     Initializes a new instance of the <see cref="Path{T, TV}" /> class.
         /// </summary>
         /// <param name="connections">The connections.</param>
         protected Path(List<TV> connections)
@@ -68,7 +66,7 @@
         public abstract void Draw(bool multicolor = true);
 
         /// <summary>
-        /// Removes the connection.
+        ///     Removes the connection.
         /// </summary>
         /// <param name="connection">The connection.</param>
         public virtual void RemoveConnection(TV connection)

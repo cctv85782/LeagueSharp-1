@@ -9,7 +9,7 @@
     using LeagueSharp;
     using LeagueSharp.Common;
 
-    using RethoughtLib.CastManager.Abstract_Classes;
+    using RethoughtLib.ActionManager.Abstract_Classes;
     using RethoughtLib.Menu;
     using RethoughtLib.Menu.Presets;
 
@@ -43,8 +43,8 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="NonDashingQModule" /> class.
         /// </summary>
-        public NonDashingQ2Module(ISpellIndex spellParent, ICastManager castManager)
-            : base(castManager)
+        public NonDashingQ2Module(ISpellIndex spellParent, IActionManager actionManager)
+            : base(actionManager)
         {
             this.yasuoQ = (YasuoQ)spellParent[SpellSlot.Q];
 
@@ -222,7 +222,7 @@
 
                         if (mostKnockedUp != null && !mostKnockedUp.CastPosition.IsZero)
                         {
-                            this.CastManager.Queque.Enqueue(2, () => this.yasuoQ.Spell.Cast(mostKnockedUp.CastPosition));
+                            this.ActionManager.Queque.Enqueue(2, () => this.yasuoQ.Spell.Cast(mostKnockedUp.CastPosition));
                         }
 
                         break;

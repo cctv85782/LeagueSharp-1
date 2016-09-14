@@ -20,8 +20,8 @@
         /// <summary>
         ///     Different Implementations of "The connections".
         /// </summary>
-        private readonly List<Edge<Vector2>> connections =
-            new List<Edge<Vector2>>
+        private readonly List<EdgeBase<Vector2>> connections =
+            new List<EdgeBase<Vector2>>
                 {
                 // Manual Implementations
                     new SimpleEdge<Vector2>(Nodes[0], Nodes[1], 5),
@@ -61,7 +61,7 @@
 
         private void Calculate()
         {
-            var calculator = new Dijkstra<Vector2, Edge<Vector2>>(this.connections);
+            var calculator = new Dijkstra<Vector2, EdgeBase<Vector2>>(this.connections);
 
             calculator.SetStart(Nodes[0]);
 

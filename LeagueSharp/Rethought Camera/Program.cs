@@ -13,6 +13,13 @@
     {
         #region Methods
 
+        /* TODO: GLOBAL LIST >
+            - DeathCam
+            - Ease In and Ease Out separated instead of only having "Transition: Quadric Ease In and Out" for example. More transitions.
+            - QuickSwitch for objectives. And waypoints.
+            - Waypoint System. Set some waypoints and let the camera transits to all waypoints in a given order on hotkey.
+        */
+
         /// <summary>
         ///     Mains the specified arguments.
         /// </summary>

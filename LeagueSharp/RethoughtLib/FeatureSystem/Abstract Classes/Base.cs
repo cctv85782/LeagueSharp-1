@@ -153,24 +153,10 @@
 
             this.Initialized = true;
 
-            this.OnLoadEvent += this.OnInitialize;
             this.OnLoadEvent += this.OnLoad;
-
 
             this.SetMenu();
             this.SetSwitch();
-        }
-
-        [Obsolete]
-        public void OnLoadInvoker()
-        {
-            this.Load();
-        }
-
-        [Obsolete]
-        protected virtual void OnInitialize(object sender, FeatureBaseEventArgs featureBaseEventArgs)
-        {
-
         }
 
         /// <summary>

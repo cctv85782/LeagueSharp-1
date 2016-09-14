@@ -128,7 +128,7 @@
 
             if (this.Children.Any(x => !x.Value.Item1)) return;
 
-            this.Disable();
+            this.Disable(sender);
         }
 
         /// <summary>
@@ -143,6 +143,8 @@
         {
             var sender = featureBaseEventArgs.Sender;
 
+            Console.WriteLine("CHILD ENABLED: " +sender);
+
             if (sender == null || sender == this)
             {
                 return;
@@ -150,9 +152,7 @@
 
             this.Children[sender] = new Tuple<bool, bool>(true, false);
 
-            if (this.Switch.Enabled) return;
-
-            this.Enable();
+            this.Enable(sender);
         }
 
         /// <summary>

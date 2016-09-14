@@ -77,6 +77,14 @@
         /// </value>
         public override string Name { get; set; } = "Q";
 
+        /// <summary>
+        ///     Gets or sets the spell priority.
+        /// </summary>
+        /// <value>
+        ///     The spell priority.
+        /// </value>
+        public int SpellPriority { get; set; } = 4;
+
         #endregion
 
         #region Methods
@@ -143,7 +151,7 @@
                     x => x.Position.Distance(ObjectManager.Player.ServerPosition) <= GravesTransformationRange)
                 > this.Menu.Item("mingravetransformations").GetValue<Slider>().Value)
             {
-                this.lastRites.Spell.Cast();
+                this.ActionManager.Queque.Enqueue(this.SpellPriority, this.lastRites.Spell.Cast());
             }
         }
 

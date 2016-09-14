@@ -84,6 +84,7 @@
     <Compile Include="Yasuo\Modules\Guardians\PlayerMustNotHaveBuffs.cs" />
     <Compile Include="Yasuo\Modules\Guardians\SpellMustBeReady.cs" />
     <Compile Include="Yasuo\Modules\OrbwalkingChild.cs" />
+    <Compile Include="Yasuo\Modules\Pathfinder\PathfinderModule.cs" />
     <Compile Include="Yasuo\YasuoLoader.cs" />
     <Compile Include="Yasuo\Modules\Combo\E.cs" />
     <Compile Include="Yasuo\Modules\Combo\NonDashingQ1Module.cs" />

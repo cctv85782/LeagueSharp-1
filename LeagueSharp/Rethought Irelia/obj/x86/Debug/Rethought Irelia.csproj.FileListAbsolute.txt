@@ -1,0 +1,18 @@
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\bin\Debug\Rethought Irelia.exe.config
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\bin\Debug\Rethought Irelia.exe
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\bin\Debug\Rethought Irelia.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\bin\Debug\clipper_library.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\bin\Debug\LeagueSharp.Common.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\bin\Debug\LeagueSharp.Data.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\bin\Debug\LeagueSharp.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\bin\Debug\RethoughtLib.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\bin\Debug\SharpDX.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\bin\Debug\SharpDX.Direct3D9.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\bin\Debug\Newtonsoft.Json.dll
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\bin\Debug\RethoughtLib.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\bin\Debug\clipper_library.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\bin\Debug\LeagueSharp.Common.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\bin\Debug\LeagueSharp.Data.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\obj\x86\Debug\Rethought Irelia.csprojResolveAssemblyReference.cache
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\obj\x86\Debug\Rethought Irelia.exe
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\obj\x86\Debug\Rethought Irelia.pdb

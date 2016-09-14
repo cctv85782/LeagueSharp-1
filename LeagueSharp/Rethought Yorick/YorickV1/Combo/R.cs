@@ -105,6 +105,7 @@
         ///     Raises the <see cref="E:GameUpdate" /> event.
         /// </summary>
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
+        /// // TODO DMG CONDITIONS, THIS WILL CAST ALWAYS
         private void OnGameUpdate(EventArgs args)
         {
             if (!this.CheckGuardians()) return;

@@ -63,30 +63,43 @@
             this.algorithm = new AStar<TNode, TEdge>(edges)
                                  {
                                      HeuristicFormula = this.heuristicFormula,
+                                     HeuristicEstimate = this.heuristicEstimate,
                                      ReopenCloseNodes = this.reopenClosedNodes,
                                      TieBreaker = this.tieBreaking
                                  };
 
-            return this.algorithm.Run(start, end);
+            return this.algorithm.GetPath(start, end);
         }
 
         /// <summary>
-        ///     Gets the path. Returns null if no path found.
+        /// Gets the path. Returns null if no path found.
         /// </summary>
         /// <param name="edges">The edges.</param>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
+        /// <param name="heuristic">The heuristic.</param>
+        /// <param name="allowReopenClosedNodes">if set to <c>true</c> [allow reopen closed nodes].</param>
+        /// <param name="allowTieBreaking">if set to <c>true</c> [allow tie breaking].</param>
+        /// <param name="predefinedHeuristicEstimate">The predefined heuristic estimate.</param>
         /// <returns></returns>
-        public List<TNode> GetPath(List<TEdge> edges, TNode start, TNode end, IHeuristic heuristic, bool reopenClosedNodes, bool tieBreaking)
+        public List<TNode> GetPath(
+            List<TEdge> edges,
+            TNode start,
+            TNode end,
+            IHeuristic heuristic,
+            bool allowReopenClosedNodes,
+            bool allowTieBreaking,
+            float predefinedHeuristicEstimate = 0f)
         {
             this.algorithm = new AStar<TNode, TEdge>(edges)
-            {
-                HeuristicFormula = heuristic,
-                ReopenCloseNodes = reopenClosedNodes,
-                TieBreaker = tieBreaking
-            };
+                                 {
+                                     HeuristicFormula = heuristic,
+                                     HeuristicEstimate = this.heuristicEstimate,
+                                     ReopenCloseNodes = allowReopenClosedNodes,
+                                     TieBreaker = allowTieBreaking
+                                 };
 
-            return this.algorithm.Run(start, end);
+            return this.algorithm.GetPath(start, end);
         }
 
         #endregion

@@ -8,6 +8,8 @@
     using LeagueSharp;
     using LeagueSharp.Common;
 
+    using RethoughtLib.Events;
+    using RethoughtLib.Extensions;
     using RethoughtLib.FeatureSystem.Abstract_Classes;
     using RethoughtLib.FeatureSystem.Switches;
 
@@ -32,7 +34,7 @@
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DynamicCameraParent"/> class.
+        ///     Initializes a new instance of the <see cref="DynamicCameraParent" /> class.
         /// </summary>
         /// <param name="camera">The camera.</param>
         public DynamicCameraParent(CameraModule camera)
@@ -41,7 +43,6 @@
         }
 
         #endregion
-
 
         #region Public Properties
 
@@ -71,6 +72,7 @@
         protected override void OnDisable(object sender, FeatureBaseEventArgs eventArgs)
         {
             base.OnDisable(sender, eventArgs);
+
             Game.OnUpdate -= this.OnUpdate;
         }
 
@@ -80,20 +82,76 @@
         protected override void OnEnable(object sender, FeatureBaseEventArgs eventArgs)
         {
             base.OnEnable(sender, eventArgs);
+
             Game.OnUpdate += this.OnUpdate;
 
+            // TODO QOL Change SMOOTH
             this.cameraModule.SetPosition(ObjectManager.Player.Position, 0);
         }
 
+        /// <summary>
+        ///     Called when [load].
+        /// </summary>
+        protected override void OnLoad(object sender, FeatureBaseEventArgs featureBaseEventArgs)
+        {
+            base.OnLoad(sender, featureBaseEventArgs);
+
+            var disableOnDeath =
+                this.Menu.AddItem(
+                    new MenuItem("disableondeath", "Disable on death").SetValue(true)
+                        .SetTooltip(
+                            "When you die and already prepare for the next movement or move issue order in general it can be very annoying to be locked at the fountain."));
+
+            disableOnDeath.ValueChanged += (o, args) =>
+                {
+                    if (args.GetNewValue<bool>())
+                    {
+                        ObjAiBaseEvents.OnDeath += this.ObjAiBaseExtensionsOnOnDeath;
+                    }
+                    else
+                    {
+                        ObjAiBaseEvents.OnDeath -= this.ObjAiBaseExtensionsOnOnDeath;
+                    }
+                };
+
+            if (disableOnDeath.GetValue<bool>())
+            {
+                ObjAiBaseEvents.OnDeath += this.ObjAiBaseExtensionsOnOnDeath;
+            }
+            else
+            {
+                ObjAiBaseEvents.OnDeath -= this.ObjAiBaseExtensionsOnOnDeath;
+            }
+
+            this.Disable();
+        }
+
+        /// <summary>
+        /// Sets the switch.
+        /// </summary>
         protected override void SetSwitch()
         {
             this.Switch = new KeybindSwitch(this.Menu, "Enabled", 'H', this);
         }
 
         /// <summary>
-        /// Raises the <see cref="E:Update" /> event.
+        ///     Triggers when an Obj_Ai_Base dies
         /// </summary>
-        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="onDeathEventArgs">The <see cref="OnDeathEventArgs" /> instance containing the event data.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void ObjAiBaseExtensionsOnOnDeath(object sender, OnDeathEventArgs onDeathEventArgs)
+        {
+            if (onDeathEventArgs.Sender.Equals(ObjectManager.Player))
+            {
+                this.Disable(this);
+            }
+        }
+
+        /// <summary>
+        ///     Raises the <see cref="E:Update" /> event.
+        /// </summary>
+        /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void OnUpdate(EventArgs args)
         {
             if (MenuGUI.IsChatOpen || MenuGUI.IsShopOpen || ObjectManager.Player.IsDead)

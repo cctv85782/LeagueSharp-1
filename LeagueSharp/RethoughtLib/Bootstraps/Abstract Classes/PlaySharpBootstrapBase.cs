@@ -21,6 +21,8 @@
         /// </summary>
         public List<LoadableBase> Modules = new List<LoadableBase>();
 
+        protected List<LoadableBase> LoadedModules = new List<LoadableBase>();
+
         /// <summary>
         ///     Gets or sets the string that gets checked for check for.
         /// </summary>
@@ -163,7 +165,6 @@
                             "There are no strings in the Bootstrap to make a check with modules.");
                     }
 
-                    var loadedModulesCount = 0;
                     var unknownModulesCount = 0;
 
                     foreach (var module in this.Modules)
@@ -186,13 +187,13 @@
                                 }
 
                                 module.Load();
-                                loadedModulesCount++;
+                                this.LoadedModules.Add(module);
                             }
                         }
                     }
 
                     Console.WriteLine(
-                        $"[{this}] {unknownModulesCount} unknown Modules, {loadedModulesCount} loaded Modules");
+                        $"[{this}] {unknownModulesCount} unknown Modules, {this.LoadedModules.Count} loaded Modules");
 
                     if (unknownModulesCount > 0)
                     {

@@ -2,15 +2,14 @@
 {
     #region Using Directives
 
-    using System;
     using System.Linq;
 
     using LeagueSharp;
     using LeagueSharp.Common;
 
-    using SharpDX;
+    using RethoughtLib.Utility;
 
-    using Math = RethoughtLib.Utility.Math;
+    using SharpDX;
 
     #endregion
 
@@ -32,6 +31,8 @@
 
         public override Vector3 GetPosition()
         {
+            if (!this.InternalEnabled) return Vector3.Zero;
+
             var minions = MinionManager.GetMinions(
                 ObjectManager.Player.ServerPosition,
                 this.Menu.Item("range").GetValue<Slider>().Value,
@@ -51,6 +52,22 @@
         #endregion
 
         #region Methods
+
+        /// <summary>
+        ///     Called when [disable].
+        /// </summary>
+        protected override void OnDisable(object sender, FeatureBaseEventArgs eventArgs)
+        {
+            base.OnDisable(sender, eventArgs);
+        }
+
+        /// <summary>
+        ///     Called when [enable]
+        /// </summary>
+        protected override void OnEnable(object sender, FeatureBaseEventArgs eventArgs)
+        {
+            base.OnEnable(sender, eventArgs);
+        }
 
         /// <summary>
         ///     Called when [load].
@@ -77,21 +94,8 @@
             this.Menu.AddItem(
                 new MenuItem("rangedivider", "Resistance").SetValue(new Slider(57000, 1000, 70000))
                     .SetTooltip("How hard the camera will be slowed"));
-
-            this.Switch.InternalDisable(new FeatureBaseEventArgs(this));
         }
 
-        private void ProcessKeybind(OnValueChangeEventArgs args)
-        {
-            if (args.GetNewValue<KeyBind>().Active)
-            {
-                this.Switch.InternalEnable(new FeatureBaseEventArgs(this));
-            }
-            else
-            {
-                this.Switch.InternalDisable(new FeatureBaseEventArgs(this));
-            }
-        }
 
         #endregion
     }

@@ -9,7 +9,7 @@
     using LeagueSharp;
     using LeagueSharp.Common;
 
-    using RethoughtLib.CastManager.Abstract_Classes;
+    using RethoughtLib.ActionManager.Abstract_Classes;
     using RethoughtLib.FeatureSystem.Abstract_Classes;
 
     using Rethought_Yasuo.Yasuo.Modules.Behaviors;
@@ -38,15 +38,10 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="OrbwalkingChild" /> class.
         /// </summary>
-        /// <param name="castManager">The cast manager.</param>
-        protected OrbwalkingChild(ICastManager castManager = null)
+        /// <param name="actionManager">The cast manager.</param>
+        protected OrbwalkingChild(IActionManager actionManager = null)
         {
-            this.CastManager = castManager;
-
-            var Spell = new Spell(SpellSlot.E);
-            Spell.Cast();
-
-            L
+            this.ActionManager = actionManager;
         }
 
         #endregion
@@ -59,7 +54,7 @@
         /// <value>
         ///     The cast manager.
         /// </value>
-        internal ICastManager CastManager { get; set; }
+        internal IActionManager ActionManager { get; set; }
 
         #endregion
 

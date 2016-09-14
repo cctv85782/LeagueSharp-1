@@ -7,9 +7,9 @@
 
     using LeagueSharp;
 
+    using RethoughtLib.ActionManager.Abstract_Classes;
     using RethoughtLib.Algorithm.Pathfinding.Dijkstra;
     using RethoughtLib.Algorithm.Pathfinding.Dijkstra.ConnectionTypes;
-    using RethoughtLib.CastManager.Abstract_Classes;
 
     using Rethought_Yasuo.Yasuo.Modules.Core.GridGenerator;
     using Rethought_Yasuo.Yasuo.Modules.Core.SpellParent;
@@ -45,10 +45,10 @@
         ///     Initializes a new instance of the <see cref="E" /> class.
         /// </summary>
         /// <param name="spellParent">The spells module.</param>
-        /// <param name="castManager">The cast manager</param>
+        /// <param name="actionManager">The cast manager</param>
         /// <param name="gridGenerator">The grid generator used to generate possible pathes</param>
-        public E(ISpellIndex spellParent, ICastManager castManager, IGridGenerator gridGenerator)
-            : base(castManager)
+        public E(ISpellIndex spellParent, IActionManager actionManager, IGridGenerator gridGenerator)
+            : base(actionManager)
         {
             this.spellParent = spellParent;
             this.gridGenerator = gridGenerator;
