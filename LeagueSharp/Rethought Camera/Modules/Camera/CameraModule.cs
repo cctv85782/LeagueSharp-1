@@ -5,8 +5,10 @@
     using System;
 
     using LeagueSharp;
+    using LeagueSharp.Common;
 
     using RethoughtLib.FeatureSystem.Abstract_Classes;
+    using RethoughtLib.FeatureSystem.Switches;
     using RethoughtLib.PriorityQuequeV2;
 
     using SharpDX;
@@ -44,6 +46,11 @@
         ///     The zoom hack
         /// </summary>
         private bool zoomHack;
+
+        protected override void SetSwitch()
+        {
+            this.Switch = new UnreversibleSwitch(this.Menu);
+        }
 
         #endregion
 
@@ -190,6 +197,8 @@
         protected override void OnLoad(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
             base.OnLoad(sender, featureBaseEventArgs);
+
+            this.Menu.AddItem(new MenuItem("noinfos", "Seems like there are no things here yet ¯\\_(ツ)_/¯"));
 
             this.Position = Camera.Position;
 
