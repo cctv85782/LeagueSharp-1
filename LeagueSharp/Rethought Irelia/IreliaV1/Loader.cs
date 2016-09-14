@@ -15,7 +15,9 @@
 
     using Rethought_Irelia.IreliaV1.Combo;
     using Rethought_Irelia.IreliaV1.DamageCalculator;
-    using Rethought_Irelia.IreliaV1.GridGenerator;
+    using Rethought_Irelia.IreliaV1.DashToMouse;
+    using Rethought_Irelia.IreliaV1.GraphGenerator;
+    using Rethought_Irelia.IreliaV1.Interrupter;
     using Rethought_Irelia.IreliaV1.Pathfinder;
     using Rethought_Irelia.IreliaV1.Spells;
 
@@ -87,6 +89,11 @@
 
             graphGeneratorModule.IreliaQ = ireliaQ;
 
+            var spellInterrupterModule =
+                new SpellInterrupterModule(new SpellInterrupter(ireliaE.Spell, sender => ireliaE.CanStun(sender)));
+
+            var dashToMouseModule = new DashToMouseModule(ireliaQ);
+
             var spellParent = new SpellParent.SpellParent();
 
             spellParent.Add(new List<Base> { ireliaQ, ireliaW, ireliaE, ireliaR, });
@@ -128,24 +135,23 @@
                 new List<Base>()
                     {
                         new LaneClear.W(ireliaW).Guardian(new SpellMustBeReady(SpellSlot.W)),
-                        //new LaneClear.E(ireliaE).Guardian(new SpellMustBeReady(SpellSlot.E))
-                        //    .Guardian(new PlayerMustNotBeWindingUp())
+                        new LaneClear.E(ireliaE).Guardian(new SpellMustBeReady(SpellSlot.E))
+                            .Guardian(new PlayerMustNotBeWindingUp())
                     });
 
             lastHitParent.Add(
                 new List<Base>()
                     {
                         new LastHit.Q(ireliaQ).Guardian(new SpellMustBeReady(SpellSlot.Q)),
-                        //new LastHit.W(ireliaW).Guardian(new SpellMustBeReady(SpellSlot.W)),
-                        //new LastHit.E(ireliaE).Guardian(new SpellMustBeReady(SpellSlot.E))
-                        //    .Guardian(new PlayerMustNotBeWindingUp())
+                        new LastHit.E(ireliaE).Guardian(new SpellMustBeReady(SpellSlot.E))
+                            .Guardian(new PlayerMustNotBeWindingUp())
                     });
 
             mixedParent.Add(
                 new List<Base>()
                     {
-                        //new Mixed.Q(ireliaQ).Guardian(new SpellMustBeReady(SpellSlot.Q)),
-                        //new Mixed.W(ireliaW).Guardian(new SpellMustBeReady(SpellSlot.W)),
+                        new Q(ireliaQ).Guardian(new SpellMustBeReady(SpellSlot.Q)),
+                        new W(ireliaW, ireliaQ).Guardian(new SpellMustBeReady(SpellSlot.W)),
                         new Mixed.E(ireliaE).Guardian(new SpellMustBeReady(SpellSlot.E))
                             .Guardian(new PlayerMustNotBeWindingUp())
                     });
@@ -162,6 +168,8 @@
                         laneClearParent,
                         lastHitParent,
                         mixedParent,
+                        dashToMouseModule,
+                        spellInterrupterModule
                     });
 
             superParent.Load();

@@ -22,7 +22,7 @@
         /// <value>
         ///     The name.
         /// </value>
-        public override string Name { get; set; } = "Eulogy of the Isles";
+        public override string Name { get; set; } = "Transcendent Blades";
 
         public int EstimatedAmountInOneCombo { get; } = 4;
 

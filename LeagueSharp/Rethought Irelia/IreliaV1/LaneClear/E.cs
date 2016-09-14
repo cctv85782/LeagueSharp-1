@@ -3,6 +3,7 @@
     #region Using Directives
 
     using System;
+    using System.Linq;
 
     using LeagueSharp;
     using LeagueSharp.Common;
@@ -17,9 +18,8 @@
     {
         #region Fields
 
-
         /// <summary>
-        /// The irelia e
+        ///     The irelia e
         /// </summary>
         private readonly IreliaE ireliaE;
 
@@ -46,7 +46,7 @@
         /// <value>
         ///     The name.
         /// </value>
-        public override string Name { get; set; } = "W";
+        public override string Name { get; set; } = "E";
 
         #endregion
 
@@ -59,7 +59,7 @@
         {
             base.OnDisable(sender, eventArgs);
 
-            Game.OnUpdate -= this.OnGameUpdate;
+            Game.OnUpdate -= this.OnUpdate;
         }
 
         /// <summary>
@@ -69,7 +69,23 @@
         {
             base.OnEnable(sender, eventArgs);
 
-            Game.OnUpdate += this.OnGameUpdate;
+
+            Game.OnUpdate += this.OnUpdate;
+        }
+
+
+        /// <summary>
+        /// Raises the <see cref="E:Update" /> event.
+        /// </summary>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void OnUpdate(EventArgs args)
+        {
+            var minion = MinionManager.GetMinions(this.ireliaE.Spell.Range, MinionTypes.All, MinionTeam.Neutral)
+                .Where(x => this.ireliaE.CanStun(x))
+                .MaxOrDefault(x => x.Health);
+
+            this.ireliaE.Spell.Cast(minion);
         }
 
         /// <summary>

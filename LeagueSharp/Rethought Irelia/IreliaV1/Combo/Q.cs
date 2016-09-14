@@ -114,7 +114,7 @@
                         "Tries to gapclose very close to the target first, so the target uses a gapclosing spell too, then you dash onto your enemy."));
 
             this.Menu.AddItem(
-                new MenuItem(this.Name + "minrangetogapclose", "Min distance before gapclosing").SetValue(
+                new MenuItem(this.Name + "minrangetogapclose", "Don't gapclose if closer than X units").SetValue(
                     new Slider((int)ObjectManager.Player.AttackRange, 0, (int)this.ireliaQ.Spell.Range)));
         }
 
@@ -172,6 +172,8 @@
             }
 
             var path = this.ireliaQ.GetPath(ObjectManager.Player.ServerPosition, end);
+
+            if (path == null || !path.Any()) return;
 
             this.ireliaQ.Spell.Cast(path.FirstOrDefault());
         }

@@ -2,17 +2,19 @@
 {
     #region Using Directives
 
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using LeagueSharp;
     using LeagueSharp.Common;
 
     using RethoughtLib.Algorithm.Graphs;
     using RethoughtLib.Algorithm.Pathfinding;
-    using RethoughtLib.Algorithm.Pathfinding.Dijkstra;
+    using RethoughtLib.Algorithm.Pathfinding.AStar;
     using RethoughtLib.FeatureSystem.Abstract_Classes;
 
-    using Rethought_Irelia.IreliaV1.GridGenerator;
+    using Rethought_Irelia.IreliaV1.GraphGenerator;
 
     #endregion
 
@@ -48,7 +50,7 @@
         /// <param name="from">From.</param>
         /// <param name="to">To.</param>
         /// <returns></returns>
-        public List<NodeBase> GetPath(Graph<NodeBase, EdgeBase<NodeBase>> graph, NodeBase from, NodeBase to)
+        public List<AStarNode> GetPath(Graph<AStarNode, AStarEdge<AStarNode>> graph, AStarNode from, AStarNode to)
         {
             if (this.Menu.Item("prioritizechampion").GetValue<bool>())
             {
@@ -65,14 +67,15 @@
 
                     edgeBase.Cost = edgeBase.Cost *= PrioritizationMultiplicand;
                 }
-
             }
 
-            var dijkstra = new Dijkstra<NodeBase, EdgeBase<NodeBase>>(graph.Edges);
+            var edges =
+                graph.Edges.Select(
+                    edge => edge).ToList();
 
-            dijkstra.SetStart(from);
+            var astar = new AStar<AStarNode, AStarEdge<AStarNode>>(edges);
 
-            return dijkstra.GetNodesTo(to);
+            return astar.GetPath(new AStarNode(graph.Start.Position), new AStarNode(graph.End.Position));
         }
 
         #endregion

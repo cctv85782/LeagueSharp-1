@@ -2,6 +2,7 @@
 {
     #region Using Directives
 
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -10,11 +11,12 @@
 
     using RethoughtLib.Algorithm.Graphs;
     using RethoughtLib.Algorithm.Pathfinding;
+    using RethoughtLib.Algorithm.Pathfinding.AStar;
     using RethoughtLib.FeatureSystem.Implementations;
     using RethoughtLib.FeatureSystem.Switches;
 
     using Rethought_Irelia.IreliaV1.DamageCalculator;
-    using Rethought_Irelia.IreliaV1.GridGenerator;
+    using Rethought_Irelia.IreliaV1.GraphGenerator;
     using Rethought_Irelia.IreliaV1.Pathfinder;
 
     using SharpDX;
@@ -25,7 +27,9 @@
     {
         #region Constructors and Destructors
 
-        public IreliaQ(IGraphGenerator<NodeBase, EdgeBase<NodeBase>> graphGenerator, PathfinderModule pathfinderModule)
+        public IreliaQ(
+            IGraphGenerator<AStarNode, AStarEdge<AStarNode>> graphGenerator,
+            PathfinderModule pathfinderModule)
         {
             this.GraphGenerator = graphGenerator;
             this.PathfinderModule = pathfinderModule;
@@ -35,13 +39,15 @@
 
         #region Public Properties
 
+        public int EstimatedAmountInOneCombo { get; } = 1;
+
         /// <summary>
         ///     Gets or sets the graph generator.
         /// </summary>
         /// <value>
         ///     The graph generator.
         /// </value>
-        public IGraphGenerator<NodeBase, EdgeBase<NodeBase>> GraphGenerator { get; set; }
+        public IGraphGenerator<AStarNode, AStarEdge<AStarNode>> GraphGenerator { get; set; }
 
         /// <summary>
         ///     Gets or sets the name.
@@ -50,8 +56,6 @@
         ///     The name.
         /// </value>
         public override string Name { get; set; } = "Bladesurge";
-
-        public int EstimatedAmountInOneCombo { get; } = 1;
 
         /// <summary>
         ///     Gets or sets the pathfinder module.
@@ -97,11 +101,17 @@
         /// <returns></returns>
         public List<Obj_AI_Base> GetPath(Vector3 from, Vector3 to)
         {
-            var start = new NodeBase(@from);
+            var start = new NodeBase(from);
             var end = new NodeBase(to);
-            var graph = this.GraphGenerator.Generate(start, end);
+            var graph = this.GraphGenerator.Generate(new AStarNode(from), new AStarNode(to));
 
-            var path = this.PathfinderModule.GetPath(graph, start, end);
+            Console.WriteLine("Graph Count: " + graph.Edges.Count);
+
+            var path = this.PathfinderModule.GetPath(graph, graph.Start, graph.End);
+
+            if (path == null) return null;
+
+            Console.WriteLine("Path Count: " + path.Count);
 
             return path.OfType<UnitNode>().Select(x => x.Unit).ToList();
         }

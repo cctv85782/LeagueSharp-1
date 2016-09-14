@@ -43,6 +43,10 @@
         /// </value>
         public List<TNode> Nodes { get; set; }
 
+        public TNode Start { get; set; }
+
+        public TNode End { get; set; }
+
         #endregion
     }
 }

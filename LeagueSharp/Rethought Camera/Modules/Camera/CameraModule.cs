@@ -198,7 +198,7 @@
         {
             base.OnLoad(sender, featureBaseEventArgs);
 
-            this.Menu.AddItem(new MenuItem("noinfos", "Seems like there are no things here yet ¯\\_(ツ)_/¯"));
+            this.Menu.AddItem(new MenuItem("noinfos", "Seems like here are no things here yet ¯\\_(ツ)_/¯"));
 
             this.Position = Camera.Position;
 

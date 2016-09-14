@@ -17,14 +17,13 @@
     {
         #region Fields
 
-
         /// <summary>
-        /// The irelia e
+        ///     The irelia e
         /// </summary>
         private readonly IreliaE ireliaE;
 
         /// <summary>
-        /// The target
+        ///     The target
         /// </summary>
         private Obj_AI_Hero target;
 
@@ -33,7 +32,7 @@
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="E" /> class.
+        ///     Initializes a new instance of the <see cref="E" /> class.
         /// </summary>
         /// <param name="ireliaE">The irelia e.</param>
         public E(IreliaE ireliaE)
@@ -86,9 +85,32 @@
 
             this.Menu.AddItem(new MenuItem("stunwhenpossible", "Stun whenever possible").SetValue(true));
 
-            this.Menu.AddItem(new MenuItem("slowdown", "Stun when faster than the player").SetValue(true));
+            this.Menu.AddItem(new MenuItem("slowdown", "Cast when faster than the player").SetValue(true));
+
+            this.Menu.AddItem(new MenuItem("faceaway", "Cast when facing away").SetValue(false));
 
             // TODO: If enemy has interruptable spells wait for them to cast E option, or if player is far below enemy health and enemy is stunnable
+        }
+
+        /// <summary>
+        ///     Casts when the target is facing away
+        /// </summary>
+        private void LogicFaceAway()
+        {
+            if (!this.Menu.Item("faceaway").GetValue<bool>()) return;
+
+            if (this.target.HasBuffOfType(BuffType.Slow) || this.target.HasBuffOfType(BuffType.Charm)
+                || this.target.HasBuffOfType(BuffType.Taunt) || this.target.HasBuffOfType(BuffType.Flee)
+                || this.target.IsMovementImpaired())
+            {
+                return;
+            }
+
+            if (!this.target.IsFacing(ObjectManager.Player)
+                && ObjectManager.Player.Distance(this.target) > ObjectManager.Player.AttackRange - 50)
+            {
+                this.ireliaE.Spell.Cast(this.target);
+            }
         }
 
         /// <summary>
@@ -112,6 +134,12 @@
         {
             if (!this.Menu.Item("stunwhenpossible").GetValue<bool>()) return;
 
+            if (this.target.HasBuffOfType(BuffType.Charm) || this.target.HasBuffOfType(BuffType.Taunt)
+                || this.target.HasBuffOfType(BuffType.Flee) || this.target.IsMovementImpaired())
+            {
+                return;
+            }
+
             if (this.ireliaE.CanStun(this.target))
             {
                 this.ireliaE.Spell.Cast(this.target);
@@ -133,6 +161,8 @@
             this.LogicStunWhenPossible();
 
             this.LogicSlowDown();
+
+            this.LogicFaceAway();
         }
 
         #endregion

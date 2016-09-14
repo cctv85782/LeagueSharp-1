@@ -60,6 +60,42 @@
             base.OnLoad(sender, featureBaseEventArgs);
         }
 
+        /// <summary>
+        ///     Called when [disable].
+        /// </summary>
+        protected override void OnDisable(object sender, FeatureBaseEventArgs eventArgs)
+        {
+            base.OnDisable(sender, eventArgs);
+        }
+
+        /// <summary>
+        ///     Called when [enable]
+        /// </summary>
+        protected override void OnEnable(object sender, FeatureBaseEventArgs eventArgs)
+        {
+            base.OnEnable(sender, eventArgs);
+
+            Orbwalking.AfterAttack += this.OrbwalkingOnAfterAttack;
+        }
+
+        /// <summary>
+        /// Triggers after attack
+        /// </summary>
+        /// <param name="unit">The unit.</param>
+        /// <param name="target">The target.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void OrbwalkingOnAfterAttack(AttackableUnit unit, AttackableUnit target)
+        {
+            var obj = target as Obj_AI_Base;
+
+            if (obj == null) return;
+
+            if (target.Health <= this.ireliaE.GetDamage(obj))
+            {
+                this.ireliaE.Spell.Cast(obj);
+            }
+        }
+
         #endregion
     }
 }

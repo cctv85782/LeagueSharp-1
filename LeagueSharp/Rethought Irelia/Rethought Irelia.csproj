@@ -51,6 +51,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -62,7 +63,9 @@
     <Compile Include="IreliaV1\DamageCalculator\DamageCalculatorParent.cs" />
     <Compile Include="IreliaV1\DamageCalculator\IDamageCalculator.cs" />
     <Compile Include="IreliaV1\DamageCalculator\IDamageCalculatorModule.cs" />
-    <Compile Include="IreliaV1\GridGenerator\GraphGeneratorModule.cs" />
+    <Compile Include="IreliaV1\DashToMouse\DashToMouseModule.cs" />
+    <Compile Include="IreliaV1\GraphGenerator\GraphGeneratorModule.cs" />
+    <Compile Include="IreliaV1\Interrupter\SpellInterrupterModule.cs" />
     <Compile Include="IreliaV1\Pathfinder\PathfinderModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -74,10 +77,8 @@
     <Compile Include="IreliaV1\LastHit\Q.cs" />
     <Compile Include="IreliaV1\LaneClear\W.cs" />
     <Compile Include="IreliaV1\LastHit\E.cs" />
-    <Compile Include="IreliaV1\LastHit\W.cs" />
     <Compile Include="IreliaV1\Loader.cs" />
     <Compile Include="IreliaV1\Mixed\E.cs" />
-    <Compile Include="IreliaV1\Mixed\Q.cs" />
     <Compile Include="IreliaV1\Mixed\W.cs" />
     <Compile Include="IreliaV1\SpellParent\ISpellIndex.cs" />
     <Compile Include="IreliaV1\SpellParent\SpellParent.cs" />

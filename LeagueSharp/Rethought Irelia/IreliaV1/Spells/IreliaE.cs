@@ -17,20 +17,20 @@
         #region Public Properties
 
         /// <summary>
+        ///     Gets or sets the estimated amount in one combo.
+        /// </summary>
+        /// <value>
+        ///     The estimated amount in one combo.
+        /// </value>
+        public int EstimatedAmountInOneCombo { get; } = 1;
+
+        /// <summary>
         ///     Gets or sets the name.
         /// </summary>
         /// <value>
         ///     The name.
         /// </value>
         public override string Name { get; set; } = "Equilibrium Strike";
-
-        /// <summary>
-        /// Gets or sets the estimated amount in one combo.
-        /// </summary>
-        /// <value>
-        /// The estimated amount in one combo.
-        /// </value>
-        public int EstimatedAmountInOneCombo { get; } = 1;
 
         /// <summary>
         ///     Gets or sets the spell.
@@ -51,21 +51,28 @@
         /// <returns></returns>
         public bool CanStun(Obj_AI_Base target)
         {
-            var predictedEnemyHealth = HealthPrediction.GetHealthPrediction(
-                target,
-                (int)
-                (this.Spell.Delay
-                 + ObjectManager.Player.ServerPosition.Distance(target.ServerPosition) / this.Spell.Speed) / 1000,
-                0);
+            if (this.Menu.Item("usehealthprediction").GetValue<bool>())
+            {
+                var predictedEnemyHealth = HealthPrediction.GetHealthPrediction(
+                    target,
+                    (int)
+                    (this.Spell.Delay
+                     + ObjectManager.Player.ServerPosition.Distance(target.ServerPosition) / this.Spell.Speed) / 1000,
+                    0);
 
-            var playerpredictedHealth = HealthPrediction.GetHealthPrediction(
-                ObjectManager.Player,
-                (int)
-                (this.Spell.Delay
-                 + ObjectManager.Player.ServerPosition.Distance(target.ServerPosition) / this.Spell.Speed) / 1000,
-                0);
+                var playerpredictedHealth = HealthPrediction.GetHealthPrediction(
+                    ObjectManager.Player,
+                    (int)
+                    (this.Spell.Delay
+                     + ObjectManager.Player.ServerPosition.Distance(target.ServerPosition) / this.Spell.Speed) / 1000,
+                    0);
 
-            return predictedEnemyHealth / target.MaxHealth <= playerpredictedHealth / ObjectManager.Player.MaxHealth;
+                return predictedEnemyHealth / target.MaxHealth <= playerpredictedHealth / ObjectManager.Player.MaxHealth;
+            }
+            else
+            {
+                return target.HealthPercent <= ObjectManager.Player.HealthPercent;
+            }
         }
 
         /// <summary>
@@ -91,6 +98,8 @@
 
             this.Spell = new Spell(SpellSlot.E, 425);
             this.Spell.SetTargetted(0.2f, 200);
+
+            this.Menu.AddItem(new MenuItem("usehealthprediction", "Use HealthPrediction").SetValue(true));
         }
 
         /// <summary>

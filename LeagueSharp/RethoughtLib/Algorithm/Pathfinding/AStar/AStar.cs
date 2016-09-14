@@ -101,6 +101,8 @@
 
             while (this.openNodes.Count > 0)
             {
+                Console.WriteLine("Working");
+
                 var parentNode = this.openNodes.Dequeue();
 
                 // Possible Path Found
@@ -113,7 +115,12 @@
                 }
 
                 // Foreach Connection
-                foreach (var edge in this.edges.Where(x => x.Start.Equals(parentNode)))
+                foreach (
+                    var edge in
+                        this.edges.Where(
+                            x =>
+                            x.Start == parentNode || x.Start.Equals(parentNode)
+                            || x.Start.Position.Equals(parentNode.Position)))
                 {
                     Console.WriteLine("Searching");
 

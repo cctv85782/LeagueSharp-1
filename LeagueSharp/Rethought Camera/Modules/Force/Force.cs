@@ -18,7 +18,7 @@
         #endregion
 
         #region Public Properties
-            
+
         /// <summary>
         ///     Gets or sets the acceleration.
         /// </summary>

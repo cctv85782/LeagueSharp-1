@@ -45,7 +45,7 @@
         /// <value>
         ///     The name.
         /// </value>
-        public override string Name { get; set; } = "E";
+        public override string Name { get; set; } = "W";
 
         #endregion
 

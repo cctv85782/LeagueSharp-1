@@ -72,6 +72,7 @@
             try
             {
                 this.Base = tlist;
+                this.Connections = tvlist;
             }
             catch (Exception ex)
             {
@@ -175,26 +176,17 @@
         /// <returns>node Path</returns>
         public List<T> GetNodesTo(T node)
         {
-            try
-            {
-                var path = new List<T>();
+            var path = new List<T>();
 
+            path.Insert(0, node);
+
+            while (this.Previous.ContainsKey(node) && this.Previous[node] != null)
+            {
+                node = this.Previous[node];
                 path.Insert(0, node);
-
-                while (this.Previous.ContainsKey(node) && this.Previous[node] != null)
-                {
-                    node = this.Previous[node];
-                    path.Insert(0, node);
-                }
-
-                return path;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
             }
 
-            return null;
+            return path;
         }
 
         /// <summary>
@@ -203,18 +195,6 @@
         /// <param name="start">Startnode</param>
         public void SetStart(T start)
         {
-            foreach (var entry in this.Costs)
-            {
-                Console.WriteLine(entry.Key);
-            }
-
-#if DEBUG
-            if (this.Costs.ContainsKey(start))
-            {
-                Console.WriteLine("Match found!");
-            }
-#endif
-
             this.Costs[start] = 0;
 
             // while we have points to process
@@ -224,12 +204,13 @@
 
                 if (point == null)
                 {
+                    Console.WriteLine("LEast Cost null");
                     this.Base.Clear();
                 }
 
                 else
                 {
-                    foreach (var neighbor    in this.GetNeighbors(point))
+                    foreach (var neighbor in this.GetNeighbors(point))
                     {
                         var tempCost = this.Costs[point] + this.GetCostBetween(point, neighbor);
 

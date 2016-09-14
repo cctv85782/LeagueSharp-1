@@ -22,7 +22,7 @@
         /// <value>
         ///     The name.
         /// </value>
-        public override string Name { get; set; } = "Dark Procession";
+        public override string Name { get; set; } = "Hiten Style";
 
         /// <summary>
         /// Gets the estimated amount in one combo.

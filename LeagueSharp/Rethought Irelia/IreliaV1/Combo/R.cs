@@ -17,13 +17,10 @@
 
     internal class R : OrbwalkingChild
     {
-        public IDamageCalculator DamageCalculator { get; set; }
-
         #region Fields
 
-
         /// <summary>
-        /// The irelia r
+        ///     The irelia r
         /// </summary>
         private readonly IreliaR ireliaR;
 
@@ -37,7 +34,7 @@
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="W" /> class.
+        ///     Initializes a new instance of the <see cref="W" /> class.
         /// </summary>
         /// <param name="ireliaR">The irelia r.</param>
         /// <param name="damageCalculator">The damage calculator</param>
@@ -50,6 +47,8 @@
         #endregion
 
         #region Public Properties
+
+        public IDamageCalculator DamageCalculator { get; set; }
 
         /// <summary>
         ///     Gets or sets the name.
@@ -99,12 +98,74 @@
             // Puts all HitChances into the Menu
             var minHitChance =
                 this.Menu.AddItem(
-                    new MenuItem("minhitchance", "Minimal Hitchance").SetValue(new StringList(stringList, 4)));
+                    new MenuItem(this.Name + "minhitchance", "Minimal Hitchance").SetValue(
+                        new StringList(stringList, 4)));
 
             minHitChance.ValueChanged +=
                 (o, args) => { this.hitchance = (HitChance)args.GetNewValue<StringList>().SelectedIndex; };
 
             this.hitchance = (HitChance)minHitChance.GetValue<StringList>().SelectedIndex;
+
+            this.Menu.AddItem(new MenuItem(this.Name + "usetoregen", "Use to regenerate health").SetValue(true));
+
+            this.Menu.AddItem(
+                new MenuItem(this.Name + "usetoregen.minlife", "Use when below X % health").SetValue(
+                    new Slider(15, 0, 100)));
+        }
+
+        /// <summary>
+        ///     Casts the spell on target with prediction.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        private void CastOnTarget(Obj_AI_Hero target)
+        {
+            var prediction = this.ireliaR.Spell.GetPrediction(
+                target,
+                true,
+                collisionable: new[] { CollisionableObjects.YasuoWall });
+
+            if (prediction != null && prediction.Hitchance >= this.hitchance)
+            {
+                this.ireliaR.Spell.Cast(prediction.CastPosition);
+            }
+        }
+
+        /// <summary>
+        ///     Logic for executing R when killable by combo
+        /// </summary>
+        /// <param name="target">The target.</param>
+        private void LogicAutoCombo(Obj_AI_Hero target)
+        {
+            if (this.DamageCalculator.GetDamage(target) <= target.Health) return;
+
+            this.CastOnTarget(target);
+        }
+
+        /// <summary>
+        ///     Logic life regeneration
+        /// </summary>
+        /// <param name="target">The target.</param>
+        private void LogicRegenerateHealth(Obj_AI_Hero target)
+        {
+            if (!this.Menu.Item(this.Name + "usetoregen").GetValue<bool>()) return;
+
+            var enemyMeanHealth = 0f;
+            var count = 0;
+
+            foreach (var enemy in HeroManager.Enemies.Where(x => x.Distance(ObjectManager.Player) <= 1250))
+            {
+                count++;
+                enemyMeanHealth += enemy.HealthPercent;
+            }
+
+            enemyMeanHealth /= count;
+
+            if (ObjectManager.Player.HealthPercent
+                <= this.Menu.Item(this.Name + "usetoregen.minlife").GetValue<Slider>().Value
+                && ObjectManager.Player.HealthPercent <= enemyMeanHealth)
+            {
+                this.CastOnTarget(target);
+            }
         }
 
         /// <summary>
@@ -115,21 +176,13 @@
         {
             if (!this.CheckGuardians()) return;
 
-            var target = TargetSelector.GetTarget(
-                this.ireliaR.Spell.Range + this.ireliaR.Spell.Width,
-                TargetSelector.DamageType.Physical);
+            var target = TargetSelector.GetTarget(this.ireliaR.Spell.Range, TargetSelector.DamageType.Physical);
 
-            if (this.DamageCalculator.GetDamage(target) > target.Health) return;
+            if (target == null) return;
 
-            var prediction = this.ireliaR.Spell.GetPrediction(
-                target,
-                true,
-                collisionable: new[] { CollisionableObjects.YasuoWall });
+            this.LogicRegenerateHealth(target);
 
-            if (prediction != null && prediction.Hitchance >= this.hitchance)
-            {
-                this.ireliaR.Spell.Cast(prediction.CastPosition);
-            }
+            this.LogicAutoCombo(target);
         }
 
         #endregion

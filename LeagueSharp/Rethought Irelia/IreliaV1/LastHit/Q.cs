@@ -18,9 +18,8 @@
     {
         #region Fields
 
-
         /// <summary>
-        /// The irelia q
+        ///     The irelia q
         /// </summary>
         private readonly IreliaQ ireliaQ;
 
@@ -83,6 +82,15 @@
             this.Menu.AddItem(
                 new MenuItem(this.Name + "clearmode", "Clear Mode: ").SetValue(
                     new StringList(new[] { "Unkillable", "Always" })));
+
+            this.Menu.AddItem(new MenuItem("eplxaination", "Don't get closer than that to: "));
+
+            foreach (var enemy in HeroManager.Enemies)
+            {
+                this.Menu.AddItem(
+                    new MenuItem(this.Name + enemy.ChampionName, enemy.ChampionName).SetValue(
+                        new Slider(300, 0, 1000)));
+            }
         }
 
         /// <summary>
@@ -98,19 +106,39 @@
                     this.ireliaQ.Spell.Range,
                     MinionTypes.All,
                     MinionTeam.NotAlly,
-                    MinionOrderTypes.Health).Where(x => this.ireliaQ.WillReset(x));
+                    MinionOrderTypes.Health).Where(x => this.ireliaQ.WillReset(x)).ToList();
+
+            foreach (var enemy in
+                HeroManager.Enemies.Where(x => x.Distance(ObjectManager.Player) <= 1000 + this.ireliaQ.Spell.Range))
+            {
+                foreach (var entry in units.ToList())
+                {
+                    if (entry.Distance(enemy) <= this.Menu.Item(this.Name + enemy.ChampionName).GetValue<Slider>().Value)
+                    {
+                        units.Remove(entry);
+                    }
+                }
+            }
+
+            Obj_AI_Base unit = null;
 
             switch (this.Menu.Item(this.Name + "clearmode").GetValue<StringList>().SelectedIndex)
             {
                 case 0:
-                    this.ireliaQ.Spell.Cast(
+                    unit =
                         units.FirstOrDefault(
                             x =>
-                            x.Distance(ObjectManager.Player) >= ObjectManager.Player.AttackRange + 200 && x.HealthPercent <= 20));
+                            x.Distance(ObjectManager.Player) >= ObjectManager.Player.AttackRange + 200
+                            && x.HealthPercent <= 20);
                     break;
                 case 1:
-                    this.ireliaQ.Spell.Cast(units.FirstOrDefault());
+                    unit = units.FirstOrDefault();
                     break;
+            }
+
+            if (unit != null)
+            {
+                this.ireliaQ.Spell.Cast(unit);
             }
         }
 
