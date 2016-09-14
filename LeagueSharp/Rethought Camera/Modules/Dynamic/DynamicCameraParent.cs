@@ -101,29 +101,6 @@
                     new MenuItem("disableondeath", "Disable on death").SetValue(true)
                         .SetTooltip(
                             "When you die and already prepare for the next movement or move issue order in general it can be very annoying to be locked at the fountain."));
-
-            disableOnDeath.ValueChanged += (o, args) =>
-                {
-                    if (args.GetNewValue<bool>())
-                    {
-                        ObjAiBaseEvents.OnDeath += this.ObjAiBaseExtensionsOnOnDeath;
-                    }
-                    else
-                    {
-                        ObjAiBaseEvents.OnDeath -= this.ObjAiBaseExtensionsOnOnDeath;
-                    }
-                };
-
-            if (disableOnDeath.GetValue<bool>())
-            {
-                ObjAiBaseEvents.OnDeath += this.ObjAiBaseExtensionsOnOnDeath;
-            }
-            else
-            {
-                ObjAiBaseEvents.OnDeath -= this.ObjAiBaseExtensionsOnOnDeath;
-            }
-
-            this.Disable();
         }
 
         /// <summary>
@@ -135,26 +112,17 @@
         }
 
         /// <summary>
-        ///     Triggers when an Obj_Ai_Base dies
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="onDeathEventArgs">The <see cref="OnDeathEventArgs" /> instance containing the event data.</param>
-        /// <exception cref="System.NotImplementedException"></exception>
-        private void ObjAiBaseExtensionsOnOnDeath(object sender, OnDeathEventArgs onDeathEventArgs)
-        {
-            if (onDeathEventArgs.Sender.Equals(ObjectManager.Player))
-            {
-                this.Disable(this);
-            }
-        }
-
-        /// <summary>
         ///     Raises the <see cref="E:Update" /> event.
         /// </summary>
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void OnUpdate(EventArgs args)
         {
-            if (MenuGUI.IsChatOpen || MenuGUI.IsShopOpen || ObjectManager.Player.IsDead)
+            if (ObjectManager.Player.IsDead && this.Menu.Item("disableondeath").GetValue<bool>())
+            {
+                this.Disable();
+            }
+
+            if (MenuGUI.IsChatOpen || MenuGUI.IsShopOpen)
             {
                 return;
             }
