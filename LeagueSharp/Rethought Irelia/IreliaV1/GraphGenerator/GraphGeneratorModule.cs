@@ -126,7 +126,32 @@
         {
             base.OnLoad(sender, featureBaseEventArgs);
 
-            Drawing.OnDraw += this.DrawingOnOnDraw;
+            var draw = this.Menu.AddItem(new MenuItem("drawgraph", "Draw (Debugging)").SetValue(false));
+
+            draw.ValueChanged += (o, args) =>
+                {
+                    if (args.GetNewValue<bool>())
+                    {
+                        Drawing.OnDraw += this.DrawingOnOnDraw;
+                        Game.OnUpdate += this.DrawingOnUpdate;
+                    }
+                    else
+                    {
+                        Drawing.OnDraw -= this.DrawingOnOnDraw;
+                        Game.OnUpdate -= this.DrawingOnUpdate;
+                    }
+                };
+
+            if (draw.GetValue<bool>())
+            {
+                Drawing.OnDraw += this.DrawingOnOnDraw;
+                Game.OnUpdate -= this.DrawingOnUpdate;
+            }
+        }
+
+        private void DrawingOnUpdate(EventArgs args)
+        {
+            this.graph = null;
         }
 
         /// <summary>
