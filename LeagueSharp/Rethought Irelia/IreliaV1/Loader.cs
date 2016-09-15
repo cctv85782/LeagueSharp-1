@@ -3,6 +3,7 @@
     #region Using Directives
 
     using System.Collections.Generic;
+    using System.Drawing;
 
     using LeagueSharp;
     using LeagueSharp.Common;
@@ -16,10 +17,13 @@
     using Rethought_Irelia.IreliaV1.Combo;
     using Rethought_Irelia.IreliaV1.DamageCalculator;
     using Rethought_Irelia.IreliaV1.DashToMouse;
+    using Rethought_Irelia.IreliaV1.Drawings;
     using Rethought_Irelia.IreliaV1.GraphGenerator;
     using Rethought_Irelia.IreliaV1.Interrupter;
     using Rethought_Irelia.IreliaV1.Pathfinder;
     using Rethought_Irelia.IreliaV1.Spells;
+
+    using Color = SharpDX.Color;
 
     #endregion
 
@@ -97,6 +101,7 @@
             var spellParent = new SpellParent.SpellParent();
 
             spellParent.Add(new List<Base> { ireliaQ, ireliaW, ireliaE, ireliaR, });
+            spellParent.Load();
 
             var comboParent = new OrbwalkingParent(
                 "Combo",
@@ -119,6 +124,8 @@
                 "Mixed",
                 orbwalkerModule.OrbwalkerInstance,
                 Orbwalking.OrbwalkingMode.Mixed);
+
+            var drawingParent = new Parent("Drawings");
 
             comboParent.Add(
                 new List<Base>()
@@ -156,6 +163,14 @@
                             .Guardian(new PlayerMustNotBeWindingUp())
                     });
 
+            drawingParent.Add(
+                new List<Base>()
+                    {
+                        new CommonSpellDrawing(ireliaQ.Spell, "Q"),
+                        new CommonSpellDrawing(ireliaE.Spell, "E"),
+                        new CommonSpellDrawing(ireliaR.Spell, "R", true),
+                    });
+
             superParent.Add(
                 new List<Base>()
                     {
@@ -169,10 +184,14 @@
                         lastHitParent,
                         mixedParent,
                         dashToMouseModule,
-                        spellInterrupterModule
+                        spellInterrupterModule,
+                        drawingParent
                     });
 
             superParent.Load();
+
+            superParent.Menu.Style = FontStyle.Bold;
+            superParent.Menu.Color = Color.Firebrick;
         }
 
         #endregion

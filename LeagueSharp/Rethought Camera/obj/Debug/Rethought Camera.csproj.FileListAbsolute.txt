@@ -15,3 +15,4 @@ E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Debug\
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\bin\Debug\clipper_library.pdb
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\obj\Debug\Rethought Camera.exe
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\obj\Debug\Rethought Camera.pdb
+E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Camera\obj\Debug\Rethought Camera.csprojResolveAssemblyReference.cache

@@ -64,6 +64,7 @@
     <Compile Include="IreliaV1\DamageCalculator\IDamageCalculator.cs" />
     <Compile Include="IreliaV1\DamageCalculator\IDamageCalculatorModule.cs" />
     <Compile Include="IreliaV1\DashToMouse\DashToMouseModule.cs" />
+    <Compile Include="IreliaV1\Drawings\CommonSpellDrawing.cs" />
     <Compile Include="IreliaV1\GraphGenerator\GraphGeneratorModule.cs" />
     <Compile Include="IreliaV1\Interrupter\SpellInterrupterModule.cs" />
     <Compile Include="IreliaV1\Pathfinder\PathfinderModule.cs" />
@@ -96,6 +97,7 @@
       <Name>RethoughtLib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
