@@ -58,4 +58,3 @@ E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\Leag
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\bin\Debug\clipper_library.pdb
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\obj\Debug\RethoughtLib.dll
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\obj\Debug\RethoughtLib.pdb
-E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\RethoughtLib\obj\Debug\RethoughtLib.csprojResolveAssemblyReference.cache
