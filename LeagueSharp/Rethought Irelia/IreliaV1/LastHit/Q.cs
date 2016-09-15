@@ -101,6 +101,26 @@
         {
             if (!this.CheckGuardians()) return;
 
+            this.LogicLaneLastHit();
+        }
+
+        private void LogicJungleLastHit()
+        {
+            var units =
+    MinionManager.GetMinions(
+        this.ireliaQ.Spell.Range,
+        MinionTypes.All,
+        MinionTeam.Neutral,
+        MinionOrderTypes.Health).Where(x => this.ireliaQ.WillReset(x)).ToList();
+            var unit = units.FirstOrDefault();
+
+            if (unit == null) return;
+
+            this.ireliaQ.Spell.Cast(unit);
+        }
+
+        private void LogicLaneLastHit()
+        {
             var units =
                 MinionManager.GetMinions(
                     this.ireliaQ.Spell.Range,
@@ -125,15 +145,15 @@
             switch (this.Menu.Item(this.Name + "clearmode").GetValue<StringList>().SelectedIndex)
             {
                 case 0:
-                    unit =
-                        units.FirstOrDefault(
-                            x =>
-                            x.Distance(ObjectManager.Player) >= ObjectManager.Player.AttackRange + 200
-                            && x.HealthPercent <= 20);
-                    break;
+                unit =
+                    units.FirstOrDefault(
+                        x =>
+                        x.Distance(ObjectManager.Player) >= ObjectManager.Player.AttackRange + 200
+                        && x.HealthPercent <= 20);
+                break;
                 case 1:
-                    unit = units.FirstOrDefault();
-                    break;
+                unit = units.FirstOrDefault();
+                break;
             }
 
             if (unit != null)

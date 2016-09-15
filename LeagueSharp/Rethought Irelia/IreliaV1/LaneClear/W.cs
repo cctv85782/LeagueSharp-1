@@ -3,6 +3,7 @@
     #region Using Directives
 
     using System;
+    using System.Linq;
 
     using LeagueSharp.Common;
 
@@ -81,6 +82,11 @@
             if (!this.CheckGuardians()) return;
 
             if (MinionManager.GetMinions(1000, MinionTypes.All, MinionTeam.NotAlly).Count > 3)
+            {
+                this.ireliaW.Spell.Cast();
+            }
+
+            if (MinionManager.GetMinions(400, MinionTypes.All, MinionTeam.Neutral).Any(x => x.HealthPercent > 20))
             {
                 this.ireliaW.Spell.Cast();
             }
