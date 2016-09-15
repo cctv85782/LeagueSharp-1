@@ -101,14 +101,12 @@
 
             if (this.Menu.Item(this.Name + "displaymethod").GetValue<StringList>().SelectedIndex == 0)
             {
-                Drawing.DrawCircle(ObjectManager.Player.Position, this.spell.Range, this.color);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, this.spell.Range, this.color, 3, true);
             }
             else
             {
-                Render.Circle.DrawCircle(ObjectManager.Player.ServerPosition, this.spell.Range, this.color, 3, true);
+                Drawing.DrawCircle(ObjectManager.Player.Position, this.spell.Range, this.color);
             }
-
-
         }
 
         #endregion

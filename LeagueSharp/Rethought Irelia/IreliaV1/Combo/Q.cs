@@ -12,6 +12,8 @@
 
     using Rethought_Irelia.IreliaV1.Spells;
 
+    using SharpDX;
+
     #endregion
 
     internal class Q : OrbwalkingChild
@@ -127,7 +129,7 @@
                 || ObjectManager.Player.ServerPosition.Distance(this.target.ServerPosition)
                 <= this.ireliaQ.Spell.Range - Baitrange) return;
 
-            var possibleUnits = ObjectManager.Get<Obj_AI_Base>().Where(x => this.ireliaQ.WillReset(x));
+            var possibleUnits = ObjectManager.Get<Obj_AI_Base>().Where(x => this.ireliaQ.WillReset(x) && x.Distance(this.target) <= ObjectManager.Player.Distance(this.target));
 
             this.ireliaQ.Spell.Cast(possibleUnits.MinOrDefault(x => x.Distance(this.target)));
         }
@@ -152,15 +154,38 @@
         {
             if (!this.Menu.Item(this.Name + "pathfinding").GetValue<bool>()) return;
 
-            var end = Game.CursorPos;
+            var end = Vector3.Zero;
 
+            this.GetMovementPrediction(ref end);
+
+            if (end == Vector3.Zero)
+            {
+                end = Game.CursorPos;
+            }
+
+            var path = this.ireliaQ.GetPath(ObjectManager.Player.ServerPosition, end);
+
+            if (path == null || !path.Any()) return;
+
+            this.ireliaQ.Spell.Cast(path.FirstOrDefault());
+        }
+
+        private bool GetMovementPrediction(ref Vector3 end)
+        {
             if (this.Menu.Item(this.Name + "movementprediction").GetValue<bool>() && this.target != null)
             {
                 var gapclosePath = this.ireliaQ.GetPath(ObjectManager.Player.ServerPosition, this.target.ServerPosition);
 
-                var expectedTime =
-                    gapclosePath.TakeWhile((t, i) => i != gapclosePath.Count - 1).Where((t, i) => t != null).Select((t, i) => t.Distance(gapclosePath[i + 1]))
-                        .Sum() / this.ireliaQ.Spell.Speed;
+                var expectedTime = 0f;
+
+                if (gapclosePath == null || gapclosePath.Any()) return true;
+
+                for (var i = 0; i < gapclosePath.Count - 1; i++)
+                {
+                    if (gapclosePath[i] == null || gapclosePath[i + 1] == null) continue;
+
+                    expectedTime += gapclosePath[i].Distance(gapclosePath[i + 1]) / this.ireliaQ.Spell.Speed;
+                }
 
                 var pred = Prediction.GetPrediction(this.target, expectedTime);
 
@@ -169,12 +194,7 @@
                     end = pred.CastPosition;
                 }
             }
-
-            var path = this.ireliaQ.GetPath(ObjectManager.Player.ServerPosition, end);
-
-            if (path == null || !path.Any()) return;
-
-            this.ireliaQ.Spell.Cast(path.FirstOrDefault());
+            return false;
         }
 
         /// <summary>
