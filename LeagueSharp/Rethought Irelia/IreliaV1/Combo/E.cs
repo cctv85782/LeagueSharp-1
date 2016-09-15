@@ -83,11 +83,13 @@
         {
             base.OnLoad(sender, featureBaseEventArgs);
 
-            this.Menu.AddItem(new MenuItem("stunwhenpossible", "Stun whenever possible").SetValue(true));
+            this.Menu.AddItem(
+                new MenuItem(this.Path + "." + "stunwhenpossible", "Stun whenever possible").SetValue(true));
 
-            this.Menu.AddItem(new MenuItem("slowdown", "Cast when faster than the player").SetValue(true));
+            this.Menu.AddItem(
+                new MenuItem(this.Path + "." + "slowdown", "Cast when faster than the player").SetValue(true));
 
-            this.Menu.AddItem(new MenuItem("faceaway", "Cast when facing away").SetValue(false));
+            this.Menu.AddItem(new MenuItem(this.Path + "." + "faceaway", "Cast when facing away").SetValue(false));
 
             // TODO: If enemy has interruptable spells wait for them to cast E option, or if player is far below enemy health and enemy is stunnable
         }
@@ -97,7 +99,7 @@
         /// </summary>
         private void LogicFaceAway()
         {
-            if (!this.Menu.Item("faceaway").GetValue<bool>()) return;
+            if (!this.Menu.Item(this.Path + "." + "faceaway").GetValue<bool>()) return;
 
             if (this.target.HasBuffOfType(BuffType.Slow) || this.target.HasBuffOfType(BuffType.Charm)
                 || this.target.HasBuffOfType(BuffType.Taunt) || this.target.HasBuffOfType(BuffType.Flee)
@@ -118,7 +120,7 @@
         /// </summary>
         private void LogicSlowDown()
         {
-            if (!this.Menu.Item("slowdown").GetValue<bool>()) return;
+            if (!this.Menu.Item(this.Path + "." + "slowdown").GetValue<bool>()) return;
 
             if (this.target.MoveSpeed > ObjectManager.Player.MoveSpeed && !this.target.IsMovementImpaired()
                 && ObjectManager.Player.Distance(this.target) > ObjectManager.Player.AttackRange - 50)
@@ -132,7 +134,7 @@
         /// </summary>
         private void LogicStunWhenPossible()
         {
-            if (!this.Menu.Item("stunwhenpossible").GetValue<bool>()) return;
+            if (!this.Menu.Item(this.Path + "." + "stunwhenpossible").GetValue<bool>()) return;
 
             if (this.target.HasBuffOfType(BuffType.Charm) || this.target.HasBuffOfType(BuffType.Taunt)
                 || this.target.HasBuffOfType(BuffType.Flee) || this.target.IsMovementImpaired())

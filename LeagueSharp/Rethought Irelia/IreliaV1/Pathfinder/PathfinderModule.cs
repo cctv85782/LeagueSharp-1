@@ -2,7 +2,6 @@
 {
     #region Using Directives
 
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -10,7 +9,6 @@
     using LeagueSharp.Common;
 
     using RethoughtLib.Algorithm.Graphs;
-    using RethoughtLib.Algorithm.Pathfinding;
     using RethoughtLib.Algorithm.Pathfinding.AStar;
     using RethoughtLib.FeatureSystem.Abstract_Classes;
 
@@ -69,9 +67,7 @@
                 }
             }
 
-            var edges =
-                graph.Edges.Select(
-                    edge => edge).ToList();
+            var edges = graph.Edges.Select(edge => edge).ToList();
 
             var astar = new AStar<AStarNode, AStarEdge<AStarNode>>(edges);
 

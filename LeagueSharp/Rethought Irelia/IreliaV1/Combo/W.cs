@@ -16,13 +16,12 @@
         #region Fields
 
         /// <summary>
-        /// The irelia q
+        ///     The irelia q
         /// </summary>
         private readonly IreliaQ ireliaQ;
 
-
         /// <summary>
-        /// The irelia w
+        ///     The irelia w
         /// </summary>
         private readonly IreliaW ireliaW;
 

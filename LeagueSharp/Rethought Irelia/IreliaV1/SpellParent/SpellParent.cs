@@ -4,6 +4,7 @@
 
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using LeagueSharp;
 
@@ -92,12 +93,21 @@
         protected override void OnChildAdd(object sender, ParentBaseEventArgs parentBaseEventArgs)
         {
             base.OnChildAdd(sender, parentBaseEventArgs);
+        }
 
-            var spellChild = parentBaseEventArgs.Child as SpellChild;
+        /// <summary>
+        ///     Called when [load].
+        /// </summary>
+        protected override void OnLoad(object sender, FeatureBaseEventArgs featureBaseEventArgs)
+        {
+            base.OnLoad(sender, featureBaseEventArgs);
 
-            if (spellChild?.Spell == null) return;
+            foreach (var spell in this.Children.OfType<SpellChild>())
+            {
+                if (spell.Spell == null) return;
 
-            this.Spells[spellChild.Spell.Slot] = spellChild;
+                this.Spells[spell.Spell.Slot] = spell;
+            }
         }
 
         /// <summary>

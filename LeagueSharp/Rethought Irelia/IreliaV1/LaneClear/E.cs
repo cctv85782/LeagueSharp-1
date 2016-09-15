@@ -69,23 +69,7 @@
         {
             base.OnEnable(sender, eventArgs);
 
-
             Game.OnUpdate += this.OnUpdate;
-        }
-
-
-        /// <summary>
-        /// Raises the <see cref="E:Update" /> event.
-        /// </summary>
-        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
-        /// <exception cref="System.NotImplementedException"></exception>
-        private void OnUpdate(EventArgs args)
-        {
-            var minion = MinionManager.GetMinions(this.ireliaE.Spell.Range, MinionTypes.All, MinionTeam.Neutral)
-                .Where(x => this.ireliaE.CanStun(x))
-                .MaxOrDefault(x => x.Health);
-
-            this.ireliaE.Spell.Cast(minion);
         }
 
         /// <summary>
@@ -97,12 +81,20 @@
         }
 
         /// <summary>
-        ///     Raises the <see cref="E:GameUpdate" /> event.
+        ///     Raises the <see cref="E:Update" /> event.
         /// </summary>
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
-        private void OnGameUpdate(EventArgs args)
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void OnUpdate(EventArgs args)
         {
             if (!this.CheckGuardians()) return;
+
+            var minion =
+                MinionManager.GetMinions(this.ireliaE.Spell.Range, MinionTypes.All, MinionTeam.Neutral)
+                    .Where(x => this.ireliaE.CanStun(x))
+                    .MaxOrDefault(x => x.Health);
+
+            this.ireliaE.Spell.Cast(minion);
         }
 
         #endregion

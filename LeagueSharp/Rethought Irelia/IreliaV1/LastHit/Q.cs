@@ -80,40 +80,29 @@
             base.OnLoad(sender, featureBaseEventArgs);
 
             this.Menu.AddItem(
-                new MenuItem(this.Name + "clearmode", "Clear Mode: ").SetValue(
+                new MenuItem(this.Path + "." + "clearmode", "Clear Mode: ").SetValue(
                     new StringList(new[] { "Unkillable", "Always" })));
+
+            this.Menu.AddItem(new MenuItem(this.Path + "." + "noturretdive", "Don't dive turrets").SetValue(true));
 
             this.Menu.AddItem(new MenuItem("eplxaination", "Don't get closer than that to: "));
 
             foreach (var enemy in HeroManager.Enemies)
             {
                 this.Menu.AddItem(
-                    new MenuItem(this.Name + enemy.ChampionName, enemy.ChampionName).SetValue(
+                    new MenuItem(this.Path + "." + enemy.ChampionName, enemy.ChampionName).SetValue(
                         new Slider(300, 0, 1000)));
             }
-        }
-
-        /// <summary>
-        ///     Raises the <see cref="E:GameUpdate" /> event.
-        /// </summary>
-        /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
-        private void OnGameUpdate(EventArgs args)
-        {
-            if (!this.CheckGuardians()) return;
-
-            this.LogicLaneLastHit();
-
-            //this.LogicJungleLastHit();
         }
 
         private void LogicJungleLastHit()
         {
             var units =
-    MinionManager.GetMinions(
-        this.ireliaQ.Spell.Range,
-        MinionTypes.All,
-        MinionTeam.Neutral,
-        MinionOrderTypes.Health).Where(x => this.ireliaQ.WillReset(x)).ToList();
+                MinionManager.GetMinions(
+                    this.ireliaQ.Spell.Range,
+                    MinionTypes.All,
+                    MinionTeam.Neutral,
+                    MinionOrderTypes.Health).Where(x => this.ireliaQ.WillReset(x)).ToList();
             var unit = units.FirstOrDefault();
 
             if (unit == null) return;
@@ -130,12 +119,24 @@
                     MinionTeam.NotAlly,
                     MinionOrderTypes.Health).Where(x => this.ireliaQ.WillReset(x)).ToList();
 
+            if (this.Menu.Item(this.Path + "." + "noturretdive").GetValue<bool>())
+            {
+                foreach (var unit2 in units.ToList())
+                {
+                    if (unit2.UnderTurret(true))
+                    {
+                        units.Remove(unit2);
+                    }
+                }
+            }
+
             foreach (var enemy in
                 HeroManager.Enemies.Where(x => x.Distance(ObjectManager.Player) <= 1000 + this.ireliaQ.Spell.Range))
             {
                 foreach (var entry in units.ToList())
                 {
-                    if (entry.Distance(enemy) <= this.Menu.Item(this.Name + enemy.ChampionName).GetValue<Slider>().Value)
+                    if (entry.Distance(enemy)
+                        <= this.Menu.Item(this.Path + "." + enemy.ChampionName).GetValue<Slider>().Value)
                     {
                         units.Remove(entry);
                     }
@@ -144,24 +145,37 @@
 
             Obj_AI_Base unit = null;
 
-            switch (this.Menu.Item(this.Name + "clearmode").GetValue<StringList>().SelectedIndex)
+            switch (this.Menu.Item(this.Path + "." + "clearmode").GetValue<StringList>().SelectedIndex)
             {
                 case 0:
-                unit =
-                    units.FirstOrDefault(
-                        x =>
-                        x.Distance(ObjectManager.Player) >= ObjectManager.Player.AttackRange + 200
-                        && x.HealthPercent <= 20);
-                break;
+                    unit =
+                        units.FirstOrDefault(
+                            x =>
+                            x.Distance(ObjectManager.Player) >= ObjectManager.Player.AttackRange + 200
+                            && x.HealthPercent <= 20);
+                    break;
                 case 1:
-                unit = units.FirstOrDefault();
-                break;
+                    unit = units.FirstOrDefault();
+                    break;
             }
 
             if (unit != null)
             {
                 this.ireliaQ.Spell.Cast(unit);
             }
+        }
+
+        /// <summary>
+        ///     Raises the <see cref="E:GameUpdate" /> event.
+        /// </summary>
+        /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void OnGameUpdate(EventArgs args)
+        {
+            if (!this.CheckGuardians()) return;
+
+            this.LogicLaneLastHit();
+
+            this.LogicJungleLastHit();
         }
 
         #endregion

@@ -97,7 +97,7 @@
             // Puts all values into the Menu
             var minValue =
                 this.Menu.AddItem(
-                    new MenuItem(this.Name + "minvalue", "Minimal Danger Value").SetValue(
+                    new MenuItem(this.Path + "." + "minvalue", "Minimal Danger Value").SetValue(
                         new StringList(stringList, (int)Interrupter2.DangerLevel.Medium)));
 
             minValue.ValueChanged +=
@@ -120,7 +120,9 @@
             if (sender.IsAlly || sender.IsMe || args.DangerLevel < this.dangerlevel
                 || this.currentlyExecuting.Contains(sender) || this.Spells.All(x => !x.Spell.IsReady())) return;
 
-            var spellInterrupter = this.Spells.Where(x => x.Spell.IsReady() && x.AdditionalCondition.Invoke(sender)).MaxOrDefault(x => x.Spell.Speed);
+            var spellInterrupter =
+                this.Spells.Where(x => x.Spell.IsReady() && x.AdditionalCondition.Invoke(sender))
+                    .MaxOrDefault(x => x.Spell.Speed);
 
             if (spellInterrupter.Spell.Instance.SData.TargettingType == SpellDataTargetType.Unit)
             {
@@ -139,7 +141,8 @@
 
             // just an estimate
             Utility.DelayAction.Add(
-                (int)(ObjectManager.Player.ServerPosition.Distance(sender.ServerPosition) / spellInterrupter.Spell.Speed),
+                (int)
+                (ObjectManager.Player.ServerPosition.Distance(sender.ServerPosition) / spellInterrupter.Spell.Speed),
                 () => this.currentlyExecuting.Remove(sender));
         }
 
@@ -151,7 +154,7 @@
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SpellInterrupter"/> class.
+        ///     Initializes a new instance of the <see cref="SpellInterrupter" /> class.
         /// </summary>
         /// <param name="spell">The spell.</param>
         /// <param name="additionalCondition">The additional condition.</param>
@@ -175,6 +178,7 @@
         ///     The additional condition.
         /// </value>
         public Func<Obj_AI_Hero, bool> AdditionalCondition { get; } = hero => true;
+
         /// <summary>
         ///     Gets the spell.
         /// </summary>

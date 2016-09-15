@@ -16,6 +16,8 @@
     {
         #region Public Properties
 
+        public int EstimatedAmountInOneCombo { get; } = 4;
+
         /// <summary>
         ///     Gets or sets the name.
         /// </summary>
@@ -23,8 +25,6 @@
         ///     The name.
         /// </value>
         public override string Name { get; set; } = "Transcendent Blades";
-
-        public int EstimatedAmountInOneCombo { get; } = 4;
 
         /// <summary>
         ///     Gets or sets the spell.
@@ -45,7 +45,7 @@
         /// <returns></returns>
         public float GetDamage(Obj_AI_Base target)
         {
-            return this.Spell.GetDamage(target);
+            return !this.Spell.IsReady() ? 0 : this.Spell.GetDamage(target);
         }
 
         #endregion

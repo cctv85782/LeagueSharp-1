@@ -98,7 +98,7 @@
             // Puts all HitChances into the Menu
             var minHitChance =
                 this.Menu.AddItem(
-                    new MenuItem(this.Name + "minhitchance", "Minimal Hitchance").SetValue(
+                    new MenuItem(this.Path + "." + "minhitchance", "Minimal Hitchance").SetValue(
                         new StringList(stringList, 4)));
 
             minHitChance.ValueChanged +=
@@ -106,10 +106,10 @@
 
             this.hitchance = (HitChance)minHitChance.GetValue<StringList>().SelectedIndex;
 
-            this.Menu.AddItem(new MenuItem(this.Name + "usetoregen", "Use to regenerate health").SetValue(true));
+            this.Menu.AddItem(new MenuItem(this.Path + "." + "usetoregen", "Use to regenerate health").SetValue(true));
 
             this.Menu.AddItem(
-                new MenuItem(this.Name + "usetoregen.minlife", "Use when below X % health").SetValue(
+                new MenuItem(this.Path + "." + "usetoregen.minlife", "Use when below X % health").SetValue(
                     new Slider(15, 0, 100)));
         }
 
@@ -136,7 +136,7 @@
         /// <param name="target">The target.</param>
         private void LogicAutoCombo(Obj_AI_Hero target)
         {
-            if (this.DamageCalculator.GetDamage(target) <= target.Health) return;
+            if (this.DamageCalculator.GetDamage(target) < target.Health) return;
 
             this.CastOnTarget(target);
         }
@@ -147,7 +147,7 @@
         /// <param name="target">The target.</param>
         private void LogicRegenerateHealth(Obj_AI_Hero target)
         {
-            if (!this.Menu.Item(this.Name + "usetoregen").GetValue<bool>()) return;
+            if (!this.Menu.Item(this.Path + "." + "usetoregen").GetValue<bool>()) return;
 
             var enemyMeanHealth = 0f;
             var count = 0;
@@ -161,7 +161,7 @@
             enemyMeanHealth /= count;
 
             if (ObjectManager.Player.HealthPercent
-                <= this.Menu.Item(this.Name + "usetoregen.minlife").GetValue<Slider>().Value
+                <= this.Menu.Item(this.Path + "." + "usetoregen.minlife").GetValue<Slider>().Value
                 && ObjectManager.Player.HealthPercent <= enemyMeanHealth)
             {
                 this.CastOnTarget(target);

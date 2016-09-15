@@ -62,6 +62,41 @@
             }
         }
 
+        /// <summary>
+        ///     Called when [load].
+        /// </summary>
+        public override void Load()
+        {
+            if (this.Loaded) return;
+
+            base.Load();
+
+            foreach (var keyValuePair in this.Children.ToList())
+            {
+                var child = keyValuePair.Key;
+
+                child.Initialize();
+
+                child.Path = this.Path + child.Path;
+
+                child.Switch.OnEnableEvent += this.OnChildEnabled;
+                child.Switch.OnDisableEvent += this.OnChildDisabled;
+
+                child.Load();
+
+                if (!child.Menu.Children.Any() && !child.Menu.Items.Any()) continue;
+
+                this.Menu.AddSubMenu(child.Menu);
+            }
+        }
+
+        /// <summary>Returns a string that represents the current object.</summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString()
+        {
+            return "Parent " + this.Name;
+        }
+
         #endregion
 
         #region Methods
@@ -188,7 +223,6 @@
 
             foreach (var keyValuePair in this.Children.ToList())
             {
-
                 if (!keyValuePair.Value.Item1 || !keyValuePair.Value.Item2)
                 {
                     continue;
@@ -196,37 +230,6 @@
 
                 keyValuePair.Key.Enable(this);
             }
-        }
-
-        /// <summary>
-        ///     Called when [load].
-        /// </summary>
-        public override void Load()
-        {
-            base.Load();
-
-            foreach (var keyValuePair in this.Children.ToList())
-            {
-                var child = keyValuePair.Key;
-
-                child.Initialize();
-
-                child.Path = this.Path + child.Path;
-
-                this.Menu.AddSubMenu(child.Menu);
-
-                child.Switch.OnEnableEvent += this.OnChildEnabled;
-                child.Switch.OnDisableEvent += this.OnChildDisabled;
-
-                child.Load();
-            }
-        }
-
-        /// <summary>Returns a string that represents the current object.</summary>
-        /// <returns>A string that represents the current object.</returns>
-        public override string ToString()
-        {
-            return "Parent " + this.Name;
         }
 
         #endregion

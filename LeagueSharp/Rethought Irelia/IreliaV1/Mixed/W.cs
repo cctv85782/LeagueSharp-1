@@ -3,10 +3,8 @@
     #region Using Directives
 
     using System;
-    using System.Linq;
 
     using LeagueSharp;
-    using LeagueSharp.Common;
 
     using RethoughtLib.FeatureSystem.Implementations;
 
@@ -19,7 +17,7 @@
         #region Fields
 
         /// <summary>
-        /// The irelia w
+        ///     The irelia w
         /// </summary>
         private readonly IreliaW ireliaW;
 
@@ -28,10 +26,9 @@
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="W" /> class.
+        ///     Initializes a new instance of the <see cref="W" /> class.
         /// </summary>
         /// <param name="ireliaW">The irelia w.</param>
-
         public W(IreliaW ireliaW)
         {
             this.ireliaW = ireliaW;
@@ -87,7 +84,6 @@
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void OnGameUpdate(EventArgs args)
         {
-
         }
 
         #endregion

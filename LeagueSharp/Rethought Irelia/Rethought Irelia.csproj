@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IreliaV1\DamageCalculator\AutoAttacks.cs" />
     <Compile Include="IreliaV1\DamageCalculator\DamageCalculatorParent.cs" />
     <Compile Include="IreliaV1\DamageCalculator\IDamageCalculator.cs" />
     <Compile Include="IreliaV1\DamageCalculator\IDamageCalculatorModule.cs" />

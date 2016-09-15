@@ -149,11 +149,6 @@
             }
         }
 
-        private void DrawingOnUpdate(EventArgs args)
-        {
-            this.graph = null;
-        }
-
         /// <summary>
         ///     Sets the switch.
         /// </summary>
@@ -172,6 +167,11 @@
                     1,
                     Color.White);
             }
+        }
+
+        private void DrawingOnUpdate(EventArgs args)
+        {
+            this.graph = null;
         }
 
         #endregion

@@ -86,6 +86,7 @@
             var ireliaE = new IreliaE();
             var ireliaR = new IreliaR();
 
+            damageCalculator.Add(new AutoAttacks());
             damageCalculator.Add(ireliaQ);
             damageCalculator.Add(ireliaW);
             damageCalculator.Add(ireliaE);
@@ -130,7 +131,7 @@
             comboParent.Add(
                 new List<Base>()
                     {
-                        new Q(ireliaQ).Guardian(new SpellMustBeReady(SpellSlot.Q)),
+                        new Q(ireliaQ, damageCalculator).Guardian(new SpellMustBeReady(SpellSlot.Q)),
                         new W(ireliaW, ireliaQ).Guardian(new SpellMustBeReady(SpellSlot.W)),
                         new E(ireliaE).Guardian(new SpellMustBeReady(SpellSlot.E))
                             .Guardian(new PlayerMustNotBeWindingUp()),
@@ -157,7 +158,7 @@
             mixedParent.Add(
                 new List<Base>()
                     {
-                        new Q(ireliaQ).Guardian(new SpellMustBeReady(SpellSlot.Q)),
+                        new Q(ireliaQ, damageCalculator).Guardian(new SpellMustBeReady(SpellSlot.Q)),
                         new W(ireliaW, ireliaQ).Guardian(new SpellMustBeReady(SpellSlot.W)),
                         new Mixed.E(ireliaE).Guardian(new SpellMustBeReady(SpellSlot.E))
                             .Guardian(new PlayerMustNotBeWindingUp())

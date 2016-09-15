@@ -17,20 +17,20 @@
         #region Public Properties
 
         /// <summary>
+        ///     Gets the estimated amount in one combo.
+        /// </summary>
+        /// <value>
+        ///     The estimated amount in one combo.
+        /// </value>
+        public int EstimatedAmountInOneCombo { get; } = 4;
+
+        /// <summary>
         ///     Gets or sets the name.
         /// </summary>
         /// <value>
         ///     The name.
         /// </value>
         public override string Name { get; set; } = "Hiten Style";
-
-        /// <summary>
-        /// Gets the estimated amount in one combo.
-        /// </summary>
-        /// <value>
-        /// The estimated amount in one combo.
-        /// </value>
-        public int EstimatedAmountInOneCombo { get; } = 4;
 
         /// <summary>
         ///     Gets or sets the spell.
@@ -51,7 +51,7 @@
         /// <returns></returns>
         public float GetDamage(Obj_AI_Base target)
         {
-            return this.Spell.GetDamage(target);
+            return !this.Spell.IsReady() ? 0 : this.Spell.GetDamage(target);
         }
 
         #endregion

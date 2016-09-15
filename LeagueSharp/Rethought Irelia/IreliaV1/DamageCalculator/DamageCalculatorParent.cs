@@ -75,7 +75,7 @@
             foreach (var damageCalculator in this.damageCalculatorsModules)
             {
                 this.Menu.AddItem(
-                    new MenuItem(this.Name + damageCalculator.Name, damageCalculator.Name).SetValue(
+                    new MenuItem(this.Path + "." + damageCalculator.Name, damageCalculator.Name).SetValue(
                         new Slider(damageCalculator.EstimatedAmountInOneCombo, 0, 5)));
             }
         }

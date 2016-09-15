@@ -2,7 +2,6 @@
 {
     #region Using Directives
 
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -10,7 +9,6 @@
     using LeagueSharp.Common;
 
     using RethoughtLib.Algorithm.Graphs;
-    using RethoughtLib.Algorithm.Pathfinding;
     using RethoughtLib.Algorithm.Pathfinding.AStar;
     using RethoughtLib.FeatureSystem.Implementations;
     using RethoughtLib.FeatureSystem.Switches;
@@ -77,12 +75,6 @@
 
         #region Public Methods and Operators
 
-        // TODO
-        public float CustomGetDamage(Obj_AI_Base target)
-        {
-            return this.Spell.GetDamage(target);
-        }
-
         /// <summary>
         ///     Gets the damage.
         /// </summary>
@@ -90,7 +82,7 @@
         /// <returns></returns>
         public float GetDamage(Obj_AI_Base target)
         {
-            return this.Spell.GetDamage(target);
+            return !this.Spell.IsReady() ? 0 : this.Spell.GetDamage(target);
         }
 
         /// <summary>
@@ -121,7 +113,7 @@
                 (this.Spell.Delay
                  + target.ServerPosition.Distance(ObjectManager.Player.ServerPosition) / this.Spell.Speed));
 
-            return predictedTargetHealth <= this.CustomGetDamage(target);
+            return predictedTargetHealth <= this.GetDamage(target);
         }
 
         #endregion

@@ -2,7 +2,6 @@
 {
     #region Using Directives
 
-    using System;
     using System.Linq;
 
     using LeagueSharp.Common;
@@ -17,9 +16,8 @@
     {
         #region Fields
 
-
         /// <summary>
-        /// The irelia w
+        ///     The irelia w
         /// </summary>
         private readonly IreliaW ireliaW;
 

@@ -51,7 +51,7 @@
         /// <returns></returns>
         public bool CanStun(Obj_AI_Base target)
         {
-            if (this.Menu.Item("usehealthprediction").GetValue<bool>())
+            if (this.Menu.Item(this.Path + "." + "usehealthprediction").GetValue<bool>())
             {
                 var predictedEnemyHealth = HealthPrediction.GetHealthPrediction(
                     target,
@@ -82,7 +82,7 @@
         /// <returns></returns>
         public float GetDamage(Obj_AI_Base target)
         {
-            return this.Spell.GetDamage(target);
+            return !this.Spell.IsReady() ? 0 : this.Spell.GetDamage(target);
         }
 
         #endregion
@@ -99,7 +99,8 @@
             this.Spell = new Spell(SpellSlot.E, 425);
             this.Spell.SetTargetted(0.2f, 200);
 
-            this.Menu.AddItem(new MenuItem("usehealthprediction", "Use HealthPrediction").SetValue(true));
+            this.Menu.AddItem(
+                new MenuItem(this.Path + "." + "usehealthprediction", "Use HealthPrediction").SetValue(true));
         }
 
         /// <summary>

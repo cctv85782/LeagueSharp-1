@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Rethought_Irelia.IreliaV1.DamageCalculator
+﻿namespace Rethought_Irelia.IreliaV1.DamageCalculator
 {
     internal interface IDamageCalculatorModule : IDamageCalculator
     {
-        string Name { get; set; }
+        #region Public Properties
 
         int EstimatedAmountInOneCombo { get; }
+
+        string Name { get; set; }
+
+        #endregion
     }
 }

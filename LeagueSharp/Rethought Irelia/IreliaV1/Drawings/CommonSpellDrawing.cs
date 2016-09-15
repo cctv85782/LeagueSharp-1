@@ -22,6 +22,8 @@
 
         private Color color = Color.White;
 
+        private bool zaxis;
+
         #endregion
 
         #region Constructors and Destructors
@@ -78,16 +80,25 @@
         {
             base.OnLoad(sender, featureBaseEventArgs);
 
-            var colorPicker = this.Menu.AddItem(new MenuItem(this.Name + "color", "Color").SetValue(new Circle(true, Color.White)));
+            var colorPicker =
+                this.Menu.AddItem(
+                    new MenuItem(this.Path + "." + "color", "Color").SetValue(new Circle(true, Color.White)));
 
             colorPicker.ValueChanged += (o, args) => { this.color = args.GetNewValue<Circle>().Color; };
 
             this.color = colorPicker.GetValue<Circle>().Color;
 
-            this.Menu.AddItem(new MenuItem(this.Name + "spellready", "Spell must be ready").SetValue(this.spellMustBeReady));
+            this.Menu.AddItem(
+                new MenuItem(this.Path + "." + "spellready", "Spell must be ready").SetValue(this.spellMustBeReady));
+
+            var zaxisItem = this.Menu.AddItem(new MenuItem(this.Path + "." + "zaxis", "z-axis").SetValue(true));
+
+            zaxisItem.ValueChanged += (o, args) => { this.zaxis = args.GetNewValue<bool>(); };
+
+            this.zaxis = zaxisItem.GetValue<bool>();
 
             this.Menu.AddItem(
-                new MenuItem(this.Name + "displaymethod", "Display Method").SetValue(
+                new MenuItem(this.Path + "." + "displaymethod", "Display Method").SetValue(
                     new StringList(new string[] { "Render Drawings", "League Drawings" })));
         }
 
@@ -97,11 +108,11 @@
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void DrawingOnOnDraw(EventArgs args)
         {
-            if (this.Menu.Item(this.Name + "spellready").GetValue<bool>() && !this.spell.IsReady()) return;
+            if (this.Menu.Item(this.Path + "." + "spellready").GetValue<bool>() && !this.spell.IsReady()) return;
 
-            if (this.Menu.Item(this.Name + "displaymethod").GetValue<StringList>().SelectedIndex == 0)
+            if (this.Menu.Item(this.Path + "." + "displaymethod").GetValue<StringList>().SelectedIndex == 0)
             {
-                Render.Circle.DrawCircle(ObjectManager.Player.Position, this.spell.Range, this.color, 3, true);
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, this.spell.Range, this.color, 3, this.zaxis);
             }
             else
             {

@@ -2,8 +2,6 @@
 {
     #region Using Directives
 
-    using System;
-
     using LeagueSharp;
     using LeagueSharp.Common;
 
@@ -17,9 +15,8 @@
     {
         #region Fields
 
-
         /// <summary>
-        /// The irelia e
+        ///     The irelia e
         /// </summary>
         private readonly IreliaE ireliaE;
 
@@ -28,7 +25,7 @@
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="E" /> class.
+        ///     Initializes a new instance of the <see cref="E" /> class.
         /// </summary>
         /// <param name="ireliaE">The irelia e.</param>
         public E(IreliaE ireliaE)
@@ -53,14 +50,6 @@
         #region Methods
 
         /// <summary>
-        ///     Called when [load].
-        /// </summary>
-        protected override void OnLoad(object sender, FeatureBaseEventArgs featureBaseEventArgs)
-        {
-            base.OnLoad(sender, featureBaseEventArgs);
-        }
-
-        /// <summary>
         ///     Called when [disable].
         /// </summary>
         protected override void OnDisable(object sender, FeatureBaseEventArgs eventArgs)
@@ -81,7 +70,15 @@
         }
 
         /// <summary>
-        /// Triggers after attack
+        ///     Called when [load].
+        /// </summary>
+        protected override void OnLoad(object sender, FeatureBaseEventArgs featureBaseEventArgs)
+        {
+            base.OnLoad(sender, featureBaseEventArgs);
+        }
+
+        /// <summary>
+        ///     Triggers after attack
         /// </summary>
         /// <param name="unit">The unit.</param>
         /// <param name="target">The target.</param>
