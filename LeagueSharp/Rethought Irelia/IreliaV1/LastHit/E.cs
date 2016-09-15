@@ -66,6 +66,8 @@
         protected override void OnDisable(object sender, FeatureBaseEventArgs eventArgs)
         {
             base.OnDisable(sender, eventArgs);
+
+            Orbwalking.AfterAttack -= this.OrbwalkingOnAfterAttack;
         }
 
         /// <summary>

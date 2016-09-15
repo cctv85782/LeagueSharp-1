@@ -102,6 +102,8 @@
             if (!this.CheckGuardians()) return;
 
             this.LogicLaneLastHit();
+
+            //this.LogicJungleLastHit();
         }
 
         private void LogicJungleLastHit()
