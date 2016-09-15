@@ -85,7 +85,7 @@
 
             var keybind = new KeyBind(this.Key, KeyBindType.Toggle) { Active = false };
 
-            this.Menu.Item(this.owner.Name + this.BoolName).SetValue(keybind);
+            this.Menu.Item(this.owner.Path + "." + this.BoolName).SetValue(keybind);
         }
 
         /// <summary>
@@ -110,7 +110,7 @@
 
             var keybind = new KeyBind(this.Key, KeyBindType.Toggle) { Active = true };
 
-            this.Menu.Item(this.owner.Name + this.BoolName).SetValue(keybind);
+            this.Menu.Item(this.owner.Path + "." + this.BoolName).SetValue(keybind);
         }
 
         #endregion
@@ -122,7 +122,7 @@
         /// </summary>
         public override void Setup()
         {
-            this.Menu.AddItem(new MenuItem(this.owner.Name + this.BoolName, this.BoolName).SetValue(new KeyBind(this.Key, KeyBindType.Toggle)))
+            this.Menu.AddItem(new MenuItem(this.owner.Path + "." + this.BoolName, this.BoolName).SetValue(new KeyBind(this.Key, KeyBindType.Toggle)))
                 .ValueChanged += delegate(object sender, OnValueChangeEventArgs args)
                     {
                         if (args.GetNewValue<KeyBind>().Active)
@@ -135,7 +135,7 @@
                         }
                     };
 
-            if (this.Menu.Item(this.owner.Name + this.BoolName).GetValue<KeyBind>().Active)
+            if (this.Menu.Item(this.owner.Path +"."+ this.BoolName).GetValue<KeyBind>().Active)
             {
                 this.Enable(new Base.FeatureBaseEventArgs(this.owner));
             }

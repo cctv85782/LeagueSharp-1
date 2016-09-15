@@ -88,14 +88,8 @@
 
             var path = this.ireliaQ.GetPath(ObjectManager.Player.ServerPosition, Game.CursorPos);
 
-            if (path == null)
+            if (path == null || !path.Any())
             {
-                Console.WriteLine("Null");
-                return;
-            }
-            if (!path.Any())
-            {
-                Console.WriteLine("No Units");
                 return;
             }
 

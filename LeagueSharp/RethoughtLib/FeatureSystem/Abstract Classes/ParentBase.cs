@@ -143,8 +143,6 @@
         {
             var sender = featureBaseEventArgs.Sender;
 
-            Console.WriteLine("CHILD ENABLED: " +sender);
-
             if (sender == null || sender == this)
             {
                 return;
@@ -212,6 +210,8 @@
                 var child = keyValuePair.Key;
 
                 child.Initialize();
+
+                child.Path = this.Path + child.Path;
 
                 this.Menu.AddSubMenu(child.Menu);
 

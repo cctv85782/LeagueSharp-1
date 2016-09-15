@@ -28,7 +28,7 @@
         /// </summary>
         protected override void SetMenu()
         {
-            this.Menu = new Menu(this.Name, this.Name, true);
+            this.Menu = new Menu(this.Path, this.Name, true);
         }
 
         /// <summary>Returns a string that represents the current object.</summary>

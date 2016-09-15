@@ -101,19 +101,11 @@
         /// <returns></returns>
         public List<Obj_AI_Base> GetPath(Vector3 from, Vector3 to)
         {
-            var start = new NodeBase(from);
-            var end = new NodeBase(to);
             var graph = this.GraphGenerator.Generate(new AStarNode(from), new AStarNode(to));
-
-            Console.WriteLine("Graph Count: " + graph.Edges.Count);
 
             var path = this.PathfinderModule.GetPath(graph, graph.Start, graph.End);
 
-            if (path == null) return null;
-
-            Console.WriteLine("Path Count: " + path.Count);
-
-            return path.OfType<UnitNode>().Select(x => x.Unit).ToList();
+            return path?.OfType<UnitNode>().Select(x => x.Unit).ToList();
         }
 
         /// <summary>

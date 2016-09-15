@@ -48,7 +48,7 @@
         ///     Initializes a new instance of the <see cref="Q" /> class.
         /// </summary>
         /// <param name="ireliaQ">The Q logic</param>
-        public Q(IreliaQ ireliaQ)
+        public  Q(IreliaQ ireliaQ)
         {
             this.ireliaQ = ireliaQ;
         }
@@ -159,8 +159,7 @@
                 var gapclosePath = this.ireliaQ.GetPath(ObjectManager.Player.ServerPosition, this.target.ServerPosition);
 
                 var expectedTime =
-                    gapclosePath.TakeWhile((t, i) => i != gapclosePath.Count - 1)
-                        .Select((t, i) => t.Distance(gapclosePath[i + 1]))
+                    gapclosePath.TakeWhile((t, i) => i != gapclosePath.Count - 1).Where((t, i) => t != null).Select((t, i) => t.Distance(gapclosePath[i + 1]))
                         .Sum() / this.ireliaQ.Spell.Speed;
 
                 var pred = Prediction.GetPrediction(this.target, expectedTime);

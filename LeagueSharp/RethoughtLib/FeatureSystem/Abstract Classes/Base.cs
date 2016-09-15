@@ -70,6 +70,8 @@
         /// </value>
         public abstract string Name { get; set; }
 
+        public string Path { get; set; }
+
         #endregion
 
         #region Public Methods and Operators
@@ -153,6 +155,8 @@
 
             this.Initialized = true;
 
+            this.Path = this.Name;
+
             this.OnLoadEvent += this.OnLoad;
 
             this.SetMenu();
@@ -193,7 +197,9 @@
         /// </summary>
         protected virtual void OnDisable(object sender, FeatureBaseEventArgs eventArgs)
         {
+#if DEBUG
             Console.WriteLine($"{this}: OnDisable");
+#endif
         }
 
         /// <summary>
@@ -201,7 +207,9 @@
         /// </summary>
         protected virtual void OnEnable(object sender, FeatureBaseEventArgs eventArgs)
         {
+#if DEBUG
             Console.WriteLine($"{this}: OnEnable");
+#endif
         }
 
         /// <summary>
@@ -209,7 +217,10 @@
         /// </summary>
         protected virtual void OnLoad(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
+#if DEBUG
             Console.WriteLine($"{this}: OnLoad");
+
+#endif
         }
 
         /// <summary>
@@ -225,8 +236,11 @@
         /// </summary>
         protected virtual void SetMenu()
         {
+#if DEBUG
             Console.WriteLine($"{this}: SetMenu");
-            this.Menu = new Menu(this.Name, this.Name);
+
+#endif
+            this.Menu = new Menu(this.Path, this.Name);
         }
 
         /// <summary>
@@ -234,7 +248,10 @@
         /// </summary>
         protected virtual void SetSwitch()
         {
+#if DEBUG
             Console.WriteLine($"{this}: SetSwitch");
+
+#endif
             this.Switch = new BoolSwitch(this.Menu, "Enabled", true, this);
         }
 

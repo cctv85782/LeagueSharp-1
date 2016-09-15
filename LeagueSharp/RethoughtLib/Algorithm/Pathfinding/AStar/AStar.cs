@@ -101,14 +101,11 @@
 
             while (this.openNodes.Count > 0)
             {
-                Console.WriteLine("Working");
-
                 var parentNode = this.openNodes.Dequeue();
 
                 // Possible Path Found
                 if (parentNode.Position == end.Position)
                 {
-                    Console.WriteLine("Found Solution");
                     this.closedNodes.Add(parentNode);
                     this.Finished = true;
                     break;
@@ -122,15 +119,12 @@
                             x.Start == parentNode || x.Start.Equals(parentNode)
                             || x.Start.Position.Equals(parentNode.Position)))
                 {
-                    Console.WriteLine("Searching");
-
                     var newNode = edge.End;
 
                     newNode.G = edge.Cost;
 
                     if (Math.Abs(newNode.G - parentNode.G) < 0.1f)
                     {
-                        Console.WriteLine("Parent and New are the same");
                         continue;
                     }
 

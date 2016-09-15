@@ -89,7 +89,7 @@
 
             this.Cache = e;
 
-            this.Menu.Item(this.owner.Name + this.BoolName).SetValue(false);
+            this.Menu.Item(this.owner.Path + "." + this.BoolName).SetValue(false);
         }
 
         /// <summary>
@@ -113,7 +113,7 @@
 
             this.Cache = e;
 
-            this.Menu.Item(this.owner.Name + this.BoolName).SetValue(true);
+            this.Menu.Item(this.owner.Path + "." +this.BoolName).SetValue(true);
         }
 
         /// <summary>
@@ -121,7 +121,7 @@
         /// </summary>
         public override void Setup()
         {
-            var menuItem = this.Menu.AddItem(new MenuItem(this.owner.Name + this.BoolName, this.BoolName).SetValue(this.BoolValue));
+            var menuItem = this.Menu.AddItem(new MenuItem(this.owner.Path + "." + this.BoolName, this.BoolName).SetValue(this.BoolValue));
 
             menuItem.ValueChanged +=
                 delegate (object sender, OnValueChangeEventArgs args)
@@ -136,7 +136,7 @@
                     }
                 };
 
-            if (this.Menu.Item(this.owner.Name + this.BoolName).GetValue<bool>())
+            if (this.Menu.Item(this.owner.Path + "." + this.BoolName).GetValue<bool>())
             {
                 this.Enable(new Base.FeatureBaseEventArgs(this.owner));
             }
