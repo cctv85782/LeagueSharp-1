@@ -116,8 +116,7 @@
                 MinionManager.GetMinions(
                     this.ireliaQ.Spell.Range,
                     MinionTypes.All,
-                    MinionTeam.NotAlly,
-                    MinionOrderTypes.Health).Where(x => this.ireliaQ.WillReset(x)).ToList();
+                    MinionTeam.NotAlly).Where(x => this.ireliaQ.WillReset(x)).ToList();
 
             if (this.Menu.Item(this.Path + "." + "noturretdive").GetValue<bool>())
             {
@@ -151,7 +150,7 @@
                     unit =
                         units.FirstOrDefault(
                             x =>
-                            x.Distance(ObjectManager.Player) >= ObjectManager.Player.AttackRange + 200
+                            x.Distance(ObjectManager.Player) >= ObjectManager.Player.AttackRange
                             && x.HealthPercent <= 20);
                     break;
                 case 1:

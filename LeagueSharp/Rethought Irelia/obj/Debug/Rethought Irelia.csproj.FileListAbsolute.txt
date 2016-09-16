@@ -13,6 +13,5 @@ E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\bin\Debug\
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\bin\Debug\clipper_library.pdb
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\bin\Debug\LeagueSharp.Common.pdb
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\bin\Debug\LeagueSharp.Data.pdb
-E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\obj\Debug\Rethought Irelia.csprojResolveAssemblyReference.cache
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\obj\Debug\Rethought Irelia.exe
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Irelia\obj\Debug\Rethought Irelia.pdb

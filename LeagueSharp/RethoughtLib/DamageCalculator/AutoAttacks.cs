@@ -1,4 +1,4 @@
-﻿namespace Rethought_Irelia.IreliaV1.DamageCalculator
+﻿namespace RethoughtLib.DamageCalculator
 {
     #region Using Directives
 
@@ -10,7 +10,7 @@
     /// <summary>
     ///     Auto-Attacks DamageCalculatorModule
     /// </summary>
-    /// <seealso cref="Rethought_Irelia.IreliaV1.DamageCalculator.IDamageCalculatorModule" />
+    /// <seealso cref="IDamageCalculatorModule" />
     internal class AutoAttacks : IDamageCalculatorModule
     {
         #region Public Properties

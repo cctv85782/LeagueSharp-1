@@ -101,10 +101,10 @@
     <Compile Include="Classes\Injectables\Abstrahations\DIContainerBase.cs" />
     <Compile Include="Classes\General Intefaces\ITagable.cs" />
     <Compile Include="Core\RethoughtLibModule.cs" />
-    <Compile Include="DamageCalculator\DamageTypes\DamageType.cs" />
-    <Compile Include="DamageCalculator\DamageTypes\IDamageType.cs" />
-    <Compile Include="DamageCalculator\DamageTypes\Implementations\Magical.cs" />
-    <Compile Include="DamageCalculator\DamageTypes\Implementations\Physical.cs" />
+    <Compile Include="DamageCalculator\AutoAttacks.cs" />
+    <Compile Include="DamageCalculator\DamageCalculatorParent.cs" />
+    <Compile Include="DamageCalculator\IDamageCalculator.cs" />
+    <Compile Include="DamageCalculator\IDamageCalculatorModule.cs" />
     <Compile Include="Design\Implementations\ByteOffset.cs" />
     <Compile Include="Design\Implementations\DecimalOffset.cs" />
     <Compile Include="Design\Implementations\DoubleOffset.cs" />
@@ -117,6 +117,8 @@
     <Compile Include="Design\Implementations\Vector2Offset.cs" />
     <Compile Include="Design\Implementations\Vector3Offset.cs" />
     <Compile Include="Design\Implementations\Vector4Offset.cs" />
+    <Compile Include="Drawings\DamageDrawingInformations.cs" />
+    <Compile Include="Drawings\DamageDrawingModule.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\Base.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\ChildBase.cs" />
     <Compile Include="FeatureSystem\Behaviors\IBehavior.cs" />

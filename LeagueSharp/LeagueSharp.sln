@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rethought Fiora", "Rethough
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rethought Yasuo", "Rethought Yasuo\Rethought Yasuo.csproj", "{8B4F90AA-5F94-4B6E-BE4B-E3D6DBAD214A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTest", "ConsoleTest\ConsoleTest.csproj", "{19F91605-B4B8-4441-98D8-14C0ED9C9430}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rethought Camera", "Rethought Camera\Rethought Camera.csproj", "{8961E3AA-23EE-4BB0-9C4F-E0CA89352A61}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rethought Yorick", "Rethought Yorick\Rethought Yorick.csproj", "{4C68F84D-92DB-4726-AB2E-16057326B949}"
@@ -41,10 +39,6 @@ Global
 		{8B4F90AA-5F94-4B6E-BE4B-E3D6DBAD214A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B4F90AA-5F94-4B6E-BE4B-E3D6DBAD214A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B4F90AA-5F94-4B6E-BE4B-E3D6DBAD214A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{19F91605-B4B8-4441-98D8-14C0ED9C9430}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{19F91605-B4B8-4441-98D8-14C0ED9C9430}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{19F91605-B4B8-4441-98D8-14C0ED9C9430}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{19F91605-B4B8-4441-98D8-14C0ED9C9430}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8961E3AA-23EE-4BB0-9C4F-E0CA89352A61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8961E3AA-23EE-4BB0-9C4F-E0CA89352A61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8961E3AA-23EE-4BB0-9C4F-E0CA89352A61}.Release|Any CPU.ActiveCfg = Release|Any CPU
