@@ -2,6 +2,8 @@
 {
     #region Using Directives
 
+    using System;
+
     using LeagueSharp;
     using LeagueSharp.Common;
 
@@ -55,24 +57,21 @@
             {
                 var predictedEnemyHealth = HealthPrediction.GetHealthPrediction(
                     target,
-                    (int)
-                    (this.Spell.Delay
-                     + ObjectManager.Player.ServerPosition.Distance(target.ServerPosition) / this.Spell.Speed) / 1000,
-                    0);
+                    0,
+                    (int)this.Spell.Delay);
 
                 var playerpredictedHealth = HealthPrediction.GetHealthPrediction(
                     ObjectManager.Player,
-                    (int)
-                    (this.Spell.Delay
-                     + ObjectManager.Player.ServerPosition.Distance(target.ServerPosition) / this.Spell.Speed) / 1000,
-                    0);
+                    0,
+                    (int)this.Spell.Delay);
 
-                return predictedEnemyHealth / target.MaxHealth <= playerpredictedHealth / ObjectManager.Player.MaxHealth;
+                var f = predictedEnemyHealth / target.MaxHealth * 100;
+                var d = playerpredictedHealth / ObjectManager.Player.MaxHealth * 100;
+
+                return f >= d;
             }
-            else
-            {
-                return target.HealthPercent <= ObjectManager.Player.HealthPercent;
-            }
+
+            return target.HealthPercent >= ObjectManager.Player.HealthPercent;
         }
 
         /// <summary>

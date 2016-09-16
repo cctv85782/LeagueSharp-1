@@ -142,10 +142,9 @@
                 return;
             }
 
-            if (this.ireliaE.CanStun(this.target))
-            {
-                this.ireliaE.Spell.Cast(this.target);
-            }
+            if (!this.ireliaE.CanStun(this.target)) return;
+
+            this.ireliaE.Spell.Cast(this.target);
         }
 
         /// <summary>

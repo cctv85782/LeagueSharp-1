@@ -135,7 +135,7 @@
                         new W(ireliaW, ireliaQ).Guardian(new SpellMustBeReady(SpellSlot.W)),
                         new E(ireliaE).Guardian(new SpellMustBeReady(SpellSlot.E))
                             .Guardian(new PlayerMustNotBeWindingUp()),
-                        new R(ireliaR, damageCalculator).Guardian(new SpellMustBeReady(SpellSlot.R))
+                        new R(ireliaR, ireliaQ, damageCalculator).Guardian(new SpellMustBeReady(SpellSlot.R))
                             .Guardian(new PlayerMustNotBeWindingUp())
                     });
 

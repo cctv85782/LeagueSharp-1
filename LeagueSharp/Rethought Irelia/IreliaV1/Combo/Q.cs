@@ -186,8 +186,6 @@
         /// </summary>
         private void LogicFinisher()
         {
-            if (this.target == null) return;
-
             if (this.ireliaQ.WillReset(this.target))
             {
                 this.ireliaQ.Spell.Cast(this.target);
@@ -239,6 +237,8 @@
             if (!this.CheckGuardians()) return;
 
             this.target = TargetSelector.GetTarget(1000, TargetSelector.DamageType.Physical, false);
+
+            if (this.target == null) return;
 
             if (this.Menu.Item(this.Path + "." + "noturretdive").GetValue<KeyBind>().Active && this.target.UnderTurret())
             {

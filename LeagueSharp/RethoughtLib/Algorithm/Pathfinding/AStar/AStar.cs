@@ -191,8 +191,13 @@
 
             for (var i = this.closedNodes.Count - 1; i >= 0; i--)
             {
-                if (Math.Abs(fNode.ParentNode.Position.X - this.closedNodes[i].Position.X) < 0.1f
-                    && Math.Abs(fNode.ParentNode.Position.Y - this.closedNodes[i].Position.Y) < 0.1f
+                var node = this.closedNodes[i];
+                var parent = fNode.ParentNode;
+
+                if (node == null || parent == null) continue;
+
+                if (Math.Abs(parent.Position.X - node.Position.X) < 0.1f
+                    && Math.Abs(parent.Position.Y - node.Position.Y) < 0.1f
                     || i == this.closedNodes.Count - 1)
                 {
                     fNode = this.closedNodes[i];

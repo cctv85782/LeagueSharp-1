@@ -19,6 +19,8 @@
     {
         #region Fields
 
+        private readonly IreliaQ ireliaQ;
+
         /// <summary>
         ///     The irelia r
         /// </summary>
@@ -37,11 +39,13 @@
         ///     Initializes a new instance of the <see cref="W" /> class.
         /// </summary>
         /// <param name="ireliaR">The irelia r.</param>
+        /// <param name="ireliaQ">The irelia q</param>
         /// <param name="damageCalculator">The damage calculator</param>
-        public R(IreliaR ireliaR, IDamageCalculator damageCalculator)
+        public R(IreliaR ireliaR, IreliaQ ireliaQ, IDamageCalculator damageCalculator)
         {
             this.DamageCalculator = damageCalculator;
             this.ireliaR = ireliaR;
+            this.ireliaQ = ireliaQ;
         }
 
         #endregion
@@ -117,7 +121,7 @@
         ///     Casts the spell on target with prediction.
         /// </summary>
         /// <param name="target">The target.</param>
-        private void CastOnTarget(Obj_AI_Hero target)
+        private void CastOnTarget(Obj_AI_Base target)
         {
             var prediction = this.ireliaR.Spell.GetPrediction(
                 target,
@@ -134,9 +138,12 @@
         ///     Logic for executing R when killable by combo
         /// </summary>
         /// <param name="target">The target.</param>
-        private void LogicAutoCombo(Obj_AI_Hero target)
+        private void LogicAutoCombo(Obj_AI_Base target)
         {
-            if (this.DamageCalculator.GetDamage(target) < target.Health) return;
+            if (this.DamageCalculator.GetDamage(target) < target.Health
+                || (this.ireliaQ.GetPath(ObjectManager.Player.ServerPosition, target.ServerPosition) == null
+                    && ObjectManager.Player.Distance(target) > this.ireliaQ.Spell.Range
+                    && this.ireliaR.GetDamage(target) * this.ireliaR.EstimatedAmountInOneCombo < target.Health)) return;
 
             this.CastOnTarget(target);
         }
@@ -145,7 +152,7 @@
         ///     Logic life regeneration
         /// </summary>
         /// <param name="target">The target.</param>
-        private void LogicRegenerateHealth(Obj_AI_Hero target)
+        private void LogicRegenerateHealth(Obj_AI_Base target)
         {
             if (!this.Menu.Item(this.Path + "." + "usetoregen").GetValue<bool>()) return;
 
