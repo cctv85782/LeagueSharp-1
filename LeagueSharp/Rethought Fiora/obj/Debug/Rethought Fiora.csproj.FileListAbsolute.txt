@@ -1,1 +1,2 @@
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Fiora\obj\Debug\Rethought Fiora.csprojResolveAssemblyReference.cache
+E:\Visual Studio Projects\LeagueSharp\Rethought Fiora\obj\Debug\Rethought Fiora.csprojResolveAssemblyReference.cache

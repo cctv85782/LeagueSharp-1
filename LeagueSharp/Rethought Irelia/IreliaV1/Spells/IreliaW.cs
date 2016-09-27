@@ -2,6 +2,8 @@
 {
     #region Using Directives
 
+    using System;
+
     using LeagueSharp;
     using LeagueSharp.Common;
 
@@ -9,6 +11,9 @@
     using RethoughtLib.FeatureSystem.Switches;
 
     using Rethought_Irelia.IreliaV1.DamageCalculator;
+    using Rethought_Irelia.IreliaV1.Drawings;
+
+    using SharpDX;
 
     #endregion
 
@@ -16,13 +21,15 @@
     {
         #region Public Properties
 
+        public Color Color { get; set; } = Color.Yellow;
+
         /// <summary>
         ///     Gets the estimated amount in one combo.
         /// </summary>
         /// <value>
         ///     The estimated amount in one combo.
         /// </value>
-        public int EstimatedAmountInOneCombo { get; } = 4;
+        public int EstimatedAmountInOneCombo { get; set; } = 4;
 
         /// <summary>
         ///     Gets or sets the name.
@@ -31,6 +38,11 @@
         ///     The name.
         /// </value>
         public override string Name { get; set; } = "Hiten Style";
+
+        /// <summary>
+        /// The buff name
+        /// </summary>
+        public const string BuffName = "IreliaHitenStyleCharged";
 
         /// <summary>
         ///     Gets or sets the spell.
@@ -51,7 +63,12 @@
         /// <returns></returns>
         public float GetDamage(Obj_AI_Base target)
         {
-            return !this.Spell.IsReady() ? 0 : this.Spell.GetDamage(target);
+            if (!this.Spell.IsReady() && !ObjectManager.Player.HasBuff(BuffName))
+            {
+                return 0;
+            }
+
+            return this.Spell.Level * 15;
         }
 
         #endregion

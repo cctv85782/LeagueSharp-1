@@ -4,7 +4,7 @@
 
     using RethoughtLib.Bootstraps.Implementations;
 
-    using Rethought_Irelia.IreliaV1;
+    using IreliaV1;
 
     #endregion
 
@@ -17,7 +17,6 @@
             var bootstrap = new LeagueSharpMultiBootstrap();
 
             bootstrap.AddModule(new Loader());
-            bootstrap.AddString("Irelia_" + bootstrap.Modules.Count);
 
             bootstrap.Run();
         }

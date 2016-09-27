@@ -130,7 +130,7 @@
             }
 
             foreach (var enemy in
-                HeroManager.Enemies.Where(x => x.Distance(ObjectManager.Player) <= 1000 + this.ireliaQ.Spell.Range))
+                HeroManager.Enemies.Where(x => !x.IsDead && x.Distance(ObjectManager.Player) <= 1000 + this.ireliaQ.Spell.Range))
             {
                 foreach (var entry in units.ToList())
                 {
@@ -151,7 +151,7 @@
                         units.FirstOrDefault(
                             x =>
                             x.Distance(ObjectManager.Player) >= ObjectManager.Player.AttackRange
-                            && x.HealthPercent <= 20);
+                            && x.HealthPercent <= 10);
                     break;
                 case 1:
                     unit = units.FirstOrDefault();

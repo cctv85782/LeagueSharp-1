@@ -6,7 +6,7 @@
 
     #endregion
 
-    internal interface IDamageCalculator
+    public interface IDamageCalculator
     {
         #region Public Methods and Operators
 

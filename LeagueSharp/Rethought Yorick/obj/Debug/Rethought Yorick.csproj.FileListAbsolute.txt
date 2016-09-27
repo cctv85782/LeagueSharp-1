@@ -18,3 +18,4 @@ E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\bin\Debug\
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\obj\Debug\Rethought Yorick.csprojResolveAssemblyReference.cache
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\obj\Debug\Rethought Yorick.exe
 E:\Visual Studio Projects\LeagueSharpDev\LeagueSharp\Rethought Yorick\obj\Debug\Rethought Yorick.pdb
+E:\Visual Studio Projects\LeagueSharp\Rethought Yorick\obj\Debug\Rethought Yorick.csprojResolveAssemblyReference.cache

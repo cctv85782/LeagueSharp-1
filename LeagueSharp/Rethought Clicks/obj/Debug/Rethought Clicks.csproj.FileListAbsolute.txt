@@ -1,0 +1,17 @@
+E:\Visual Studio Projects\LeagueSharp\Rethought Clicks\bin\Debug\Rethought Clicks.exe.config
+E:\Visual Studio Projects\LeagueSharp\Rethought Clicks\bin\Debug\Rethought Clicks.exe
+E:\Visual Studio Projects\LeagueSharp\Rethought Clicks\bin\Debug\Rethought Clicks.pdb
+E:\Visual Studio Projects\LeagueSharp\Rethought Clicks\bin\Debug\LeagueSharp.Common.dll
+E:\Visual Studio Projects\LeagueSharp\Rethought Clicks\bin\Debug\LeagueSharp.dll
+E:\Visual Studio Projects\LeagueSharp\Rethought Clicks\bin\Debug\SharpDX.dll
+E:\Visual Studio Projects\LeagueSharp\Rethought Clicks\bin\Debug\SharpDX.Direct3D9.dll
+E:\Visual Studio Projects\LeagueSharp\Rethought Clicks\bin\Debug\LeagueSharp.Data.dll
+E:\Visual Studio Projects\LeagueSharp\Rethought Clicks\bin\Debug\clipper_library.dll
+E:\Visual Studio Projects\LeagueSharp\Rethought Clicks\bin\Debug\Newtonsoft.Json.dll
+E:\Visual Studio Projects\LeagueSharp\Rethought Clicks\bin\Debug\LeagueSharp.Common.pdb
+E:\Visual Studio Projects\LeagueSharp\Rethought Clicks\bin\Debug\RethoughtLib.pdb
+E:\Visual Studio Projects\LeagueSharp\Rethought Clicks\bin\Debug\LeagueSharp.Data.pdb
+E:\Visual Studio Projects\LeagueSharp\Rethought Clicks\bin\Debug\clipper_library.pdb
+E:\Visual Studio Projects\LeagueSharp\Rethought Clicks\obj\Debug\Rethought Clicks.csprojResolveAssemblyReference.cache
+E:\Visual Studio Projects\LeagueSharp\Rethought Clicks\obj\Debug\Rethought Clicks.exe
+E:\Visual Studio Projects\LeagueSharp\Rethought Clicks\obj\Debug\Rethought Clicks.pdb

@@ -54,8 +54,6 @@
                 this.damageCalculatorsModules.Sum(
                     calculatorModule => calculatorModule.GetDamage(target) * calculatorModule.EstimatedAmountInOneCombo);
 
-            result += (float)ObjectManager.Player.GetAutoAttackDamage(target) * 3f;
-
             return result;
         }
 
@@ -74,9 +72,15 @@
 
             foreach (var damageCalculator in this.damageCalculatorsModules)
             {
-                this.Menu.AddItem(
-                    new MenuItem(this.Path + "." + damageCalculator.Name, damageCalculator.Name).SetValue(
-                        new Slider(damageCalculator.EstimatedAmountInOneCombo, 0, 5)));
+                var slider =
+                    this.Menu.AddItem(
+                        new MenuItem(this.Path + "." + damageCalculator.Name, damageCalculator.Name).SetValue(
+                            new Slider(damageCalculator.EstimatedAmountInOneCombo, 0, 5)));
+
+                slider.ValueChanged +=
+                    (o, args) => { damageCalculator.EstimatedAmountInOneCombo = args.GetNewValue<Slider>().Value; };
+
+                damageCalculator.EstimatedAmountInOneCombo = slider.GetValue<Slider>().Value;
             }
         }
 

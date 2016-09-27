@@ -21,7 +21,7 @@
         /// <value>
         ///     The estimated amount in one combo.
         /// </value>
-        public int EstimatedAmountInOneCombo { get; } = 2;
+        public int EstimatedAmountInOneCombo { get; set; } = 3;
 
         /// <summary>
         ///     Gets or sets the name.

@@ -1,0 +1,2 @@
+E:\Visual Studio Projects\LeagueSharp\Rethought Template\bin\Debug\Rethought Template.exe.config
+E:\Visual Studio Projects\LeagueSharp\Rethought Template\obj\Debug\Rethought Template.csprojResolveAssemblyReference.cache

@@ -113,8 +113,12 @@
             this.Menu.AddItem(new MenuItem(this.Path + "." + "usetoregen", "Use to regenerate health").SetValue(true));
 
             this.Menu.AddItem(
-                new MenuItem(this.Path + "." + "usetoregen.minlife", "Use when below X % health").SetValue(
-                    new Slider(15, 0, 100)));
+                new MenuItem(this.Path + "." + "usetoregen.minlife", " > Use when below X (percentage) health").SetValue(
+                    new Slider(20, 0, 100)));
+
+            this.Menu.AddItem(
+                new MenuItem(this.Path + "." + "usetoregen.minlifeflat", " > Use when below X (flat) health").SetValue(
+                    new Slider(200, 0, 5000)));
         }
 
         /// <summary>
@@ -169,7 +173,8 @@
 
             if (ObjectManager.Player.HealthPercent
                 <= this.Menu.Item(this.Path + "." + "usetoregen.minlife").GetValue<Slider>().Value
-                && ObjectManager.Player.HealthPercent <= enemyMeanHealth)
+                || ObjectManager.Player.Health <= this.Menu.Item(this.Path + "." + "usetoregen.minlifeflat").GetValue<Slider>().Value
+                && ObjectManager.Player.HealthPercent <= enemyMeanHealth + 5)
             {
                 this.CastOnTarget(target);
             }

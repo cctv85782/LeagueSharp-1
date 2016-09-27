@@ -117,8 +117,6 @@
     <Compile Include="Design\Implementations\Vector2Offset.cs" />
     <Compile Include="Design\Implementations\Vector3Offset.cs" />
     <Compile Include="Design\Implementations\Vector4Offset.cs" />
-    <Compile Include="Drawings\DamageDrawingInformations.cs" />
-    <Compile Include="Drawings\DamageDrawingModule.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\Base.cs" />
     <Compile Include="FeatureSystem\Abstract Classes\ChildBase.cs" />
     <Compile Include="FeatureSystem\Behaviors\IBehavior.cs" />

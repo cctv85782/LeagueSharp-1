@@ -219,7 +219,6 @@
         {
 #if DEBUG
             Console.WriteLine($"{this}: OnLoad");
-
 #endif
         }
 
@@ -238,7 +237,6 @@
         {
 #if DEBUG
             Console.WriteLine($"{this}: SetMenu");
-
 #endif
             this.Menu = new Menu(this.Path, this.Name);
         }
@@ -250,7 +248,6 @@
         {
 #if DEBUG
             Console.WriteLine($"{this}: SetSwitch");
-
 #endif
             this.Switch = new BoolSwitch(this.Menu, "Enabled", true, this);
         }

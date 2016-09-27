@@ -125,7 +125,7 @@
         protected override void OnLoad(object sender, FeatureBaseEventArgs featureBaseEventArgs)
         {
             base.OnLoad(sender, featureBaseEventArgs);
-
+#if DEBUG
             var draw = this.Menu.AddItem(new MenuItem("drawgraph", "Draw (Debugging)").SetValue(false));
 
             draw.ValueChanged += (o, args) =>
@@ -133,20 +133,18 @@
                     if (args.GetNewValue<bool>())
                     {
                         Drawing.OnDraw += this.DrawingOnOnDraw;
-                        Game.OnUpdate += this.DrawingOnUpdate;
                     }
                     else
                     {
                         Drawing.OnDraw -= this.DrawingOnOnDraw;
-                        Game.OnUpdate -= this.DrawingOnUpdate;
                     }
                 };
 
             if (draw.GetValue<bool>())
             {
                 Drawing.OnDraw += this.DrawingOnOnDraw;
-                Game.OnUpdate -= this.DrawingOnUpdate;
             }
+#endif
         }
 
         /// <summary>
@@ -159,6 +157,8 @@
 
         private void DrawingOnOnDraw(EventArgs args)
         {
+            if (this.graph == null) return;
+
             foreach (var edge in this.graph.Edges)
             {
                 Drawing.DrawLine(
@@ -167,10 +167,7 @@
                     1,
                     Color.White);
             }
-        }
 
-        private void DrawingOnUpdate(EventArgs args)
-        {
             this.graph = null;
         }
 

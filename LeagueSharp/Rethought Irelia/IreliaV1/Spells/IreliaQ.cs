@@ -14,6 +14,7 @@
     using RethoughtLib.FeatureSystem.Switches;
 
     using Rethought_Irelia.IreliaV1.DamageCalculator;
+    using Rethought_Irelia.IreliaV1.Drawings;
     using Rethought_Irelia.IreliaV1.GraphGenerator;
     using Rethought_Irelia.IreliaV1.Pathfinder;
 
@@ -37,7 +38,7 @@
 
         #region Public Properties
 
-        public int EstimatedAmountInOneCombo { get; } = 1;
+        public int EstimatedAmountInOneCombo { get; set; } = 1;
 
         /// <summary>
         ///     Gets or sets the graph generator.

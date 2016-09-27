@@ -53,6 +53,10 @@
     <Reference Include="SharpDX">
       <HintPath>E:\Program Files (x86)\cRRQOkSFgDev\References\SharpDX.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDX.Direct3D9, Version=2.6.3.0, Culture=neutral, PublicKeyToken=345b829e6e492981, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>E:\Program Files (x86)\cRRQOkSFgDev\References\SharpDX.Direct3D9.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -69,8 +73,10 @@
     <Compile Include="IreliaV1\DamageCalculator\IDamageCalculator.cs" />
     <Compile Include="IreliaV1\DamageCalculator\IDamageCalculatorModule.cs" />
     <Compile Include="IreliaV1\DashToMouse\DashToMouseModule.cs" />
-    <Compile Include="IreliaV1\Drawings\CommonSpellDrawing.cs" />
-    <Compile Include="IreliaV1\Drawings\DamageDrawing.cs" />
+    <Compile Include="IreliaV1\Drawings\DamageDrawingChild.cs" />
+    <Compile Include="IreliaV1\Drawings\RangeDrawingChild.cs" />
+    <Compile Include="IreliaV1\Drawings\DamageDrawingParent.cs" />
+    <Compile Include="IreliaV1\Drawings\IDamageDrawing.cs" />
     <Compile Include="IreliaV1\GraphGenerator\GraphGeneratorModule.cs" />
     <Compile Include="IreliaV1\Interrupter\SpellInterrupterModule.cs" />
     <Compile Include="IreliaV1\Pathfinder\PathfinderModule.cs" />

@@ -28,7 +28,7 @@
     #endregion
 
     /// <summary>
-    ///     Class which represents the loader for <c>Yorick</c>
+    ///     Class which represents the loader for <c>Irelia</c>
     /// </summary>
     /// <seealso cref="RethoughtLib.Bootstraps.Abstract_Classes.LoadableBase" />
     public class Loader : LoadableBase
@@ -57,7 +57,7 @@
         /// <value>
         ///     The tags.
         /// </value>
-        public override IEnumerable<string> Tags { get; set; } = new[] { "Irelia_1" };
+        public override IEnumerable<string> Tags { get; set; } = new[] { "Irelia" };
 
         #endregion
 
@@ -164,13 +164,28 @@
                             .Guardian(new PlayerMustNotBeWindingUp())
                     });
 
-            drawingParent.Add(
+            var module = new DamageDrawingParent("Damage Drawings");
+
+            module.Add(
+                new List<IDamageDrawing>()
+                    {
+                        new DamageDrawingChild(ireliaQ.Spell, "Q", ireliaQ.GetDamage) { Color =Color.Green },
+                        new DamageDrawingChild(ireliaW.Spell, "W", ireliaW.GetDamage),
+                        new DamageDrawingChild(ireliaE.Spell, "E", ireliaE.GetDamage),
+                        new DamageDrawingChild(ireliaR.Spell, "R", ireliaR.GetDamage)
+                    });
+
+            var spellRangeParent = new Parent("Ranges");
+
+            spellRangeParent.Add(
                 new List<Base>()
                     {
-                        new CommonSpellDrawing(ireliaQ.Spell, "Q"),
-                        new CommonSpellDrawing(ireliaE.Spell, "E"),
-                        new CommonSpellDrawing(ireliaR.Spell, "R", true),
+                        new RangeDrawingChild(ireliaQ.Spell, "Q"),
+                        new RangeDrawingChild(ireliaE.Spell, "E"),
+                        new RangeDrawingChild(ireliaR.Spell, "R", true),
                     });
+
+            drawingParent.Add(new List<Base>() { spellRangeParent, module });
 
             superParent.Add(
                 new List<Base>()

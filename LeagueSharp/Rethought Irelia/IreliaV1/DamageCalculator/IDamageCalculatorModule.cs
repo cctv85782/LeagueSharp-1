@@ -1,10 +1,10 @@
 ﻿namespace Rethought_Irelia.IreliaV1.DamageCalculator
 {
-    internal interface IDamageCalculatorModule : IDamageCalculator
+    public interface IDamageCalculatorModule : IDamageCalculator
     {
         #region Public Properties
 
-        int EstimatedAmountInOneCombo { get; }
+        int EstimatedAmountInOneCombo { get; set; }
 
         string Name { get; set; }
 

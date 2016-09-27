@@ -1,5 +1,7 @@
 ﻿namespace RethoughtLib.Extensions
 {
+    #region Using Directives
+
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -9,7 +11,9 @@
 
     using SharpDX;
 
-    internal static class Extensions
+    #endregion
+
+    public static class Extensions
     {
         #region Public Methods and Operators
 
@@ -72,6 +76,14 @@
             }
             return result * 1000;
         }
+
+        /// <summary>
+        /// To the color of the sharp dx.
+        /// </summary>
+        /// <param name="color">The color.</param>
+        /// <returns></returns>
+        public static Color ToSharpDxColor(this System.Drawing.Color color)
+            => new Color(color.R, color.G, color.B, color.A);
 
         /// <summary>
         ///     Converts a list of Obj_Ai_Base's to Vector3's.

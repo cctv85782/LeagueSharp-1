@@ -1,0 +1,2 @@
+E:\Visual Studio Projects\LeagueSharp\Rethought Twitch\bin\Debug\Rethought Twitch.exe.config
+E:\Visual Studio Projects\LeagueSharp\Rethought Twitch\obj\Debug\Rethought Twitch.csprojResolveAssemblyReference.cache

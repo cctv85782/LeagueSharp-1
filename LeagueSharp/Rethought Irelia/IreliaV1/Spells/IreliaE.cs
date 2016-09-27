@@ -11,6 +11,9 @@
     using RethoughtLib.FeatureSystem.Switches;
 
     using Rethought_Irelia.IreliaV1.DamageCalculator;
+    using Rethought_Irelia.IreliaV1.Drawings;
+
+    using SharpDX;
 
     #endregion
 
@@ -24,7 +27,7 @@
         /// <value>
         ///     The estimated amount in one combo.
         /// </value>
-        public int EstimatedAmountInOneCombo { get; } = 1;
+        public int EstimatedAmountInOneCombo { get; set; } = 1;
 
         /// <summary>
         ///     Gets or sets the name.
